@@ -21,19 +21,19 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 - [x] Install @cloudflare/next-on-pages for Workers deployment - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [x] Install wrangler for local development - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
-- [ ] Install and configure shadcn/ui (using official CLI) - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [x] Install and configure shadcn/ui (using official CLI) - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 - [ ] Install CodeMirror 6 and language modes - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
 - [ ] Install nanoid for ID generation - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
 - [x] Install @cloudflare/workers-types for type definitions - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
 - [ ] Install development dependencies (vitest, @testing-library/react) - [#10](https://github.com/nullcoder/ghostpaste/issues/10)
-- [ ] Install next-themes for theme management - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [x] Install next-themes for theme management - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 
 ### Project Structure
 
 - [ ] Create folder structure (`app/`, `components/`, `lib/`, `types/`) - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
 - [ ] Set up app router pages structure - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
-- [ ] Create base layout with theme provider - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
-- [ ] Set up global styles and CSS variables - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [x] Create base layout with theme provider - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [x] Set up global styles and CSS variables - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 - [ ] Verify Cloudflare R2 setup - [#12](https://github.com/nullcoder/ghostpaste/issues/12)
 
 ## 🔧 Phase 2: Core Infrastructure
