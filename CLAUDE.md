@@ -72,5 +72,6 @@ For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
   5. Request code review
   6. Squash and merge after approval
   7. When merging, write commit summary from all commits in the pull request
+  8. Use a comprehensive summary (not a commit list) as the squash merge commit message, describing the overall work accomplished in the PR
 - Prefer rebase over merge to keep history clean
 - Always pull latest changes from `main` before starting new work
