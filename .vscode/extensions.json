@@ -2,12 +2,6 @@
   "recommendations": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
-    "bradlc.vscode-tailwindcss",
-    "prisma.prisma",
-    "ms-vscode.vscode-typescript-next",
-    "christian-kohler.path-intellisense",
-    "mikestead.dotenv",
-    "usernamehw.errorlens",
-    "wix.vscode-import-cost"
+    "bradlc.vscode-tailwindcss"
   ]
 }
