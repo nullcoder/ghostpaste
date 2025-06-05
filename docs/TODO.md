@@ -30,8 +30,8 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Project Structure
 
-- [ ] Create folder structure (`app/`, `components/`, `lib/`, `types/`) - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
-- [ ] Set up app router pages structure - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
+- [x] Create folder structure (`app/`, `components/`, `lib/`, `types/`) - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
+- [x] Set up app router pages structure - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
 - [x] Create base layout with theme provider - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 - [x] Set up global styles and CSS variables - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 - [ ] Verify Cloudflare R2 setup - [#12](https://github.com/nullcoder/ghostpaste/issues/12)
