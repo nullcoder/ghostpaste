@@ -5,18 +5,20 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🏗️ Phase 1: Project Setup
 
 ### Initial Setup
+
 - [x] Initialize Next.js 15 project with TypeScript (using `create-next-app`) - [#5](https://github.com/nullcoder/ghostpaste/issues/5)
 - [x] Set up Cloudflare Workers environment with wrangler - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [x] Configure project for Next.js on Cloudflare Workers using @cloudflare/next-on-pages - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [x] Configure Edge Runtime compatibility for all routes - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
-- [ ] Configure ESLint and Prettier - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
-- [ ] Set up Git hooks with Husky and lint-staged - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [x] Configure ESLint and Prettier - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [x] Set up Git hooks with Husky and lint-staged - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
 - [x] Create wrangler.toml with R2 bucket bindings and environment variables - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
-- [ ] Configure path aliases in `tsconfig.json` - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
-- [ ] Set up VS Code workspace settings - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [x] Configure path aliases in `tsconfig.json` - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [x] Set up VS Code workspace settings - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
 - [x] Create .dev.vars for local development secrets - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 
 ### Dependencies
+
 - [x] Install @cloudflare/next-on-pages for Workers deployment - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [x] Install wrangler for local development - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [ ] Install and configure shadcn/ui (using official CLI) - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
@@ -27,6 +29,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Install next-themes for theme management - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 
 ### Project Structure
+
 - [ ] Create folder structure (`app/`, `components/`, `lib/`, `types/`) - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
 - [ ] Set up app router pages structure - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
 - [ ] Create base layout with theme provider - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
@@ -36,6 +39,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🔧 Phase 2: Core Infrastructure
 
 ### Type Definitions
+
 - [ ] Create TypeScript interfaces for GistMetadata
 - [ ] Create TypeScript interfaces for UserMetadata
 - [ ] Create TypeScript interfaces for EncryptedData
@@ -45,6 +49,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Export all types from `types/index.ts`
 
 ### Configuration
+
 - [ ] Create configuration module for environment variables
 - [ ] Create constants file for limits and defaults
 - [ ] Set up feature flags system
@@ -53,6 +58,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Set up local development with miniflare
 
 ### Utilities
+
 - [ ] Create logger utility
 - [ ] Create error handling utilities
 - [ ] Create validation utilities
@@ -61,6 +67,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🔐 Phase 3: Encryption Implementation
 
 ### Crypto Module (`lib/crypto.ts`)
+
 - [ ] Implement key generation using Web Crypto API
 - [ ] Implement AES-GCM encryption function (Workers-compatible)
 - [ ] Implement AES-GCM decryption function (Workers-compatible)
@@ -70,12 +77,14 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Ensure all crypto operations are Edge Runtime compatible
 
 ### Binary Format (`lib/binary.ts`)
+
 - [ ] Implement file encoding to binary format
 - [ ] Implement binary format decoding
 - [ ] Add format validation
 - [ ] Create unit tests for binary operations
 
 ### PIN Authentication (`lib/auth.ts`)
+
 - [ ] Implement PBKDF2 PIN hashing
 - [ ] Create PIN validation function
 - [ ] Add salt generation utility
@@ -84,12 +93,14 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🎨 Phase 4: UI Components
 
 ### Layout Components
+
 - [ ] Create Header component with navigation
 - [ ] Create Footer component
 - [ ] Create Container component for consistent spacing
 - [ ] Implement responsive design tokens
 
 ### Form Components
+
 - [ ] Create FileTab component for multi-file support
 - [ ] Create CodeEditor component (CodeMirror wrapper)
 - [ ] Create ExpirySelector component
@@ -97,6 +108,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create ShareDialog component with copy functionality
 
 ### Display Components
+
 - [ ] Create GistViewer component
 - [ ] Create FileList component
 - [ ] Create VersionHistory dropdown
@@ -104,6 +116,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create ErrorBoundary component
 
 ### UI Features
+
 - [ ] Implement dark/light theme toggle
 - [ ] Add toast notifications
 - [ ] Create keyboard shortcuts
@@ -113,6 +126,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🔌 Phase 5: API Development
 
 ### Storage Client (`lib/storage.ts`)
+
 - [ ] Create R2 client wrapper using Cloudflare Workers R2 bindings
 - [ ] Configure R2 bucket binding in wrangler.toml
 - [ ] Implement metadata upload/download (JSON) using R2 API
@@ -122,6 +136,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Implement streaming for large files
 
 ### API Routes
+
 - [ ] Configure all routes with `export const runtime = 'edge'`
 - [ ] `POST /api/gists` - Create gist endpoint
 - [ ] `GET /api/gists/[id]` - Get gist metadata
@@ -134,6 +149,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Configure API routes to access R2 bindings
 
 ### API Features
+
 - [ ] Implement multipart form data parsing (Workers-compatible)
 - [ ] Add request size validation (Workers limit: 100MB)
 - [ ] Create consistent error responses
@@ -144,6 +160,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## ✨ Phase 6: Features Implementation
 
 ### Core Features
+
 - [ ] Implement gist creation flow
 - [ ] Implement gist viewing flow
 - [ ] Implement gist editing with PIN
@@ -151,6 +168,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Implement file management (add/remove/rename)
 
 ### Self-Expiring Gists
+
 - [ ] Add expiry field to creation form
 - [ ] Create separate Cloudflare Worker for scheduled CRON cleanup
 - [ ] Configure CRON trigger in wrangler.toml
@@ -159,6 +177,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Add countdown timer display
 
 ### One-Time View
+
 - [ ] Add one-time view option to creation
 - [ ] Implement view tracking (mark as viewed in metadata)
 - [ ] Create deletion after successful decryption
@@ -166,6 +185,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Implement download option before viewing
 
 ### Additional Features
+
 - [ ] Implement syntax highlighting selection
 - [ ] Add line numbers toggle
 - [ ] Create print-friendly view
@@ -175,6 +195,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🧪 Phase 7: Testing
 
 ### Unit Tests
+
 - [ ] Test encryption/decryption functions
 - [ ] Test binary format encoding/decoding
 - [ ] Test PIN hashing and validation
@@ -183,6 +204,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Test R2 operations with miniflare
 
 ### Integration Tests
+
 - [ ] Test complete gist creation flow
 - [ ] Test gist viewing with decryption
 - [ ] Test gist editing with PIN
@@ -190,6 +212,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Test one-time view functionality
 
 ### E2E Tests
+
 - [ ] Set up Playwright or Cypress
 - [ ] Test user journey: create → share → view
 - [ ] Test error scenarios
@@ -197,6 +220,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Test accessibility
 
 ### Performance Tests
+
 - [ ] Test large file handling
 - [ ] Test encryption performance
 - [ ] Measure page load times
@@ -205,6 +229,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🚀 Phase 8: Deployment
 
 ### Cloudflare Setup
+
 - [ ] Create R2 bucket (ghostpaste-bucket)
 - [ ] Configure R2 bucket bindings in wrangler.toml
 - [ ] Set up Cloudflare Workers project
@@ -215,6 +240,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Configure environment variables in Workers dashboard
 
 ### CI/CD Pipeline
+
 - [ ] Set up GitHub Actions workflow for Cloudflare deployment
 - [ ] Configure automated testing with vitest
 - [ ] Add build verification using @cloudflare/next-on-pages
@@ -223,6 +249,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Set up preview deployments for PRs
 
 ### Production Readiness
+
 - [ ] Implement error tracking (Sentry)
 - [ ] Set up monitoring and alerts
 - [ ] Configure CDN for static assets
@@ -230,6 +257,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create runbook for operations
 
 ### Security Hardening
+
 - [ ] Implement Content Security Policy headers
 - [ ] Configure HSTS and security headers
 - [ ] Set up rate limiting with Cloudflare
@@ -241,6 +269,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 📚 Phase 9: Documentation & Polish
 
 ### User Documentation
+
 - [ ] Create user guide
 - [ ] Add FAQ section
 - [ ] Create video tutorials
@@ -248,6 +277,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Add troubleshooting guide
 
 ### Developer Documentation
+
 - [ ] Document API endpoints
 - [ ] Create architecture diagrams
 - [ ] Write contribution guidelines
@@ -255,6 +285,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create development setup guide
 
 ### Final Polish
+
 - [ ] Optimize bundle size
 - [ ] Improve lighthouse scores
 - [ ] Add OpenGraph meta tags
@@ -282,6 +313,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## Progress Tracking
 
 **Phase Completion:**
+
 - [ ] Phase 1: Project Setup
 - [ ] Phase 2: Core Infrastructure
 - [ ] Phase 3: Encryption Implementation

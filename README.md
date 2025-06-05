@@ -51,19 +51,19 @@ Simply open the shared link - the decryption key is in the URL fragment and neve
 
 ## 📊 Limits
 
-| Resource | Limit | Why? |
-|----------|-------|------|
-| File size | 500 KB | Covers 99% of code files |
-| Total size | 5 MB | Enough for ~10-20 typical files |
-| Files per paste | 20 | Keeps the UI responsive |
-| Versions kept | 50 | Balances history with storage |
+| Resource        | Limit  | Why?                            |
+| --------------- | ------ | ------------------------------- |
+| File size       | 500 KB | Covers 99% of code files        |
+| Total size      | 5 MB   | Enough for ~10-20 typical files |
+| Files per paste | 20     | Keeps the UI responsive         |
+| Versions kept   | 50     | Balances history with storage   |
 
 ## 🔧 Development
 
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn  
+- npm or yarn
 - Cloudflare account (for Workers and R2)
 - Wrangler CLI (`npm install -g wrangler`)
 

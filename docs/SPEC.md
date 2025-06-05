@@ -5,6 +5,7 @@
 GhostPaste is a zero-knowledge encrypted code sharing platform where users can create, share, and edit encrypted code snippets. The server never has access to plaintext content—all encryption and decryption happens client-side.
 
 **Core Principles:**
+
 - 🔐 Zero-knowledge encryption
 - 👤 No user accounts required
 - ✏️ PIN-protected editing
@@ -20,6 +21,7 @@ GhostPaste is a zero-knowledge encrypted code sharing platform where users can c
 ### Deployment Model
 
 GhostPaste runs entirely on Cloudflare's edge network:
+
 - **Next.js** deployed via Cloudflare Workers using `@cloudflare/next-on-pages`
 - **R2 Storage** accessed through native Workers bindings (no AWS SDK needed)
 - **Zero cold starts** with Workers' always-warm edge runtime
@@ -27,14 +29,14 @@ GhostPaste runs entirely on Cloudflare's edge network:
 
 ### Tech Stack
 
-| Component      | Technology                              | Purpose                           |
-| -------------- | --------------------------------------- | --------------------------------- |
-| **Frontend**   | Next.js 15                              | React framework with app router   |
-| **UI Library** | [shadcn/ui](https://ui.shadcn.com)      | Modern, accessible components     |
-| **Editor**     | CodeMirror 6                            | Syntax highlighting & editing     |
-| **Encryption** | Web Crypto API                          | AES-GCM client-side encryption    |
-| **Runtime**    | Cloudflare Workers                      | Edge computing platform           |
-| **Storage**    | Cloudflare R2                           | Object storage with native bindings |
+| Component      | Technology                         | Purpose                             |
+| -------------- | ---------------------------------- | ----------------------------------- |
+| **Frontend**   | Next.js 15                         | React framework with app router     |
+| **UI Library** | [shadcn/ui](https://ui.shadcn.com) | Modern, accessible components       |
+| **Editor**     | CodeMirror 6                       | Syntax highlighting & editing       |
+| **Encryption** | Web Crypto API                     | AES-GCM client-side encryption      |
+| **Runtime**    | Cloudflare Workers                 | Edge computing platform             |
+| **Storage**    | Cloudflare R2                      | Object storage with native bindings |
 
 ### Storage Structure
 
@@ -62,32 +64,32 @@ Each gist has a metadata file containing both public system data and encrypted u
 ```typescript
 interface GistMetadata {
   // Unencrypted system fields
-  id: string;                    // nanoid (21 chars)
-  created_at: string;            // ISO 8601
-  updated_at: string;            // ISO 8601
-  expires_at?: string;           // ISO 8601 (optional)
-  version: number;               // Current version number
-  version_count: number;         // Total versions
-  total_size: number;            // Total size in bytes
-  file_count: number;            // Number of files
-  schema_version: 1;             // For future migrations
-  
+  id: string; // nanoid (21 chars)
+  created_at: string; // ISO 8601
+  updated_at: string; // ISO 8601
+  expires_at?: string; // ISO 8601 (optional)
+  version: number; // Current version number
+  version_count: number; // Total versions
+  total_size: number; // Total size in bytes
+  file_count: number; // Number of files
+  schema_version: 1; // For future migrations
+
   // Edit authentication (optional)
-  edit_pin_hash?: string;        // PBKDF2 hash of edit PIN
-  edit_pin_salt?: string;        // Random salt for hash
-  
+  edit_pin_hash?: string; // PBKDF2 hash of edit PIN
+  edit_pin_salt?: string; // Random salt for hash
+
   // Editor preferences (unencrypted for quick UI setup)
   editor: {
-    indent_mode: 'spaces' | 'tabs';
-    indent_size: number;         // 2, 4, 8
-    wrap_mode: 'soft' | 'off';
-    theme?: 'light' | 'dark';
+    indent_mode: "spaces" | "tabs";
+    indent_size: number; // 2, 4, 8
+    wrap_mode: "soft" | "off";
+    theme?: "light" | "dark";
   };
-  
+
   // Encrypted user content
   encrypted_metadata: {
-    iv: string;                  // Base64 encoded IV
-    ciphertext: string;          // Base64 encoded encrypted data
+    iv: string; // Base64 encoded IV
+    ciphertext: string; // Base64 encoded encrypted data
   };
 }
 
@@ -134,6 +136,7 @@ Stored format:
 ### PIN Protection
 
 For editable gists:
+
 - **Algorithm:** PBKDF2-SHA256
 - **Iterations:** 100,000
 - **Salt:** Random 16 bytes per gist
@@ -212,6 +215,7 @@ Response: 200 OK
 ```
 
 Error codes:
+
 - `NOT_FOUND` - Gist doesn't exist
 - `INVALID_PIN` - Wrong edit PIN
 - `VERSION_CONFLICT` - Concurrent edit
@@ -222,18 +226,18 @@ Error codes:
 
 ## 📏 Limits
 
-| Resource           | Limit       | Rationale                    |
-| ------------------ | ----------- | ---------------------------- |
-| File size          | 500 KB      | Covers 99% of code files     |
-| Gist size          | 5 MB        | ~10-20 typical files         |
-| Files per gist     | 20          | UI performance               |
-| Versions kept      | 50          | Storage management           |
-| Create rate        | 30/hour/IP  | Prevent abuse                |
-| Update rate        | 60/hour/IP  | Allow active editing         |
-| Minimum PIN length | 4 digits    | Basic security               |
-| Maximum PIN length | 8 digits    | Usability                    |
-| Request size       | 100 MB      | Cloudflare Workers limit     |
-| CPU time           | 50ms        | Workers CPU limit            |
+| Resource           | Limit      | Rationale                |
+| ------------------ | ---------- | ------------------------ |
+| File size          | 500 KB     | Covers 99% of code files |
+| Gist size          | 5 MB       | ~10-20 typical files     |
+| Files per gist     | 20         | UI performance           |
+| Versions kept      | 50         | Storage management       |
+| Create rate        | 30/hour/IP | Prevent abuse            |
+| Update rate        | 60/hour/IP | Allow active editing     |
+| Minimum PIN length | 4 digits   | Basic security           |
+| Maximum PIN length | 8 digits   | Usability                |
+| Request size       | 100 MB     | Cloudflare Workers limit |
+| CPU time           | 50ms       | Workers CPU limit        |
 
 ---
 
@@ -242,11 +246,13 @@ Error codes:
 ### 1. Self-Expiring Gists
 
 Users can set expiration times:
+
 - Minimum: 1 hour
 - Maximum: 30 days
 - Default: No expiration
 
 Implementation:
+
 - Separate Cloudflare Worker with scheduled trigger
 - Checks `expires_at` field hourly
 - Batch deletes expired gists + versions
@@ -255,6 +261,7 @@ Implementation:
 ### 2. One-Time View
 
 Gists that delete after first decryption:
+
 - `one_time_view: true` flag in metadata
 - Client notifies server after successful decrypt
 - Server immediately deletes all gist data
@@ -391,21 +398,21 @@ export async function POST(request: Request, env: Env) {
 ```javascript
 // Generate key
 const key = await crypto.subtle.generateKey(
-  { name: 'AES-GCM', length: 256 },
+  { name: "AES-GCM", length: 256 },
   true,
-  ['encrypt', 'decrypt']
+  ["encrypt", "decrypt"]
 );
 
 // Encrypt
 const iv = crypto.getRandomValues(new Uint8Array(12));
 const encrypted = await crypto.subtle.encrypt(
-  { name: 'AES-GCM', iv },
+  { name: "AES-GCM", iv },
   key,
   new TextEncoder().encode(JSON.stringify(data))
 );
 
 // Export key for URL
-const keyData = await crypto.subtle.exportKey('raw', key);
+const keyData = await crypto.subtle.exportKey("raw", key);
 const keyBase64 = btoa(String.fromCharCode(...new Uint8Array(keyData)));
 ```
 

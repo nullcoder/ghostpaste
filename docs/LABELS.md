@@ -65,11 +65,13 @@ Platform-specific considerations:
 ### For Issues
 
 1. **Every issue must have:**
+
    - At least one category label (e.g., `feature`, `bug`, `docs`)
    - One priority label
    - One status label (initially `ready` unless `blocked`)
 
 2. **Add platform labels when:**
+
    - The issue is specific to Cloudflare Workers (`cloudflare`)
    - It involves Next.js routing or features (`nextjs`)
    - Edge runtime compatibility is a concern (`edge-runtime`)
@@ -88,24 +90,28 @@ Platform-specific considerations:
 ### Examples
 
 #### Example 1: New Feature Issue
+
 ```
 Labels: feature, ui, priority: high, ready
 Title: "Add dark mode toggle to header"
 ```
 
 #### Example 2: Bug Fix Issue
+
 ```
 Labels: bug, api, cloudflare, priority: critical, in progress
 Title: "R2 uploads failing in production"
 ```
 
 #### Example 3: Documentation Update
+
 ```
 Labels: docs, priority: low, ready, good first issue
 Title: "Add examples to encryption documentation"
 ```
 
 #### Example 4: Blocked Setup Task
+
 ```
 Labels: setup, cloudflare, priority: high, blocked
 Title: "Configure CRON triggers for expiry cleanup"
@@ -117,6 +123,7 @@ Body: "Blocked by #15 - R2 bucket creation"
 ### Adding New Labels
 
 Before adding a new label, consider:
+
 1. Does an existing label cover this use case?
 2. Will this label be used frequently?
 3. Does it fit into our existing categories?
@@ -124,6 +131,7 @@ Before adding a new label, consider:
 ### Removing Labels
 
 Remove labels that:
+
 1. Haven't been used in the last 50 issues
 2. Duplicate the meaning of existing labels
 3. Are too specific to be reusable
@@ -131,6 +139,7 @@ Remove labels that:
 ## Automation
 
 Consider using GitHub Actions to:
+
 - Auto-label based on file paths changed
 - Enforce labeling requirements
 - Update status labels based on PR state
