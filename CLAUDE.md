@@ -58,3 +58,19 @@ See `.env.example` for required Cloudflare R2 configuration.
 5. **Handle errors**: Provide clear error messages to users
 
 For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
+
+## Git Workflow
+
+- Always create a new branch for features/fixes
+- Use descriptive branch names (e.g., `feature/add-encryption` or `fix/pin-validation`)
+- Commit frequently with clear, concise commit messages
+- Pull request workflow:
+  1. Create branch from `main`
+  2. Make changes
+  3. Run tests and linting
+  4. Create pull request
+  5. Request code review
+  6. Squash and merge after approval
+  7. When merging, write commit summary from all commits in the pull request
+- Prefer rebase over merge to keep history clean
+- Always pull latest changes from `main` before starting new work
