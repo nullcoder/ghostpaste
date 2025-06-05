@@ -5,19 +5,26 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🏗️ Phase 1: Project Setup
 
 ### Initial Setup
-- [ ] Initialize Next.js 15 project with TypeScript
+- [ ] Initialize Next.js 15 project with TypeScript (using `create-next-app`)
+- [ ] Set up Cloudflare Workers environment with wrangler
+- [ ] Configure project for Next.js on Cloudflare Workers using @cloudflare/next-on-pages
+- [ ] Configure Edge Runtime compatibility for all routes
 - [ ] Configure ESLint and Prettier
-- [ ] Set up Git hooks with Husky
-- [ ] Create `.env.example` file
+- [ ] Set up Git hooks with Husky and lint-staged
+- [ ] Create wrangler.toml with R2 bucket bindings and environment variables
 - [ ] Configure path aliases in `tsconfig.json`
 - [ ] Set up VS Code workspace settings
+- [ ] Create .dev.vars for local development secrets
 
 ### Dependencies
-- [ ] Install and configure shadcn/ui
+- [ ] Install @cloudflare/next-on-pages for Workers deployment
+- [ ] Install wrangler for local development
+- [ ] Install and configure shadcn/ui (using official CLI)
 - [ ] Install CodeMirror 6 and language modes
-- [ ] Install encryption dependencies (if needed beyond Web Crypto API)
-- [ ] Install Cloudflare SDK (@cloudflare/workers-types)
-- [ ] Install development dependencies (testing, linting)
+- [ ] Install nanoid for ID generation
+- [ ] Install @cloudflare/workers-types for type definitions
+- [ ] Install development dependencies (vitest, @testing-library/react)
+- [ ] Install next-themes for theme management
 
 ### Project Structure
 - [ ] Create folder structure (`app/`, `components/`, `lib/`, `types/`)
@@ -30,15 +37,19 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ### Type Definitions
 - [ ] Create TypeScript interfaces for GistMetadata
 - [ ] Create TypeScript interfaces for UserMetadata
+- [ ] Create TypeScript interfaces for EncryptedData
 - [ ] Create TypeScript interfaces for API responses
 - [ ] Create TypeScript interfaces for error types
+- [ ] Create type for binary file format
 - [ ] Export all types from `types/index.ts`
 
 ### Configuration
 - [ ] Create configuration module for environment variables
 - [ ] Create constants file for limits and defaults
 - [ ] Set up feature flags system
-- [ ] Create Cloudflare R2 client configuration
+- [ ] Configure bindings types for TypeScript
+- [ ] Create env.d.ts for Cloudflare bindings
+- [ ] Set up local development with miniflare
 
 ### Utilities
 - [ ] Create logger utility
@@ -49,12 +60,13 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🔐 Phase 3: Encryption Implementation
 
 ### Crypto Module (`lib/crypto.ts`)
-- [ ] Implement key generation function
-- [ ] Implement AES-GCM encryption function
-- [ ] Implement AES-GCM decryption function
+- [ ] Implement key generation using Web Crypto API
+- [ ] Implement AES-GCM encryption function (Workers-compatible)
+- [ ] Implement AES-GCM decryption function (Workers-compatible)
 - [ ] Implement key export/import utilities
-- [ ] Create URL-safe key encoding/decoding
+- [ ] Create URL-safe key encoding/decoding (base64url)
 - [ ] Add encryption error handling
+- [ ] Ensure all crypto operations are Edge Runtime compatible
 
 ### Binary Format (`lib/binary.ts`)
 - [ ] Implement file encoding to binary format
@@ -100,28 +112,33 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🔌 Phase 5: API Development
 
 ### Storage Client (`lib/storage.ts`)
-- [ ] Create R2 client wrapper
-- [ ] Implement metadata upload/download
-- [ ] Implement blob upload/download
-- [ ] Add retry logic for failed requests
-- [ ] Create storage error handling
+- [ ] Create R2 client wrapper using Cloudflare Workers R2 bindings
+- [ ] Configure R2 bucket binding in wrangler.toml
+- [ ] Implement metadata upload/download (JSON) using R2 API
+- [ ] Implement blob upload/download (binary) using R2 API
+- [ ] Handle R2 errors (R2Error, R2ObjectNotFound)
+- [ ] Create type-safe wrapper for R2 operations
+- [ ] Implement streaming for large files
 
 ### API Routes
+- [ ] Configure all routes with `export const runtime = 'edge'`
 - [ ] `POST /api/gists` - Create gist endpoint
 - [ ] `GET /api/gists/[id]` - Get gist metadata
 - [ ] `GET /api/blobs/[id]` - Get encrypted blob
 - [ ] `PUT /api/gists/[id]` - Update gist
 - [ ] `DELETE /api/gists/[id]` - Delete gist
-- [ ] Add rate limiting middleware
+- [ ] Implement Cloudflare rate limiting rules
 - [ ] Add input validation middleware
 - [ ] Add error handling middleware
+- [ ] Configure API routes to access R2 bindings
 
 ### API Features
-- [ ] Implement multipart form data parsing
-- [ ] Add request size validation
+- [ ] Implement multipart form data parsing (Workers-compatible)
+- [ ] Add request size validation (Workers limit: 100MB)
 - [ ] Create consistent error responses
 - [ ] Add API documentation
 - [ ] Implement CORS configuration
+- [ ] Handle Workers CPU time limits (50ms)
 
 ## ✨ Phase 6: Features Implementation
 
@@ -134,15 +151,18 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Self-Expiring Gists
 - [ ] Add expiry field to creation form
-- [ ] Create Cloudflare Worker for CRON cleanup
+- [ ] Create separate Cloudflare Worker for scheduled CRON cleanup
+- [ ] Configure CRON trigger in wrangler.toml
+- [ ] Implement batch deletion for expired gists
 - [ ] Implement expiry warning UI
 - [ ] Add countdown timer display
 
 ### One-Time View
 - [ ] Add one-time view option to creation
-- [ ] Implement view tracking
-- [ ] Create deletion after view logic
-- [ ] Add warning before viewing
+- [ ] Implement view tracking (mark as viewed in metadata)
+- [ ] Create deletion after successful decryption
+- [ ] Add warning modal before viewing
+- [ ] Implement download option before viewing
 
 ### Additional Features
 - [ ] Implement syntax highlighting selection
@@ -157,8 +177,9 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Test encryption/decryption functions
 - [ ] Test binary format encoding/decoding
 - [ ] Test PIN hashing and validation
-- [ ] Test API route handlers
+- [ ] Test API route handlers with Workers test environment
 - [ ] Test utility functions
+- [ ] Test R2 operations with miniflare
 
 ### Integration Tests
 - [ ] Test complete gist creation flow
@@ -183,18 +204,22 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🚀 Phase 8: Deployment
 
 ### Cloudflare Setup
-- [ ] Create R2 bucket
-- [ ] Configure bucket CORS policy
-- [ ] Set up Cloudflare Workers
-- [ ] Configure custom domain
-- [ ] Set up SSL certificates
+- [ ] Create R2 bucket (ghostpaste-bucket)
+- [ ] Configure R2 bucket bindings in wrangler.toml
+- [ ] Set up Cloudflare Workers project
+- [ ] Configure Workers routes for the app
+- [ ] Set up scheduled Workers for CRON jobs (expiry cleanup)
+- [ ] Configure custom domain (ghostpaste.dev)
+- [ ] Set up SSL certificates (automatic with Cloudflare)
+- [ ] Configure environment variables in Workers dashboard
 
 ### CI/CD Pipeline
-- [ ] Set up GitHub Actions workflow
-- [ ] Configure automated testing
-- [ ] Add build verification
-- [ ] Set up deployment pipeline
-- [ ] Configure environment secrets
+- [ ] Set up GitHub Actions workflow for Cloudflare deployment
+- [ ] Configure automated testing with vitest
+- [ ] Add build verification using @cloudflare/next-on-pages
+- [ ] Set up deployment pipeline with wrangler
+- [ ] Configure environment secrets in GitHub
+- [ ] Set up preview deployments for PRs
 
 ### Production Readiness
 - [ ] Implement error tracking (Sentry)
@@ -202,6 +227,15 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Configure CDN for static assets
 - [ ] Implement backup strategy
 - [ ] Create runbook for operations
+
+### Security Hardening
+- [ ] Implement Content Security Policy headers
+- [ ] Configure HSTS and security headers
+- [ ] Set up rate limiting with Cloudflare
+- [ ] Implement input sanitization
+- [ ] Add request size limits
+- [ ] Configure CORS properly
+- [ ] Security audit of encryption implementation
 
 ## 📚 Phase 9: Documentation & Polish
 
@@ -237,6 +271,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Folder/collection support
 - [ ] Search functionality
 - [ ] User dashboards (optional auth)
+- [ ] Import from GitHub Gists
+- [ ] Export to various formats
+- [ ] Syntax theme customization
+- [ ] Custom short URLs
 
 ---
 

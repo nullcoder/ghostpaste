@@ -42,12 +42,12 @@ Simply open the shared link - the decryption key is in the URL fragment and neve
 
 ## 🛠️ Technical Stack
 
-- **Frontend**: Next.js 15 with React
+- **Framework**: Next.js 15 with React
+- **Runtime**: Cloudflare Workers (Edge)
 - **UI Components**: shadcn/ui
 - **Code Editor**: CodeMirror 6
 - **Encryption**: Web Crypto API (AES-GCM)
-- **Storage**: Cloudflare R2
-- **Deployment**: Cloudflare Workers
+- **Storage**: Cloudflare R2 with native bindings
 
 ## 📊 Limits
 
@@ -63,8 +63,9 @@ Simply open the shared link - the decryption key is in the URL fragment and neve
 ### Prerequisites
 
 - Node.js 18+
-- npm or yarn
-- Cloudflare account (for R2 storage)
+- npm or yarn  
+- Cloudflare account (for Workers and R2)
+- Wrangler CLI (`npm install -g wrangler`)
 
 ### Setup
 
@@ -76,29 +77,56 @@ cd ghostpaste
 # Install dependencies
 npm install
 
-# Copy environment variables
-cp .env.example .env.local
+# Login to Cloudflare
+wrangler login
 
-# Configure your Cloudflare R2 credentials in .env.local
+# Create R2 bucket
+wrangler r2 bucket create ghostpaste-bucket
+
+# Copy wrangler configuration
+cp wrangler.toml.example wrangler.toml
 
 # Run development server
 npm run dev
 ```
 
-### Environment Variables
+### Configuration
 
-```env
-CLOUDFLARE_ACCOUNT_ID=your_account_id
-CLOUDFLARE_R2_ACCESS_KEY_ID=your_access_key
-CLOUDFLARE_R2_SECRET_ACCESS_KEY=your_secret_key
-CLOUDFLARE_R2_BUCKET_NAME=ghostpaste-bucket
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+Create a `wrangler.toml` file:
+
+```toml
+name = "ghostpaste"
+compatibility_date = "2024-12-01"
+
+[[r2_buckets]]
+binding = "GHOSTPASTE_BUCKET"
+bucket_name = "ghostpaste-bucket"
+
+[vars]
+NEXT_PUBLIC_APP_URL = "https://ghostpaste.dev"
+```
+
+For local development secrets, create `.dev.vars`:
+
+```
+# Any additional secrets go here
+```
+
+### Deployment
+
+```bash
+# Build for Cloudflare Workers
+npm run build
+
+# Deploy to production
+npm run deploy
 ```
 
 ## 📖 Documentation
 
 - [Technical Specification](docs/SPEC.md) - Detailed architecture and implementation details
 - [AI Development Guide](CLAUDE.md) - Guidelines for AI-assisted development
+- [Implementation TODO](docs/TODO.md) - Development roadmap and progress tracking
 
 ## 🤝 Contributing
 
