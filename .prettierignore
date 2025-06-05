@@ -1,0 +1,38 @@
+# dependencies
+node_modules
+.pnp
+.pnp.*
+
+# next.js
+.next/
+out/
+build/
+
+# production
+dist/
+
+# misc
+.DS_Store
+*.pem
+
+# local env files
+.env*
+.dev.vars
+
+# vercel
+.vercel
+
+# wrangler
+.wrangler/
+
+# OpenNext
+.open-next/
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# generated files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
