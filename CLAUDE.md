@@ -76,6 +76,62 @@ For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
 - Prefer rebase over merge to keep history clean
 - Always pull latest changes from `main` before starting new work
 
+## Project Management
+
+### GitHub Project
+- All issues and PRs are tracked in the "👻 GhostPaste" project board
+- When creating issues or PRs, always add `--project "👻 GhostPaste"`
+- Follow the label system documented in `docs/LABELS.md`
+
+### Issue Management
+- Every issue must have: category label, priority label, and status label
+- Reference TODO.md line numbers in issues when applicable
+- Link related issues in the description
+
+### Progress Tracking
+- Check off completed tasks in `docs/TODO.md`
+- Update issue status labels as work progresses
+- Close issues only after PR is merged
+
+### Development Workflow
+1. Pick an issue from the project board
+2. Create feature branch: `git checkout -b feat/issue-description`
+3. Make changes following the issue requirements
+4. Create PR and link to issue with "Closes #XX"
+5. Add PR to project board
+6. Request review and address feedback
+
 ## Best Practices
 
-- Always check official documentation of frameworks, UI components, Cloudflare, CodeMirror before implementing changes. If they provide generator or command line, please follow the documentation instead of manually generate them.
+### Documentation First
+- Always check official documentation before implementing:
+  - Next.js 15: Use `create-next-app` and official guides
+  - shadcn/ui: Use `npx shadcn-ui@latest` CLI commands
+  - Cloudflare: Follow Workers and R2 official docs
+  - CodeMirror: Refer to v6 documentation
+- Use official CLIs and generators instead of manual setup
+
+### Code Quality
+- Run `npm run lint` and `npm run typecheck` before committing
+- Follow TypeScript strict mode practices
+- Write edge-runtime compatible code only
+- Keep components small and focused
+- Use proper error boundaries
+
+### Security
+- Never commit secrets or API keys
+- Always validate and sanitize user input
+- Use environment variables for sensitive data
+- Follow encryption best practices in `docs/SPEC.md`
+
+### Performance
+- Consider Cloudflare Workers limits (50ms CPU, 100MB request)
+- Optimize for edge runtime constraints
+- Minimize bundle sizes
+- Use dynamic imports where appropriate
+
+### Testing
+- Write tests for critical paths (encryption, binary format)
+- Test edge cases and error scenarios
+- Verify edge runtime compatibility
+- Run tests before creating PRs

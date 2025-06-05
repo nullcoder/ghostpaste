@@ -5,32 +5,33 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🏗️ Phase 1: Project Setup
 
 ### Initial Setup
-- [ ] Initialize Next.js 15 project with TypeScript (using `create-next-app`)
-- [ ] Set up Cloudflare Workers environment with wrangler
-- [ ] Configure project for Next.js on Cloudflare Workers using @cloudflare/next-on-pages
-- [ ] Configure Edge Runtime compatibility for all routes
-- [ ] Configure ESLint and Prettier
-- [ ] Set up Git hooks with Husky and lint-staged
-- [ ] Create wrangler.toml with R2 bucket bindings and environment variables
-- [ ] Configure path aliases in `tsconfig.json`
-- [ ] Set up VS Code workspace settings
-- [ ] Create .dev.vars for local development secrets
+- [ ] Initialize Next.js 15 project with TypeScript (using `create-next-app`) - [#5](https://github.com/nullcoder/ghostpaste/issues/5)
+- [ ] Set up Cloudflare Workers environment with wrangler - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
+- [ ] Configure project for Next.js on Cloudflare Workers using @cloudflare/next-on-pages - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
+- [ ] Configure Edge Runtime compatibility for all routes - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
+- [ ] Configure ESLint and Prettier - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [ ] Set up Git hooks with Husky and lint-staged - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [ ] Create wrangler.toml with R2 bucket bindings and environment variables - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
+- [ ] Configure path aliases in `tsconfig.json` - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [ ] Set up VS Code workspace settings - [#7](https://github.com/nullcoder/ghostpaste/issues/7)
+- [ ] Create .dev.vars for local development secrets - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 
 ### Dependencies
-- [ ] Install @cloudflare/next-on-pages for Workers deployment
-- [ ] Install wrangler for local development
-- [ ] Install and configure shadcn/ui (using official CLI)
-- [ ] Install CodeMirror 6 and language modes
-- [ ] Install nanoid for ID generation
-- [ ] Install @cloudflare/workers-types for type definitions
-- [ ] Install development dependencies (vitest, @testing-library/react)
-- [ ] Install next-themes for theme management
+- [ ] Install @cloudflare/next-on-pages for Workers deployment - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
+- [ ] Install wrangler for local development - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
+- [ ] Install and configure shadcn/ui (using official CLI) - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [ ] Install CodeMirror 6 and language modes - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
+- [ ] Install nanoid for ID generation - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
+- [ ] Install @cloudflare/workers-types for type definitions - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
+- [ ] Install development dependencies (vitest, @testing-library/react) - [#10](https://github.com/nullcoder/ghostpaste/issues/10)
+- [ ] Install next-themes for theme management - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 
 ### Project Structure
-- [ ] Create folder structure (`app/`, `components/`, `lib/`, `types/`)
-- [ ] Set up app router pages structure
-- [ ] Create base layout with theme provider
-- [ ] Set up global styles and CSS variables
+- [ ] Create folder structure (`app/`, `components/`, `lib/`, `types/`) - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
+- [ ] Set up app router pages structure - [#11](https://github.com/nullcoder/ghostpaste/issues/11)
+- [ ] Create base layout with theme provider - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [ ] Set up global styles and CSS variables - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
+- [ ] Verify Cloudflare R2 setup - [#12](https://github.com/nullcoder/ghostpaste/issues/12)
 
 ## 🔧 Phase 2: Core Infrastructure
 
