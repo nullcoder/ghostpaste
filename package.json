@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "pages:build": "npx @cloudflare/next-on-pages",
-    "preview": "npm run pages:build && wrangler pages dev",
-    "deploy": "npm run pages:build && wrangler pages deploy",
+    "cf:build": "npx @opennextjs/cloudflare build",
+    "preview": "npm run cf:build && wrangler dev",
+    "deploy": "npm run cf:build && wrangler deploy",
     "cf:typegen": "wrangler types"
   },
   "dependencies": {
@@ -19,9 +19,9 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.12",
     "@cloudflare/workers-types": "^4.20250605.0",
     "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.1.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

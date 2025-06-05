@@ -1,7 +1,11 @@
 name = "ghostpaste"
+main = ".open-next/worker.js"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+
+# Static assets configuration for Workers
+[assets]
+directory = ".open-next/assets"
 
 # R2 bucket binding for storing encrypted gists
 [[r2_buckets]]
