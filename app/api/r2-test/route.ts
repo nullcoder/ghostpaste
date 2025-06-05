@@ -97,7 +97,16 @@ export async function POST(request: NextRequest) {
     const binaryObject = await bucket.get(binaryKey);
     const binaryReadData = await binaryObject?.arrayBuffer();
 
-    return NextResponse.json({
+    // Debug logging
+    console.log("Object metadata:", {
+      httpMetadata: object.httpMetadata,
+      customMetadata: object.customMetadata,
+      httpEtag: object.httpEtag,
+      size: object.size,
+    });
+
+    // Ensure we only return plain objects
+    const response = {
       success: true,
       message: "R2 read/write test successful",
       results: {
@@ -110,15 +119,13 @@ export async function POST(request: NextRequest) {
         binaryData: {
           key: binaryKey,
           writtenSize: binaryData.byteLength,
-          readSize: binaryReadData?.byteLength,
+          readSize: binaryReadData?.byteLength || 0,
           matches: binaryReadData?.byteLength === binaryData.byteLength,
         },
-        metadata: {
-          contentType: object.httpMetadata?.contentType || null,
-          customMetadata: object.customMetadata || {},
-        },
       },
-    });
+    };
+
+    return NextResponse.json(response);
   } catch (error) {
     console.error("R2 test error:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
