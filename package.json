@@ -13,7 +13,7 @@
     "cf:build": "npx @opennextjs/cloudflare build",
     "preview": "npm run cf:build && wrangler dev",
     "deploy": "npm run cf:build && wrangler deploy",
-    "cf:typegen": "wrangler types",
+    "cf:typegen": "wrangler types --env-interface CloudflareEnv",
     "prepare": "husky",
     "test": "vitest",
     "test:ui": "vitest --ui",

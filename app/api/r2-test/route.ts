@@ -5,8 +5,7 @@ export const runtime = "edge";
 
 export async function GET() {
   try {
-    const context = await getCloudflareContext({ async: true });
-    const env = context.env as CloudflareEnv & Env;
+    const { env } = await getCloudflareContext({ async: true });
     const bucket = env.GHOSTPASTE_BUCKET;
 
     if (!bucket) {
@@ -45,8 +44,7 @@ export async function GET() {
 
 export async function POST(_request: NextRequest) {
   try {
-    const context = await getCloudflareContext({ async: true });
-    const env = context.env as CloudflareEnv & Env;
+    const { env } = await getCloudflareContext({ async: true });
     const bucket = env.GHOSTPASTE_BUCKET;
 
     if (!bucket) {
@@ -102,8 +100,7 @@ export async function POST(_request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const context = await getCloudflareContext({ async: true });
-    const env = context.env as CloudflareEnv & Env;
+    const { env } = await getCloudflareContext({ async: true });
     const bucket = env.GHOSTPASTE_BUCKET;
 
     if (!bucket) {
