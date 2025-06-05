@@ -81,6 +81,14 @@ For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
 - Prefer rebase over merge to keep history clean
 - Always pull latest changes from `main` before starting new work
 
+### Commit Attribution
+
+When attributing commits to Claude, use:
+
+```
+Co-Authored-By: Claude <claude@ghostpaste.dev>
+```
+
 ## Project Management
 
 ### GitHub Project
