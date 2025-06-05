@@ -54,13 +54,21 @@ The `/api/r2-test` endpoint provides the following operations:
 
 ### Local Development
 
-To test R2 locally with wrangler:
+For R2 access in development, you have two options:
 
-```bash
-npm run preview
-```
+1. **Using Next.js dev server** (recommended for development):
 
-This runs the application with Cloudflare Workers runtime and R2 bindings.
+   ```bash
+   npm run dev
+   ```
+
+   The Next.js config automatically initializes Cloudflare bindings in development mode.
+
+2. **Using Wrangler preview** (tests actual Workers runtime):
+   ```bash
+   npm run preview
+   ```
+   This runs the application with the full Cloudflare Workers runtime.
 
 ### Test Commands
 
