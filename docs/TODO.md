@@ -5,7 +5,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ## 🏗️ Phase 1: Project Setup
 
 ### Initial Setup
-- [ ] Initialize Next.js 15 project with TypeScript (using `create-next-app`) - [#5](https://github.com/nullcoder/ghostpaste/issues/5)
+- [x] Initialize Next.js 15 project with TypeScript (using `create-next-app`) - [#5](https://github.com/nullcoder/ghostpaste/issues/5)
 - [ ] Set up Cloudflare Workers environment with wrangler - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [ ] Configure project for Next.js on Cloudflare Workers using @cloudflare/next-on-pages - [#6](https://github.com/nullcoder/ghostpaste/issues/6)
 - [ ] Configure Edge Runtime compatibility for all routes - [#6](https://github.com/nullcoder/ghostpaste/issues/6)

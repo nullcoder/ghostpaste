@@ -92,14 +92,18 @@ For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
 - Check off completed tasks in `docs/TODO.md`
 - Update issue status labels as work progresses
 - Close issues only after PR is merged
+- **IMPORTANT**: Update project board status, not just labels (see below)
 
 ### Development Workflow
 1. Pick an issue from the project board
-2. Create feature branch: `git checkout -b feat/issue-description`
-3. Make changes following the issue requirements
-4. Create PR and link to issue with "Closes #XX"
-5. Add PR to project board
-6. Request review and address feedback
+2. Update issue status to "In Progress" in project board
+3. Create feature branch: `git checkout -b feat/issue-description`
+4. Make changes following the issue requirements
+5. Create PR and link to issue with "Closes #XX"
+6. Add PR to project board with "In Progress" status
+7. Add `needs review` label to PR
+8. Request review and address feedback
+9. After merge: Update both issue and PR to "Done" in project board
 
 ## Best Practices
 
@@ -135,3 +139,49 @@ For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
 - Test edge cases and error scenarios
 - Verify edge runtime compatibility
 - Run tests before creating PRs
+
+## Project Board Status Management
+
+### Updating Status in GitHub Projects
+
+The project board uses these status values:
+- **Todo** (ID: `f75ad846`)
+- **In Progress** (ID: `47fc9ee4`) 
+- **Done** (ID: `98236657`)
+
+To update status using GitHub CLI:
+
+```bash
+# Get item IDs for issues/PRs
+gh api graphql -f query='
+{
+  user(login: "nullcoder") {
+    projectV2(number: 1) {
+      items(first: 20) {
+        nodes {
+          id
+          content {
+            ... on Issue { number title }
+            ... on PullRequest { number title }
+          }
+        }
+      }
+    }
+  }
+}'
+
+# Update to "In Progress"
+gh project item-edit --project-id PVT_kwHOAAF1rM4A6v2O --id [ITEM_ID] \
+  --field-id PVTSSF_lAHOAAF1rM4A6v2OzgvQDY4 --single-select-option-id 47fc9ee4
+
+# Update to "Done"
+gh project item-edit --project-id PVT_kwHOAAF1rM4A6v2O --id [ITEM_ID] \
+  --field-id PVTSSF_lAHOAAF1rM4A6v2OzgvQDY4 --single-select-option-id 98236657
+```
+
+### Status Update Checklist
+
+- [ ] When starting work: Set issue to "In Progress"
+- [ ] When creating PR: Add PR to board with "In Progress"
+- [ ] After merge: Set both issue and PR to "Done"
+- [ ] Update TODO.md to check off completed tasks
