@@ -25,7 +25,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [x] Install CodeMirror 6 and language modes - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
 - [x] Install nanoid for ID generation - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
 - [x] Install @cloudflare/workers-types for type definitions - [#9](https://github.com/nullcoder/ghostpaste/issues/9)
-- [ ] Install development dependencies (vitest, @testing-library/react) - [#10](https://github.com/nullcoder/ghostpaste/issues/10)
+- [x] Install development dependencies (vitest, @testing-library/react) - [#10](https://github.com/nullcoder/ghostpaste/issues/10)
 - [x] Install next-themes for theme management - [#8](https://github.com/nullcoder/ghostpaste/issues/8)
 
 ### Project Structure
