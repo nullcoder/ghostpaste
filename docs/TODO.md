@@ -40,29 +40,29 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Type Definitions
 
-- [ ] Create TypeScript interfaces for GistMetadata
-- [ ] Create TypeScript interfaces for UserMetadata
-- [ ] Create TypeScript interfaces for EncryptedData
-- [ ] Create TypeScript interfaces for API responses
-- [ ] Create TypeScript interfaces for error types
-- [ ] Create type for binary file format
-- [ ] Export all types from `types/index.ts`
+- [ ] Create TypeScript interfaces for GistMetadata - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [ ] Create TypeScript interfaces for UserMetadata - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [ ] Create TypeScript interfaces for EncryptedData - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [ ] Create TypeScript interfaces for API responses - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [ ] Create TypeScript interfaces for error types - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [ ] Create type for binary file format - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [ ] Export all types from `types/index.ts` - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
 
 ### Configuration
 
-- [ ] Create configuration module for environment variables
-- [ ] Create constants file for limits and defaults
-- [ ] Set up feature flags system
-- [ ] Configure bindings types for TypeScript
-- [ ] Create env.d.ts for Cloudflare bindings
-- [ ] Set up local development with miniflare
+- [ ] Create configuration module for environment variables - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
+- [ ] Create constants file for limits and defaults - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
+- [ ] Set up feature flags system - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
+- [x] Configure bindings types for TypeScript (handled by wrangler types)
+- [x] Create env.d.ts for Cloudflare bindings (handled by worker-configuration.d.ts)
+- [ ] Set up local development with miniflare - [#29](https://github.com/nullcoder/ghostpaste/issues/29)
 
 ### Utilities
 
-- [ ] Create logger utility
-- [ ] Create error handling utilities
-- [ ] Create validation utilities
-- [ ] Create ID generation utility (nanoid)
+- [ ] Create logger utility - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [ ] Create error handling utilities - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [ ] Create validation utilities - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [ ] Create ID generation utility (nanoid) - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
 
 ## 🔐 Phase 3: Encryption Implementation
 
