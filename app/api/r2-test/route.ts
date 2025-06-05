@@ -3,16 +3,10 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 export const runtime = "edge";
 
-// Extend CloudflareEnv to include our R2 bucket binding
-declare global {
-  interface CloudflareEnv {
-    GHOSTPASTE_BUCKET: R2Bucket;
-  }
-}
-
 export async function GET() {
   try {
-    const { env } = await getCloudflareContext({ async: true });
+    const context = await getCloudflareContext({ async: true });
+    const env = context.env as CloudflareEnv & Env;
     const bucket = env.GHOSTPASTE_BUCKET;
 
     if (!bucket) {
@@ -51,7 +45,8 @@ export async function GET() {
 
 export async function POST(_request: NextRequest) {
   try {
-    const { env } = await getCloudflareContext({ async: true });
+    const context = await getCloudflareContext({ async: true });
+    const env = context.env as CloudflareEnv & Env;
     const bucket = env.GHOSTPASTE_BUCKET;
 
     if (!bucket) {
@@ -107,7 +102,8 @@ export async function POST(_request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const { env } = await getCloudflareContext({ async: true });
+    const context = await getCloudflareContext({ async: true });
+    const env = context.env as CloudflareEnv & Env;
     const bucket = env.GHOSTPASTE_BUCKET;
 
     if (!bucket) {
