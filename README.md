@@ -42,7 +42,7 @@ Simply open the shared link - the decryption key is in the URL fragment and neve
 
 ## 🛠️ Technical Stack
 
-- **Frontend**: Next.js 14+ with React
+- **Frontend**: Next.js 15 with React
 - **UI Components**: shadcn/ui
 - **Code Editor**: CodeMirror 6
 - **Encryption**: Web Crypto API (AES-GCM)

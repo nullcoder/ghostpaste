@@ -21,7 +21,7 @@ GhostPaste is a zero-knowledge encrypted code sharing platform where users can c
 
 | Component      | Technology                              | Purpose                           |
 | -------------- | --------------------------------------- | --------------------------------- |
-| **Frontend**   | Next.js 14+ (SPA mode)                  | React framework with app router   |
+| **Frontend**   | Next.js 15 (SPA mode)                   | React framework with app router   |
 | **UI Library** | [shadcn/ui](https://ui.shadcn.com)      | Modern, accessible components     |
 | **Editor**     | CodeMirror 6                            | Syntax highlighting & editing     |
 | **Encryption** | Web Crypto API                          | AES-GCM client-side encryption    |
