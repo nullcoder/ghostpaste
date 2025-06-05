@@ -1,4 +1,5 @@
 import { ThemeToggle } from "@/components/theme-toggle";
+import { R2Test } from "@/components/r2-test";
 
 export default function Home() {
   return (
@@ -28,6 +29,11 @@ export default function Home() {
               light and dark modes.
             </p>
           </div>
+        </div>
+
+        <div className="bg-card text-card-foreground mt-8 rounded-lg border p-6 shadow-sm">
+          <h3 className="mb-4 text-xl font-semibold">R2 Bucket Test</h3>
+          <R2Test />
         </div>
       </main>
     </div>
