@@ -34,14 +34,15 @@ export async function GET() {
         objects: objects.objects.map((obj) => ({
           key: obj.key,
           size: obj.size,
-          uploaded: obj.uploaded,
+          uploaded: obj.uploaded.toISOString(),
         })),
       },
     });
   } catch (error) {
     console.error("R2 test error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to access R2 bucket", details: String(error) },
+      { error: "Failed to access R2 bucket", details: errorMessage },
       { status: 500 }
     );
   }
@@ -113,15 +114,16 @@ export async function POST(request: NextRequest) {
           matches: binaryReadData?.byteLength === binaryData.byteLength,
         },
         metadata: {
-          contentType: object.httpMetadata?.contentType,
-          customMetadata: object.customMetadata,
+          contentType: object.httpMetadata?.contentType || null,
+          customMetadata: object.customMetadata || {},
         },
       },
     });
   } catch (error) {
     console.error("R2 test error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to test R2 operations", details: String(error) },
+      { error: "Failed to test R2 operations", details: errorMessage },
       { status: 500 }
     );
   }
@@ -157,8 +159,9 @@ export async function DELETE(request: NextRequest) {
     });
   } catch (error) {
     console.error("R2 delete error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return NextResponse.json(
-      { error: "Failed to delete from R2", details: String(error) },
+      { error: "Failed to delete from R2", details: errorMessage },
       { status: 500 }
     );
   }
