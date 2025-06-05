@@ -75,3 +75,7 @@ For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
   8. Use a comprehensive summary (not a commit list) as the squash merge commit message, describing the overall work accomplished in the PR
 - Prefer rebase over merge to keep history clean
 - Always pull latest changes from `main` before starting new work
+
+## Best Practices
+
+- Always check official documentation of frameworks, UI components, Cloudflare, CodeMirror before implementing changes. If they provide generator or command line, please follow the documentation instead of manually generate them.

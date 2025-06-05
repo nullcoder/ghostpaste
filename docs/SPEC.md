@@ -17,16 +17,24 @@ GhostPaste is a zero-knowledge encrypted code sharing platform where users can c
 
 ## 🏗️ Architecture
 
+### Deployment Model
+
+GhostPaste runs entirely on Cloudflare's edge network:
+- **Next.js** deployed via Cloudflare Workers using `@cloudflare/next-on-pages`
+- **R2 Storage** accessed through native Workers bindings (no AWS SDK needed)
+- **Zero cold starts** with Workers' always-warm edge runtime
+- **Global distribution** across Cloudflare's network
+
 ### Tech Stack
 
 | Component      | Technology                              | Purpose                           |
 | -------------- | --------------------------------------- | --------------------------------- |
-| **Frontend**   | Next.js 14+ (SPA mode)                  | React framework with app router   |
+| **Frontend**   | Next.js 15                              | React framework with app router   |
 | **UI Library** | [shadcn/ui](https://ui.shadcn.com)      | Modern, accessible components     |
 | **Editor**     | CodeMirror 6                            | Syntax highlighting & editing     |
 | **Encryption** | Web Crypto API                          | AES-GCM client-side encryption    |
-| **Backend**    | Next.js API + Cloudflare Workers        | API endpoints & edge computing    |
-| **Storage**    | Cloudflare R2                           | Object storage for all data       |
+| **Runtime**    | Cloudflare Workers                      | Edge computing platform           |
+| **Storage**    | Cloudflare R2                           | Object storage with native bindings |
 
 ### Storage Structure
 
@@ -135,6 +143,8 @@ For editable gists:
 
 ## 🔌 API Endpoints
 
+All API routes run on Cloudflare Workers with Edge Runtime.
+
 ### Create Gist
 
 ```http
@@ -222,6 +232,8 @@ Error codes:
 | Update rate        | 60/hour/IP  | Allow active editing         |
 | Minimum PIN length | 4 digits    | Basic security               |
 | Maximum PIN length | 8 digits    | Usability                    |
+| Request size       | 100 MB      | Cloudflare Workers limit     |
+| CPU time           | 50ms        | Workers CPU limit            |
 
 ---
 
@@ -235,16 +247,18 @@ Users can set expiration times:
 - Default: No expiration
 
 Implementation:
-- Cloudflare Workers CRON job
+- Separate Cloudflare Worker with scheduled trigger
 - Checks `expires_at` field hourly
-- Deletes expired gists + versions
+- Batch deletes expired gists + versions
+- Configured in wrangler.toml
 
 ### 2. One-Time View
 
 Gists that delete after first decryption:
-- Special flag in metadata
+- `one_time_view: true` flag in metadata
 - Client notifies server after successful decrypt
-- Server immediately deletes
+- Server immediately deletes all gist data
+- Optional download before viewing
 
 ### 3. Version History
 
@@ -322,35 +336,54 @@ img-src 'self' data: https:;
 ### Development Setup
 
 ```bash
-# Environment variables
-CLOUDFLARE_ACCOUNT_ID=
-CLOUDFLARE_R2_ACCESS_KEY_ID=
-CLOUDFLARE_R2_SECRET_ACCESS_KEY=
-CLOUDFLARE_R2_BUCKET_NAME=ghostpaste-bucket
-NEXT_PUBLIC_APP_URL=https://ghostpaste.dev
-
-# Commands
+# Install dependencies
 npm install
+
+# Local development with Wrangler
 npm run dev
+
+# Build for Cloudflare Workers
 npm run build
+
+# Deploy to Cloudflare Workers
 npm run deploy
 ```
 
-### R2 Configuration
+### Wrangler Configuration
 
-```bash
-# Create bucket
-wrangler r2 bucket create ghostpaste-bucket
+```toml
+# wrangler.toml
+name = "ghostpaste"
+compatibility_date = "2024-12-01"
 
-# Set CORS
-wrangler r2 bucket cors put ghostpaste-bucket --rules '[
-  {
-    "allowedOrigins": ["https://ghostpaste.dev"],
-    "allowedMethods": ["GET", "PUT", "POST", "DELETE"],
-    "allowedHeaders": ["*"],
-    "maxAgeSeconds": 3600
-  }
-]'
+[[r2_buckets]]
+binding = "GHOSTPASTE_BUCKET"
+bucket_name = "ghostpaste-bucket"
+
+[vars]
+NEXT_PUBLIC_APP_URL = "https://ghostpaste.dev"
+
+# Scheduled worker for expiry cleanup
+[[triggers]]
+crons = ["0 * * * *"] # Every hour
+```
+
+### R2 Access in Workers
+
+```typescript
+// Access R2 from Workers environment
+export interface Env {
+  GHOSTPASTE_BUCKET: R2Bucket;
+}
+
+// Example usage in API route
+export async function POST(request: Request, env: Env) {
+  // Direct R2 access without credentials
+  await env.GHOSTPASTE_BUCKET.put(
+    `metadata/${id}.json`,
+    JSON.stringify(metadata)
+  );
+}
 ```
 
 ### Client-Side Encryption Example
