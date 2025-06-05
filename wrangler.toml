@@ -20,7 +20,27 @@ bucket_name = "ghostpaste-bucket"
 # Environment variables
 [vars]
 NEXT_PUBLIC_APP_URL = "https://ghostpaste.dev"
+ENVIRONMENT = "production"
+
+# KV namespace for rate limiting (optional)
+# Uncomment when ready to enable rate limiting
+# [[kv_namespaces]]
+# binding = "RATE_LIMIT_KV"
+# id = "YOUR_KV_NAMESPACE_ID"
+
+# Analytics Engine (optional)
+# Uncomment when ready to enable analytics
+# [[analytics_engine_datasets]]
+# binding = "ANALYTICS"
 
 # Scheduled worker for expiry cleanup (will be added later)
 # [[triggers]]
 # crons = ["0 * * * *"] # Every hour
+
+# Development environment overrides
+[env.development]
+vars = { ENVIRONMENT = "development", NEXT_PUBLIC_APP_URL = "http://localhost:3000" }
+
+# Staging environment (optional)
+[env.staging]
+vars = { ENVIRONMENT = "production", NEXT_PUBLIC_APP_URL = "https://staging.ghostpaste.dev" }

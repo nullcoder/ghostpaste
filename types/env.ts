@@ -3,28 +3,28 @@
  */
 
 import type {
-  R2Bucket,
   KVNamespace,
   AnalyticsEngineDataset,
   ExecutionContext,
 } from "@cloudflare/workers-types";
 
 /**
- * Cloudflare Workers environment bindings
+ * Extended environment interface for future features
+ * This represents the full environment once all features are enabled
  */
-export interface Env {
-  // R2 bucket binding
-  GHOSTPASTE_BUCKET: R2Bucket;
-
-  // Environment variables
-  ENVIRONMENT?: "development" | "production";
-
+export interface ExtendedEnv extends CloudflareEnv {
   // Optional rate limiting (Cloudflare Workers KV)
   RATE_LIMIT_KV?: KVNamespace;
 
   // Optional analytics (Cloudflare Analytics Engine)
   ANALYTICS?: AnalyticsEngineDataset;
 }
+
+/**
+ * Type alias for the current environment
+ * Uses CloudflareEnv which is auto-generated from wrangler.toml
+ */
+export type Env = CloudflareEnv;
 
 /**
  * Request context for Cloudflare Workers

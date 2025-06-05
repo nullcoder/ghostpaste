@@ -6,9 +6,39 @@ This directory contains utility functions, business logic, and service modules.
 
 ```
 lib/
+├── config.ts        # Configuration management
+├── constants.ts     # Application constants and limits
+├── feature-flags.ts # Feature flag system
 ├── utils.ts         # General utility functions (cn, etc.)
+├── config.test.ts   # Configuration tests
+├── constants.test.ts # Constants tests
 └── [future modules will be added here]
 ```
+
+## Implemented Modules
+
+### Configuration (`config.ts`)
+
+- Type-safe access to Cloudflare environment variables
+- Feature flags based on available services
+- Environment detection (development/production)
+- Application URL helpers
+
+### Constants (`constants.ts`)
+
+- File size limits (500KB/file, 5MB/gist, 20 files)
+- Expiry durations for gists
+- HTTP status codes
+- Validation helpers for files, PINs, and expiry options
+- Binary format constants
+- Cache control headers
+
+### Feature Flags (`feature-flags.ts`)
+
+- Advanced feature flag system with gradual rollout
+- Percentage-based feature rollouts
+- User-specific feature targeting
+- Runtime feature toggling without deployments
 
 ## Planned Modules (to be implemented)
 
@@ -24,7 +54,6 @@ lib/
 - `logger.ts` - Structured logging utility
 - `errors.ts` - Custom error classes and handling
 - `validation.ts` - Input validation helpers
-- `constants.ts` - Application constants and limits
 
 ## Conventions
 
