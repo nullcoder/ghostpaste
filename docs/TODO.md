@@ -68,27 +68,33 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Crypto Module (`lib/crypto.ts`)
 
-- [ ] Implement key generation using Web Crypto API
-- [ ] Implement AES-GCM encryption function (Workers-compatible)
-- [ ] Implement AES-GCM decryption function (Workers-compatible)
-- [ ] Implement key export/import utilities
-- [ ] Create URL-safe key encoding/decoding (base64url)
-- [ ] Add encryption error handling
-- [ ] Ensure all crypto operations are Edge Runtime compatible
+- [ ] Implement key generation using Web Crypto API - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [ ] Implement AES-GCM encryption function (Workers-compatible) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [ ] Implement AES-GCM decryption function (Workers-compatible) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [ ] Implement key export/import utilities - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [ ] Create URL-safe key encoding/decoding (base64url) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [ ] Add encryption error handling - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [ ] Ensure all crypto operations are Edge Runtime compatible - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
 
 ### Binary Format (`lib/binary.ts`)
 
-- [ ] Implement file encoding to binary format
-- [ ] Implement binary format decoding
-- [ ] Add format validation
-- [ ] Create unit tests for binary operations
+- [ ] Implement file encoding to binary format - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [ ] Implement binary format decoding - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [ ] Add format validation - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [ ] Create unit tests for binary operations - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
 
 ### PIN Authentication (`lib/auth.ts`)
 
-- [ ] Implement PBKDF2 PIN hashing
-- [ ] Create PIN validation function
-- [ ] Add salt generation utility
-- [ ] Create PIN strength validation
+- [ ] Implement PBKDF2 PIN hashing - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [ ] Create PIN validation function - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [ ] Add salt generation utility - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [ ] Create PIN strength validation - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+
+### Integration Testing
+
+- [ ] Create integration tests for encryption workflow - [#39](https://github.com/nullcoder/ghostpaste/issues/39)
+- [ ] Add encryption helper utilities - [#40](https://github.com/nullcoder/ghostpaste/issues/40)
+- [ ] Document encryption architecture - [#41](https://github.com/nullcoder/ghostpaste/issues/41)
 
 ## 🎨 Phase 4: UI Components
 
