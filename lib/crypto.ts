@@ -17,14 +17,20 @@ const IV_LENGTH = 12; // 96 bits for AES-GCM
 const TAG_LENGTH = 128; // 128 bits for AES-GCM auth tag
 
 /**
- * Encrypted data structure
+ * Encrypted data structure with raw binary data
  */
 export interface EncryptedData {
-  /** Initialization vector (base64url encoded) */
-  iv: string;
-  /** Encrypted ciphertext (base64url encoded) */
-  ciphertext: string;
+  /** Initialization vector (12 bytes) */
+  iv: Uint8Array;
+  /** Encrypted ciphertext (raw binary) */
+  ciphertext: Uint8Array;
 }
+
+/**
+ * Encrypted blob format for storage
+ * Format: [12 bytes IV][Encrypted data]
+ */
+export type EncryptedBlob = Uint8Array;
 
 /**
  * Generate a new AES-256 encryption key
@@ -156,10 +162,10 @@ export async function encrypt(
       data
     );
 
-    // Return base64url encoded values
+    // Return raw binary data
     const result = {
-      iv: base64UrlEncode(iv),
-      ciphertext: base64UrlEncode(new Uint8Array(ciphertext)),
+      iv,
+      ciphertext: new Uint8Array(ciphertext),
     };
 
     logger.debug("Successfully encrypted data", {
@@ -194,9 +200,7 @@ export async function decrypt(
   key: CryptoKey
 ): Promise<Uint8Array> {
   try {
-    // Decode base64url values
-    const iv = base64UrlDecode(encryptedData.iv);
-    const ciphertext = base64UrlDecode(encryptedData.ciphertext);
+    const { iv, ciphertext } = encryptedData;
 
     // Decrypt the data
     const decrypted = await crypto.subtle.decrypt(
@@ -350,4 +354,73 @@ export async function extractKeyFromUrl(
     logger.error("Failed to extract key from URL", error as Error, { url });
     return null;
   }
+}
+
+/**
+ * Pack encrypted data into a single blob for storage
+ * Format: [12 bytes IV][Encrypted data]
+ *
+ * @param encryptedData - The encrypted data with separate IV and ciphertext
+ * @returns Single Uint8Array blob for storage
+ */
+export function packEncryptedBlob(encryptedData: EncryptedData): EncryptedBlob {
+  const { iv, ciphertext } = encryptedData;
+
+  // Create a single buffer with IV + ciphertext
+  const blob = new Uint8Array(iv.length + ciphertext.length);
+  blob.set(iv, 0);
+  blob.set(ciphertext, iv.length);
+
+  return blob;
+}
+
+/**
+ * Unpack encrypted blob into separate IV and ciphertext
+ *
+ * @param blob - The stored blob containing IV and ciphertext
+ * @returns EncryptedData with separate IV and ciphertext
+ * @throws DecryptionFailedError if blob is too small
+ */
+export function unpackEncryptedBlob(blob: EncryptedBlob): EncryptedData {
+  if (blob.length < IV_LENGTH) {
+    throw new DecryptionFailedError("Invalid encrypted blob: too small");
+  }
+
+  return {
+    iv: blob.slice(0, IV_LENGTH),
+    ciphertext: blob.slice(IV_LENGTH),
+  };
+}
+
+/**
+ * High-level function to encrypt data and pack it for storage
+ *
+ * @param data - The data to encrypt
+ * @param key - The encryption key (optional, generates new if not provided)
+ * @returns Object containing the packed blob and the key used
+ */
+export async function encryptAndPack(
+  data: Uint8Array,
+  key?: CryptoKey
+): Promise<{ blob: EncryptedBlob; key: CryptoKey }> {
+  const encryptionKey = key || (await generateEncryptionKey());
+  const encryptedData = await encrypt(data, encryptionKey);
+  const blob = packEncryptedBlob(encryptedData);
+
+  return { blob, key: encryptionKey };
+}
+
+/**
+ * High-level function to unpack and decrypt a stored blob
+ *
+ * @param blob - The stored encrypted blob
+ * @param key - The decryption key
+ * @returns Decrypted data
+ */
+export async function unpackAndDecrypt(
+  blob: EncryptedBlob,
+  key: CryptoKey
+): Promise<Uint8Array> {
+  const encryptedData = unpackEncryptedBlob(blob);
+  return await decrypt(encryptedData, key);
 }

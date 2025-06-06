@@ -11,6 +11,10 @@ import {
   decrypt,
   generateShareableUrl,
   extractKeyFromUrl,
+  packEncryptedBlob,
+  unpackEncryptedBlob,
+  encryptAndPack,
+  unpackAndDecrypt,
   type EncryptedData,
 } from "./crypto";
 import { DecryptionFailedError } from "./errors";
@@ -111,10 +115,10 @@ describe("Crypto Module", () => {
       const encrypted1 = await encrypt(data, key);
       const encrypted2 = await encrypt(data, key);
 
-      // IVs should be different
-      expect(encrypted1.iv).not.toBe(encrypted2.iv);
+      // IVs should be different (compare as arrays)
+      expect(encrypted1.iv).not.toEqual(encrypted2.iv);
       // Ciphertexts should be different
-      expect(encrypted1.ciphertext).not.toBe(encrypted2.ciphertext);
+      expect(encrypted1.ciphertext).not.toEqual(encrypted2.ciphertext);
 
       // But both should decrypt to same data
       const decrypted1 = await decrypt(encrypted1, key);
@@ -177,9 +181,16 @@ describe("Crypto Module", () => {
 
       const encrypted = await encrypt(data, key);
       // Corrupt the ciphertext
+      // Corrupt the last 4 bytes of ciphertext
+      const corruptedCiphertext = new Uint8Array(encrypted.ciphertext);
+      corruptedCiphertext[corruptedCiphertext.length - 1] = 255;
+      corruptedCiphertext[corruptedCiphertext.length - 2] = 255;
+      corruptedCiphertext[corruptedCiphertext.length - 3] = 255;
+      corruptedCiphertext[corruptedCiphertext.length - 4] = 255;
+
       const corrupted: EncryptedData = {
         iv: encrypted.iv,
-        ciphertext: encrypted.ciphertext.slice(0, -4) + "xxxx",
+        ciphertext: corruptedCiphertext,
       };
 
       await expect(decrypt(corrupted, key)).rejects.toThrow(
@@ -193,8 +204,9 @@ describe("Crypto Module", () => {
 
       const encrypted = await encrypt(data, key);
       // Corrupt the IV
+      // Use invalid IV (wrong size)
       const corrupted: EncryptedData = {
-        iv: "invalid-iv",
+        iv: new Uint8Array(8), // Wrong size, should be 12
         ciphertext: encrypted.ciphertext,
       };
 
@@ -289,6 +301,101 @@ describe("Crypto Module", () => {
 
         expect(new TextDecoder().decode(decrypted)).toBe("Multi-param test");
       });
+    });
+  });
+
+  describe("Blob packing and unpacking", () => {
+    it("should pack and unpack encrypted data", async () => {
+      const key = await generateEncryptionKey();
+      const data = new TextEncoder().encode("Test packing");
+
+      const encrypted = await encrypt(data, key);
+      const blob = packEncryptedBlob(encrypted);
+
+      // Blob should be IV (12 bytes) + ciphertext
+      expect(blob.length).toBe(12 + encrypted.ciphertext.length);
+
+      // Unpack and verify
+      const unpacked = unpackEncryptedBlob(blob);
+      expect(unpacked.iv).toEqual(encrypted.iv);
+      expect(unpacked.ciphertext).toEqual(encrypted.ciphertext);
+
+      // Decrypt to verify
+      const decrypted = await decrypt(unpacked, key);
+      expect(new TextDecoder().decode(decrypted)).toBe("Test packing");
+    });
+
+    it("should throw error for blob too small", () => {
+      const smallBlob = new Uint8Array(8); // Less than 12 bytes
+      expect(() => unpackEncryptedBlob(smallBlob)).toThrow(
+        DecryptionFailedError
+      );
+      expect(() => unpackEncryptedBlob(smallBlob)).toThrow(
+        "Invalid encrypted blob: too small"
+      );
+    });
+
+    it("should handle empty ciphertext", async () => {
+      const key = await generateEncryptionKey();
+      const emptyData = new Uint8Array(0);
+
+      const encrypted = await encrypt(emptyData, key);
+      const blob = packEncryptedBlob(encrypted);
+
+      // Blob should be exactly 12 bytes (IV) + 16 bytes (AES-GCM tag for empty data)
+      expect(blob.length).toBe(12 + 16);
+
+      const unpacked = unpackEncryptedBlob(blob);
+      const decrypted = await decrypt(unpacked, key);
+      expect(decrypted.length).toBe(0);
+    });
+  });
+
+  describe("High-level encryption functions", () => {
+    it("should encrypt and pack data", async () => {
+      const data = new TextEncoder().encode("High-level test");
+
+      const { blob, key } = await encryptAndPack(data);
+
+      expect(blob).toBeInstanceOf(Uint8Array);
+      expect(blob.length).toBeGreaterThan(12); // At least IV + some ciphertext
+      expect(key).toBeDefined();
+      expect(key.type).toBe("secret");
+    });
+
+    it("should encrypt with provided key", async () => {
+      const providedKey = await generateEncryptionKey();
+      const data = new TextEncoder().encode("With provided key");
+
+      const { blob, key } = await encryptAndPack(data, providedKey);
+
+      expect(key).toBe(providedKey); // Should use the provided key
+      expect(blob).toBeInstanceOf(Uint8Array);
+    });
+
+    it("should unpack and decrypt blob", async () => {
+      const originalText = "Full cycle test";
+      const data = new TextEncoder().encode(originalText);
+
+      // Encrypt and pack
+      const { blob, key } = await encryptAndPack(data);
+
+      // Unpack and decrypt
+      const decrypted = await unpackAndDecrypt(blob, key);
+      const decryptedText = new TextDecoder().decode(decrypted);
+
+      expect(decryptedText).toBe(originalText);
+    });
+
+    it("should fail to decrypt with wrong key", async () => {
+      const data = new TextEncoder().encode("Wrong key test");
+
+      const { blob } = await encryptAndPack(data);
+      const wrongKey = await generateEncryptionKey();
+
+      await expect(unpackAndDecrypt(blob, wrongKey)).rejects.toThrow(
+        DecryptionFailedError
+      );
     });
   });
 
