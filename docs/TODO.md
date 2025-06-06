@@ -85,10 +85,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### PIN Authentication (`lib/auth.ts`)
 
-- [ ] Implement PBKDF2 PIN hashing - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
-- [ ] Create PIN validation function - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
-- [ ] Add salt generation utility - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
-- [ ] Create PIN strength validation - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [x] Implement PBKDF2 PIN hashing - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [x] Create PIN validation function - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [x] Add salt generation utility - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
+- [x] Create PIN strength validation - [#38](https://github.com/nullcoder/ghostpaste/issues/38)
 
 ### Integration Testing
 
