@@ -34,12 +34,16 @@ src/
 ### Common Commands
 
 ```bash
-npm run dev          # Start development server
+npm run dev          # Start Next.js development server
+npm run preview      # Build and run with local Cloudflare Workers simulation
 npm run build        # Build for production
 npm run test         # Run tests
 npm run lint         # Run ESLint
 npm run typecheck    # Run TypeScript checks
+npm run deploy       # Deploy to production
 ```
+
+For more commands, see the [Local Development Guide](docs/LOCAL_DEVELOPMENT.md).
 
 ### Testing Checklist
 
