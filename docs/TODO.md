@@ -100,35 +100,35 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Layout Components
 
-- [ ] Create Header component with navigation
-- [ ] Create Footer component
-- [ ] Create Container component for consistent spacing
-- [ ] Implement responsive design tokens
+- [ ] Create Header component with navigation - [#53](https://github.com/nullcoder/ghostpaste/issues/53)
+- [ ] Create Footer component - [#70](https://github.com/nullcoder/ghostpaste/issues/70)
+- [ ] Create Container component for consistent spacing - [#62](https://github.com/nullcoder/ghostpaste/issues/62)
+- [ ] Implement responsive design tokens - [#57](https://github.com/nullcoder/ghostpaste/issues/57)
 
 ### Form Components
 
-- [ ] Create FileEditor component (single file with name, language, editor)
-- [ ] Create MultiFileEditor component (manages multiple FileEditor instances)
-- [ ] Create CodeEditor component (CodeMirror wrapper)
-- [ ] Create AddFileButton component
-- [ ] Create ExpirySelector component
-- [ ] Create PINInput component
-- [ ] Create ShareDialog component with copy functionality
+- [ ] Create FileEditor component (single file with name, language, editor) - [#55](https://github.com/nullcoder/ghostpaste/issues/55)
+- [ ] Create MultiFileEditor component (vertical layout, GitHub Gist style) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
+- [ ] Create CodeEditor component (CodeMirror wrapper) - [#54](https://github.com/nullcoder/ghostpaste/issues/54)
+- [ ] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
+- [ ] Create ExpirySelector component - [#64](https://github.com/nullcoder/ghostpaste/issues/64)
+- [ ] Create PINInput component - [#65](https://github.com/nullcoder/ghostpaste/issues/65)
+- [ ] Create ShareDialog component with copy functionality - [#60](https://github.com/nullcoder/ghostpaste/issues/60)
 
 ### Display Components
 
-- [ ] Create GistViewer component
-- [ ] Create FileList component
-- [ ] Create VersionHistory dropdown
-- [ ] Create LoadingStates component
-- [ ] Create ErrorBoundary component
+- [ ] Create GistViewer component - [#61](https://github.com/nullcoder/ghostpaste/issues/61)
+- [ ] Create FileList component (vertical display for viewing) - [#66](https://github.com/nullcoder/ghostpaste/issues/66)
+- [ ] Create VersionHistory dropdown - [#71](https://github.com/nullcoder/ghostpaste/issues/71)
+- [ ] Create LoadingStates component - [#67](https://github.com/nullcoder/ghostpaste/issues/67)
+- [ ] Create ErrorBoundary component - [#58](https://github.com/nullcoder/ghostpaste/issues/58)
 
 ### UI Features
 
-- [ ] Implement dark/light theme toggle
-- [ ] Add toast notifications
-- [ ] Create keyboard shortcuts
-- [ ] Add copy-to-clipboard functionality
+- [ ] Implement dark/light theme toggle (included in Header #53)
+- [ ] Add toast notifications - [#68](https://github.com/nullcoder/ghostpaste/issues/68)
+- [ ] Create keyboard shortcuts - [#72](https://github.com/nullcoder/ghostpaste/issues/72)
+- [ ] Add copy-to-clipboard functionality - [#59](https://github.com/nullcoder/ghostpaste/issues/59)
 - [ ] Implement responsive design
 - [ ] Add file editor auto-scroll on add
 - [ ] Implement filename auto-generation
