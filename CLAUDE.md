@@ -65,6 +65,7 @@ See `.env.example` for required Cloudflare R2 configuration.
 3. **Check limits**: Enforce size limits (500KB/file, 5MB/gist, 20 files)
 4. **Validate inputs**: Especially for user-provided content
 5. **Handle errors**: Provide clear error messages to users
+6. **Follow guidelines**: See `CONTRIBUTING.md` for development workflow
 
 For detailed architecture, API specs, and data models, refer to `docs/SPEC.md`.
 

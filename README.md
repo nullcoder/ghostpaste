@@ -121,10 +121,12 @@ npm run deploy
 - [Technical Specification](docs/SPEC.md) - Detailed architecture and implementation details
 - [AI Development Guide](CLAUDE.md) - Guidelines for AI-assisted development
 - [Implementation TODO](docs/TODO.md) - Development roadmap and progress tracking
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute to the project
+- [Local Development](docs/LOCAL_DEVELOPMENT.md) - Setting up your development environment
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) (coming soon).
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for detailed information on how to contribute to this project.
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
