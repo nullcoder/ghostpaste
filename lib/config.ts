@@ -4,6 +4,7 @@
  */
 
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { getRuntimeEnvironment } from "./environment";
 
 /**
  * Application configuration interface
@@ -31,30 +32,13 @@ export interface AppConfig {
 }
 
 /**
- * Get the current environment
- */
-function getEnvironment(): "development" | "production" {
-  if (process.env.NODE_ENV === "development") {
-    return "development";
-  }
-  // In Cloudflare Workers, we check the URL
-  if (typeof globalThis !== "undefined" && "location" in globalThis) {
-    const hostname = globalThis.location?.hostname || "";
-    if (hostname.includes("localhost") || hostname.includes("127.0.0.1")) {
-      return "development";
-    }
-  }
-  return "production";
-}
-
-/**
  * Get application configuration from Cloudflare environment
  * This function must be called within a request context
  */
 export async function getConfig(): Promise<AppConfig> {
   const { env } = await getCloudflareContext();
 
-  const environment = env.ENVIRONMENT || getEnvironment();
+  const environment = env.ENVIRONMENT || getRuntimeEnvironment();
 
   return {
     // Application

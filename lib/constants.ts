@@ -28,6 +28,7 @@ export const GIST_LIMITS = {
   MAX_DESCRIPTION_LENGTH: 1000, // Maximum description length
   MIN_PIN_LENGTH: 4, // Minimum PIN length
   MAX_PIN_LENGTH: 20, // Maximum PIN length
+  MAX_EXPIRY_DAYS: 365, // Maximum days a gist can be set to expire
 } as const;
 
 /**
