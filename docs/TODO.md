@@ -50,9 +50,9 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Configuration
 
-- [ ] Create configuration module for environment variables - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
-- [ ] Create constants file for limits and defaults - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
-- [ ] Set up feature flags system - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
+- [x] Create configuration module for environment variables - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
+- [x] Create constants file for limits and defaults - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
+- [x] Set up feature flags system - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
 - [x] Configure bindings types for TypeScript (handled by wrangler types)
 - [x] Create env.d.ts for Cloudflare bindings (handled by worker-configuration.d.ts)
 - [ ] Set up local development with miniflare - [#29](https://github.com/nullcoder/ghostpaste/issues/29)
