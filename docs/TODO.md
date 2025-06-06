@@ -108,7 +108,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ### Form Components
 
 - [ ] Create FileEditor component (single file with name, language, editor) - [#55](https://github.com/nullcoder/ghostpaste/issues/55)
-- [ ] Create MultiFileEditor component (manages multiple FileEditor instances) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
+- [ ] Create MultiFileEditor component (vertical layout, GitHub Gist style) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
 - [ ] Create CodeEditor component (CodeMirror wrapper) - [#54](https://github.com/nullcoder/ghostpaste/issues/54)
 - [ ] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
 - [ ] Create ExpirySelector component - [#64](https://github.com/nullcoder/ghostpaste/issues/64)
@@ -118,7 +118,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ### Display Components
 
 - [ ] Create GistViewer component - [#61](https://github.com/nullcoder/ghostpaste/issues/61)
-- [ ] Create FileList component - [#66](https://github.com/nullcoder/ghostpaste/issues/66)
+- [ ] Create FileList component (vertical display for viewing) - [#66](https://github.com/nullcoder/ghostpaste/issues/66)
 - [ ] Create VersionHistory dropdown - [#71](https://github.com/nullcoder/ghostpaste/issues/71)
 - [ ] Create LoadingStates component - [#67](https://github.com/nullcoder/ghostpaste/issues/67)
 - [ ] Create ErrorBoundary component - [#58](https://github.com/nullcoder/ghostpaste/issues/58)
