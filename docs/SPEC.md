@@ -311,7 +311,11 @@ img-src 'self' data: https:;
 ### Creating a Gist
 
 1. User enters code in editor
-2. Adds files via tabs
+2. Adds multiple files (GitHub Gist-style):
+   - Initial file shown by default
+   - Click "Add file" button to append new file editor below
+   - Each file has inline remove button (except when only one file)
+   - No tabs - all files visible vertically
 3. Sets preferences:
    - Description (optional)
    - Expiration (optional)
@@ -327,14 +331,42 @@ img-src 'self' data: https:;
 3. Fetch and decrypt metadata
 4. Fetch and decrypt content
 5. Display in read-only editor
+6. Multiple files shown vertically (same as creation)
 
 ### Editing a Gist
 
 1. Click "Edit" button
 2. Enter PIN if required
-3. Make changes
+3. Make changes:
+   - Edit existing files inline
+   - Add new files at the bottom
+   - Remove files (minimum 1 required)
 4. Click "Update"
 5. New version created
+
+### Multiple File Editor UX
+
+The file editor follows GitHub Gist's design pattern:
+
+- **Vertical Layout:** All files displayed vertically in a single scrollable page
+- **File Components:** Each file has:
+  - Filename input field (with extension auto-detection)
+  - Language selector dropdown
+  - Remove button (✕) on the right (hidden when only 1 file)
+  - Full-height code editor below
+- **Add File Button:** At the bottom of all files
+  - Adds a new empty file editor
+  - Auto-scrolls to the new file
+  - Default filename: `file1.txt`, `file2.txt`, etc.
+- **File Management:**
+  - Minimum 1 file required
+  - Maximum 20 files allowed
+  - Real-time validation of filenames
+  - Duplicate filenames prevented
+- **Responsive Design:**
+  - Stack vertically on all screen sizes
+  - Consistent spacing between files
+  - Touch-friendly controls on mobile
 
 ---
 
