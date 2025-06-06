@@ -64,17 +64,14 @@ export function FileEditor({
   useEffect(() => {
     if (!isDirty) return;
 
-    const otherFilenames = existingFilenames.filter(
-      (name) => name !== file.name
-    );
-    const validation = validateFilename(file.name, otherFilenames);
+    const validation = validateFilename(file.name, existingFilenames);
 
     if (!validation.valid) {
       setFilenameError(validation.error || "");
     } else {
       setFilenameError("");
     }
-  }, [file.name, existingFilenames, file.id, isDirty]);
+  }, [file.name, existingFilenames, isDirty]);
 
   // Handle filename change
   const handleFilenameChange = useCallback(
@@ -82,13 +79,14 @@ export function FileEditor({
       const newName = e.target.value;
       setIsDirty(true);
 
-      // Update the filename
-      onChange(file.id, { name: newName });
-
       // Auto-detect language from new filename
       const detectedLanguage = detectLanguage(newName);
+
+      // Update both filename and language in a single call
       if (detectedLanguage !== file.language) {
-        onChange(file.id, { language: detectedLanguage });
+        onChange(file.id, { name: newName, language: detectedLanguage });
+      } else {
+        onChange(file.id, { name: newName });
       }
     },
     [file.id, file.language, onChange]

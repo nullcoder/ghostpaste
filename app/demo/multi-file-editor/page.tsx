@@ -16,11 +16,12 @@ export default function MultiFileEditorDemo() {
   const [files, setFiles] = useState<FileData[]>([]);
   const [readOnly, setReadOnly] = useState(false);
   const [showJson, setShowJson] = useState(false);
+  const [key, setKey] = useState(0); // Force re-render of MultiFileEditor
 
   // Sample files for testing
   const sampleFiles: FileData[] = [
     {
-      id: "sample1",
+      id: "sample-1",
       name: "index.html",
       content: `<!DOCTYPE html>
 <html lang="en">
@@ -38,7 +39,7 @@ export default function MultiFileEditorDemo() {
       language: "html",
     },
     {
-      id: "sample2",
+      id: "sample-2",
       name: "styles.css",
       content: `/* Main styles for GhostPaste */
 body {
@@ -63,7 +64,7 @@ h1 {
       language: "css",
     },
     {
-      id: "sample3",
+      id: "sample-3",
       name: "script.js",
       content: `// GhostPaste initialization
 document.addEventListener('DOMContentLoaded', () => {
@@ -89,10 +90,12 @@ function setupEventListeners() {
 
   const loadSampleFiles = () => {
     setFiles(sampleFiles);
+    setKey((prev) => prev + 1); // Force re-render with new files
   };
 
   const clearFiles = () => {
     setFiles([]);
+    setKey((prev) => prev + 1); // Force re-render with empty files
   };
 
   return (
@@ -137,6 +140,7 @@ function setupEventListeners() {
         </CardHeader>
         <CardContent>
           <MultiFileEditor
+            key={key}
             initialFiles={files}
             onChange={setFiles}
             readOnly={readOnly}

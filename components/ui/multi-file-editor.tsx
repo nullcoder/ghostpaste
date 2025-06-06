@@ -47,7 +47,7 @@ export function MultiFileEditor({
     }
     return [
       {
-        id: nanoid(),
+        id: "default-file-1", // Use deterministic ID for SSR
         name: "file1.txt",
         content: "",
         language: "text",
@@ -65,8 +65,11 @@ export function MultiFileEditor({
     }, 0);
   }, [files]);
 
-  // Get all filenames for validation
-  const allFilenames = useMemo(() => files.map((f) => f.name), [files]);
+  // Get all files for validation (we need both name and id)
+  const allFiles = useMemo(
+    () => files.map((f) => ({ id: f.id, name: f.name })),
+    [files]
+  );
 
   // Check if we can add more files
   const canAddFile = files.length < maxFiles && !readOnly;
@@ -194,7 +197,9 @@ export function MultiFileEditor({
               onChange={handleFileChange}
               onDelete={handleFileDelete}
               showDelete={canRemoveFile}
-              existingFilenames={allFilenames}
+              existingFilenames={allFiles
+                .filter((f) => f.id !== file.id)
+                .map((f) => f.name)}
               readOnly={readOnly}
             />
           </div>
