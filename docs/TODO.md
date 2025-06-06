@@ -40,13 +40,13 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Type Definitions
 
-- [ ] Create TypeScript interfaces for GistMetadata - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
-- [ ] Create TypeScript interfaces for UserMetadata - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
-- [ ] Create TypeScript interfaces for EncryptedData - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
-- [ ] Create TypeScript interfaces for API responses - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
-- [ ] Create TypeScript interfaces for error types - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
-- [ ] Create type for binary file format - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
-- [ ] Export all types from `types/index.ts` - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Create TypeScript interfaces for GistMetadata - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Create TypeScript interfaces for UserMetadata - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Create TypeScript interfaces for EncryptedData - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Create TypeScript interfaces for API responses - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Create TypeScript interfaces for error types - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Create type for binary file format - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
+- [x] Export all types from `types/index.ts` - [#26](https://github.com/nullcoder/ghostpaste/issues/26)
 
 ### Configuration
 
@@ -55,7 +55,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [x] Set up feature flags system - [#27](https://github.com/nullcoder/ghostpaste/issues/27)
 - [x] Configure bindings types for TypeScript (handled by wrangler types)
 - [x] Create env.d.ts for Cloudflare bindings (handled by worker-configuration.d.ts)
-- [ ] Set up local development with miniflare - [#29](https://github.com/nullcoder/ghostpaste/issues/29)
+- [x] Set up local development with miniflare - [#29](https://github.com/nullcoder/ghostpaste/issues/29)
 
 ### Utilities
 
