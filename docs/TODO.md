@@ -286,7 +286,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 - [ ] Document API endpoints
 - [ ] Create architecture diagrams
-- [ ] Write contribution guidelines
+- [x] Write contribution guidelines
 - [ ] Add code style guide
 - [ ] Create development setup guide
 

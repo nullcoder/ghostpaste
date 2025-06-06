@@ -186,4 +186,4 @@ For faster development of UI components, use `npm run dev` for Next.js hot reloa
 
 - Check out the [Architecture Guide](./SPEC.md) to understand the system design
 - Review [Security Guidelines](./SPEC.md#security-considerations) for encryption implementation
-- See [Contributing Guide](../README.md#contributing) for code standards
+- See [Contributing Guide](../CONTRIBUTING.md) for code standards and development workflow
