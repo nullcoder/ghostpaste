@@ -92,7 +92,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Integration Testing
 
-- [ ] Create integration tests for encryption workflow - [#39](https://github.com/nullcoder/ghostpaste/issues/39)
+- [x] Create integration tests for encryption workflow - [#39](https://github.com/nullcoder/ghostpaste/issues/39)
 - [ ] Add encryption helper utilities - [#40](https://github.com/nullcoder/ghostpaste/issues/40)
 - [ ] Document encryption architecture - [#41](https://github.com/nullcoder/ghostpaste/issues/41)
 
