@@ -78,10 +78,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Binary Format (`lib/binary.ts`)
 
-- [ ] Implement file encoding to binary format - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
-- [ ] Implement binary format decoding - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
-- [ ] Add format validation - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
-- [ ] Create unit tests for binary operations - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [x] Implement file encoding to binary format - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [x] Implement binary format decoding - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [x] Add format validation - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
+- [x] Create unit tests for binary operations - [#37](https://github.com/nullcoder/ghostpaste/issues/37)
 
 ### PIN Authentication (`lib/auth.ts`)
 
