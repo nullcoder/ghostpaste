@@ -95,7 +95,7 @@ Note: Issue #69 appears to be a duplicate of #59 (both for copy to clipboard fun
 ## Status Legend
 
 - 🟡 Ready - Issue created and ready for development
-- 🔵 In Progress - Currently being worked on
+- 🔵 In Progress/PR - Currently being worked on or in pull request
 - 🟢 Complete - Implemented and merged
 - 🔴 Blocked - Waiting on dependencies
 
@@ -104,6 +104,7 @@ Note: Issue #69 appears to be a duplicate of #59 (both for copy to clipboard fun
 1. **Duplicate Issue**: #69 appears to duplicate #59 (copy to clipboard). Consider closing one.
 2. **Dependencies**: Components in Week 1 must be completed before Week 2 can fully proceed.
 3. **Parallel Work**: Multiple developers can work on different component groups simultaneously.
+4. **In Progress**: #54 (CodeEditor) - PR #75 submitted, awaiting review.
 
 ## Quick Commands
 
@@ -121,4 +122,4 @@ gh issue edit [number] --add-label "in progress"
 gh pr create --title "feat: implement [component]" --body "Closes #[number]"
 ```
 
-Last Updated: 2025-01-06
+Last Updated: 2025-01-07
