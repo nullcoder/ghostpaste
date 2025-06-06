@@ -7,6 +7,7 @@
 
 import { BadRequestError, UnauthorizedError } from "./errors";
 import { logger } from "./logger";
+import { base64Encode, base64Decode } from "./base64";
 
 /**
  * Configuration for PBKDF2 hashing
@@ -46,7 +47,7 @@ export async function generateSalt(): Promise<string> {
     crypto.getRandomValues(saltBuffer);
 
     // Convert to base64 for storage
-    const salt = btoa(String.fromCharCode(...saltBuffer));
+    const salt = base64Encode(saltBuffer);
 
     logger.debug("Generated salt for PIN hashing", {
       saltLength: SALT_LENGTH,
@@ -81,7 +82,7 @@ export async function hashPin(pin: string, salt: string): Promise<string> {
     const pinBuffer = encoder.encode(pin);
 
     // Decode salt from base64
-    const saltBuffer = Uint8Array.from(atob(salt), (c) => c.charCodeAt(0));
+    const saltBuffer = base64Decode(salt);
 
     // Import PIN as key material
     const keyMaterial = await crypto.subtle.importKey(
@@ -106,7 +107,7 @@ export async function hashPin(pin: string, salt: string): Promise<string> {
 
     // Convert to base64 for storage
     const hashArray = new Uint8Array(derivedBits);
-    const hash = btoa(String.fromCharCode(...hashArray));
+    const hash = base64Encode(hashArray);
 
     logger.debug("Successfully hashed PIN", {
       iterations: PBKDF2_CONFIG.iterations,
@@ -141,8 +142,8 @@ export async function validatePin(
     const computedHash = await hashPin(pin, salt);
 
     // Constant-time comparison to prevent timing attacks
-    const storedBytes = atob(storedHash);
-    const computedBytes = atob(computedHash);
+    const storedBytes = base64Decode(storedHash);
+    const computedBytes = base64Decode(computedHash);
 
     // Ensure both are the same length
     if (storedBytes.length !== computedBytes.length) {
@@ -152,7 +153,7 @@ export async function validatePin(
     // XOR all bytes and accumulate differences
     let difference = 0;
     for (let i = 0; i < storedBytes.length; i++) {
-      difference |= storedBytes.charCodeAt(i) ^ computedBytes.charCodeAt(i);
+      difference |= storedBytes[i] ^ computedBytes[i];
     }
 
     // If difference is 0, hashes match

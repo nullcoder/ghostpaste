@@ -7,6 +7,7 @@
 
 import { InvalidEncryptionKeyError, DecryptionFailedError } from "./errors";
 import { logger } from "./logger";
+import { base64UrlEncode, base64UrlDecode } from "./base64";
 
 /**
  * Encryption algorithm configuration
@@ -235,58 +236,6 @@ export async function decrypt(
       originalError: error,
     });
   }
-}
-
-/**
- * Base64url encode a Uint8Array
- *
- * @param data - Data to encode
- * @returns Base64url encoded string (URL safe, no padding)
- */
-function base64UrlEncode(data: Uint8Array): string {
-  // Convert to binary string in chunks to avoid stack overflow
-  let binaryString = "";
-  const chunkSize = 8192;
-
-  for (let i = 0; i < data.length; i += chunkSize) {
-    const chunk = data.slice(i, Math.min(i + chunkSize, data.length));
-    binaryString += Array.from(chunk, (byte) => String.fromCharCode(byte)).join(
-      ""
-    );
-  }
-
-  // Convert to base64
-  const base64 = btoa(binaryString);
-
-  // Convert to base64url by replacing characters and removing padding
-  return base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-}
-
-/**
- * Base64url decode a string to Uint8Array
- *
- * @param str - Base64url encoded string
- * @returns Decoded data as Uint8Array
- */
-function base64UrlDecode(str: string): Uint8Array {
-  // Convert base64url to base64 by replacing characters
-  let base64 = str.replace(/-/g, "+").replace(/_/g, "/");
-
-  // Add padding if necessary
-  const padding = base64.length % 4;
-  if (padding) {
-    base64 += "=".repeat(4 - padding);
-  }
-
-  // Decode base64
-  const binary = atob(base64);
-  const bytes = new Uint8Array(binary.length);
-
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-
-  return bytes;
 }
 
 /**
