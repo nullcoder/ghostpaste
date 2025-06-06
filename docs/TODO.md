@@ -107,7 +107,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Form Components
 
-- [ ] Create FileEditor component (single file with name, language, editor) - [#55](https://github.com/nullcoder/ghostpaste/issues/55)
+- [x] Create FileEditor component (single file with name, language, editor) - [#55](https://github.com/nullcoder/ghostpaste/issues/55)
 - [ ] Create MultiFileEditor component (vertical layout, GitHub Gist style) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
 - [x] Create CodeEditor component (CodeMirror wrapper) - [#54](https://github.com/nullcoder/ghostpaste/issues/54)
 - [ ] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
