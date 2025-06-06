@@ -138,7 +138,8 @@ describe("handleError", () => {
   });
 
   it("should log errors with context", async () => {
-    const loggerModule = await vi.importMock("./logger");
+    const loggerModule =
+      await vi.importMock<typeof import("./logger")>("./logger");
     const error = new BadRequestError("Test error");
 
     handleError(error, "TestContext");
@@ -156,7 +157,7 @@ describe("handleError", () => {
 
 describe("withErrorHandling", () => {
   it("should wrap async handler and catch errors", async () => {
-    const handler = async () => {
+    const handler = async (): Promise<Response> => {
       throw new BadRequestError("Test error");
     };
 

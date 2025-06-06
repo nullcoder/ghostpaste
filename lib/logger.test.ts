@@ -64,13 +64,15 @@ describe("Logger", () => {
   describe("log levels in production", () => {
     beforeEach(async () => {
       // Change mock to return production
-      const env = await vi.importMock("./environment");
+      const env =
+        await vi.importMock<typeof import("./environment")>("./environment");
       vi.mocked(env.getCurrentEnvironment).mockReturnValue("production");
     });
 
     afterEach(async () => {
       // Reset to development
-      const env = await vi.importMock("./environment");
+      const env =
+        await vi.importMock<typeof import("./environment")>("./environment");
       vi.mocked(env.getCurrentEnvironment).mockReturnValue("development");
     });
 
