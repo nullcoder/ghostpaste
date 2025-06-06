@@ -62,12 +62,11 @@ Simply open the shared link - the decryption key is in the URL fragment and neve
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - npm or yarn
-- Cloudflare account (for Workers and R2)
-- Wrangler CLI (`npm install -g wrangler`)
+- Git
 
-### Setup
+### Quick Start
 
 ```bash
 # Clone the repository
@@ -77,18 +76,13 @@ cd ghostpaste
 # Install dependencies
 npm install
 
-# Login to Cloudflare
-wrangler login
-
-# Create R2 bucket
-wrangler r2 bucket create ghostpaste-bucket
-
-# Copy wrangler configuration
-cp wrangler.toml.example wrangler.toml
-
-# Run development server
-npm run dev
+# Start development server
+npm run dev             # Next.js development (hot reload)
+# OR
+npm run preview         # Full Cloudflare Workers simulation
 ```
+
+See our [Local Development Guide](./docs/LOCAL_DEVELOPMENT.md) for detailed setup instructions.
 
 ### Configuration
 
