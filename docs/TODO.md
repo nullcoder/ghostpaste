@@ -59,10 +59,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Utilities
 
-- [ ] Create logger utility - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
-- [ ] Create error handling utilities - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
-- [ ] Create validation utilities - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
-- [ ] Create ID generation utility (nanoid) - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [x] Create logger utility - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [x] Create error handling utilities - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [x] Create validation utilities - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
+- [x] Create ID generation utility (nanoid) - [#28](https://github.com/nullcoder/ghostpaste/issues/28)
 
 ## 🔐 Phase 3: Encryption Implementation
 
