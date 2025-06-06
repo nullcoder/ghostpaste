@@ -68,13 +68,13 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Crypto Module (`lib/crypto.ts`)
 
-- [ ] Implement key generation using Web Crypto API - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
-- [ ] Implement AES-GCM encryption function (Workers-compatible) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
-- [ ] Implement AES-GCM decryption function (Workers-compatible) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
-- [ ] Implement key export/import utilities - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
-- [ ] Create URL-safe key encoding/decoding (base64url) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
-- [ ] Add encryption error handling - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
-- [ ] Ensure all crypto operations are Edge Runtime compatible - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Implement key generation using Web Crypto API - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Implement AES-GCM encryption function (Workers-compatible) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Implement AES-GCM decryption function (Workers-compatible) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Implement key export/import utilities - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Create URL-safe key encoding/decoding (base64url) - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Add encryption error handling - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
+- [x] Ensure all crypto operations are Edge Runtime compatible - [#36](https://github.com/nullcoder/ghostpaste/issues/36)
 
 ### Binary Format (`lib/binary.ts`)
 
