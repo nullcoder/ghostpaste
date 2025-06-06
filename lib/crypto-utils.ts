@@ -3,6 +3,21 @@
  *
  * This module provides simplified, high-level functions for common encryption
  * operations, making it easier to use encryption throughout the application.
+ *
+ * Key features:
+ * - Simplified API for encrypting/decrypting gists
+ * - Automatic key generation and management
+ * - URL generation with embedded encryption keys
+ * - PIN protection integration
+ * - Metadata handling (expiration, one-time view, etc.)
+ *
+ * Usage flow:
+ * 1. Create gist: `createGist(files, options)` → returns encrypted data + URL
+ * 2. Share URL: Contains gist ID and encryption key in fragment
+ * 3. Load gist: `loadGistFromUrl(url)` → returns decrypted files
+ *
+ * @module crypto-utils
+ * @see {@link /docs/ENCRYPTION.md} for detailed architecture
  */
 
 import {

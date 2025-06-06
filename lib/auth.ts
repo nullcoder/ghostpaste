@@ -3,6 +3,16 @@
  *
  * This module provides secure PIN hashing and validation for edit protection,
  * using industry-standard PBKDF2 with SHA-256 for key derivation.
+ *
+ * Security properties:
+ * - PBKDF2 with 100,000 iterations (NIST SP 800-132 recommendation)
+ * - SHA-256 hash function (collision resistant)
+ * - 128-bit random salts (prevents rainbow tables)
+ * - Constant-time comparison (prevents timing attacks)
+ * - PIN complexity requirements (letters + numbers)
+ *
+ * @module auth
+ * @see {@link https://nvlpubs.nist.gov/nistpubs/Legacy/SP/nistspecialpublication800-132.pdf}
  */
 
 import { BadRequestError, UnauthorizedError } from "./errors";

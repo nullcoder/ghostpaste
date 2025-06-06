@@ -119,6 +119,8 @@ npm run deploy
 ## 📖 Documentation
 
 - [Technical Specification](docs/SPEC.md) - Detailed architecture and implementation details
+- [Encryption Architecture](docs/ENCRYPTION.md) - In-depth encryption documentation
+- [Security Best Practices](docs/SECURITY.md) - Security guidelines for developers and users
 - [AI Development Guide](CLAUDE.md) - Guidelines for AI-assisted development
 - [Implementation TODO](docs/TODO.md) - Development roadmap and progress tracking
 - [Contributing Guide](CONTRIBUTING.md) - How to contribute to the project

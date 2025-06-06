@@ -3,6 +3,15 @@
  *
  * This module provides AES-GCM encryption using the Web Crypto API,
  * ensuring compatibility with Cloudflare Workers edge runtime.
+ *
+ * Security properties:
+ * - AES-256-GCM provides authenticated encryption (confidentiality + integrity)
+ * - Each encryption uses a unique IV (initialization vector)
+ * - Keys are never sent to the server (shared via URL fragments)
+ * - All operations use constant-time algorithms where possible
+ *
+ * @module crypto
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API}
  */
 
 import { InvalidEncryptionKeyError, DecryptionFailedError } from "./errors";
@@ -11,11 +20,16 @@ import { base64UrlEncode, base64UrlDecode } from "./base64";
 
 /**
  * Encryption algorithm configuration
+ *
+ * Using AES-GCM (Galois/Counter Mode) for authenticated encryption:
+ * - Provides both confidentiality and authenticity
+ * - Recommended by NIST SP 800-38D
+ * - Supported by all modern browsers via Web Crypto API
  */
 const ALGORITHM = "AES-GCM";
-const KEY_LENGTH = 256;
-const IV_LENGTH = 12; // 96 bits for AES-GCM
-const TAG_LENGTH = 128; // 128 bits for AES-GCM auth tag
+const KEY_LENGTH = 256; // 256-bit keys (32 bytes) for AES-256
+const IV_LENGTH = 12; // 96 bits (12 bytes) - recommended for AES-GCM
+const TAG_LENGTH = 128; // 128 bits (16 bytes) - authentication tag length
 
 /**
  * Encrypted data structure with raw binary data
@@ -36,13 +50,19 @@ export type EncryptedBlob = Uint8Array;
 /**
  * Generate a new AES-256 encryption key
  *
+ * Creates a cryptographically secure 256-bit key using the Web Crypto API.
+ * Each key is unique and should be used for a single gist only (forward secrecy).
+ *
  * @returns Promise<CryptoKey> A new 256-bit AES key for encryption/decryption
+ * @throws {InvalidEncryptionKeyError} If key generation fails
  *
  * @example
  * ```typescript
  * const key = await generateEncryptionKey();
  * // Use key for encryption/decryption operations
  * ```
+ *
+ * @security Keys are marked as extractable to allow sharing via URLs
  */
 export async function generateEncryptionKey(): Promise<CryptoKey> {
   try {

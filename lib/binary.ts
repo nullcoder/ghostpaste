@@ -3,6 +3,24 @@
  *
  * This module provides efficient binary packing/unpacking for multiple files
  * in a single blob, reducing storage overhead and maintaining data integrity.
+ *
+ * Binary Format Structure:
+ * ```
+ * Header (12 bytes):
+ * ├─ Magic bytes (4): "GHST" - identifies valid GhostPaste data
+ * ├─ Version (2): 0x0001 - format version for future compatibility
+ * ├─ File count (2): uint16 - number of files (max 65535)
+ * └─ Reserved (4): 0x00000000 - reserved for future use
+ *
+ * For each file:
+ * ├─ Name length (2): uint16 - length of filename in bytes
+ * ├─ Name (variable): UTF-8 encoded filename
+ * ├─ Content length (4): uint32 - length of file content in bytes
+ * ├─ Content (variable): UTF-8 encoded file content
+ * └─ Language (optional): 1 byte marker + variable length string
+ * ```
+ *
+ * @module binary
  */
 
 import {
