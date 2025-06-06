@@ -107,8 +107,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Form Components
 
-- [ ] Create FileTab component for multi-file support
+- [ ] Create FileEditor component (single file with name, language, editor)
+- [ ] Create MultiFileEditor component (manages multiple FileEditor instances)
 - [ ] Create CodeEditor component (CodeMirror wrapper)
+- [ ] Create AddFileButton component
 - [ ] Create ExpirySelector component
 - [ ] Create PINInput component
 - [ ] Create ShareDialog component with copy functionality
@@ -128,6 +130,11 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create keyboard shortcuts
 - [ ] Add copy-to-clipboard functionality
 - [ ] Implement responsive design
+- [ ] Add file editor auto-scroll on add
+- [ ] Implement filename auto-generation
+- [ ] Add language auto-detection from filename
+- [ ] Prevent duplicate filenames
+- [ ] Add file reordering (drag and drop - stretch goal)
 
 ## 🔌 Phase 5: API Development
 
