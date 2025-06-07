@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Ghost, Home, Plus } from "lucide-react";
+import { Home, Plus } from "lucide-react";
+import { GhostLogo } from "@/components/ghost-logo";
 
 export default function NotFound() {
   return (
     <div className="container mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 text-center">
       {/* Floating Ghost */}
       <div className="animate-float mb-8">
-        <Ghost className="text-muted-foreground/50 h-32 w-32" />
+        <GhostLogo size="2xl" className="text-indigo-500/50" />
       </div>
 
       {/* 404 Text with Glitch Effect */}

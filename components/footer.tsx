@@ -2,7 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils";
-import { Ghost } from "lucide-react";
+import { GhostLogo } from "@/components/ghost-logo";
 
 export interface FooterProps {
   /**
@@ -31,7 +31,7 @@ export function Footer({ className, buildId }: FooterProps) {
             {/* Left section - Branding */}
             <div className="space-y-2 text-center md:text-left">
               <div className="flex items-center justify-center gap-2 md:justify-start">
-                <Ghost className="h-6 w-6" aria-hidden="true" />
+                <GhostLogo className="text-indigo-600/80 dark:text-indigo-400/80" />
                 <span className="text-lg font-semibold">GhostPaste</span>
               </div>
               <p className="text-muted-foreground text-sm">

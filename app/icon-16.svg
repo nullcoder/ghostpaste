@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Minimal/no background for maximum ghost size -->
+  
+  <!-- Simplified ghost body - fills entire 16x16 space -->
+  <path d="M8 1c-3.3 0-6 2.7-6 6v7l1.5 2c0.2 0.3 0.6 0.2 0.8-0.1L5.5 14.5c0.2-0.2 0.5-0.2 0.7 0L7 15.5c0.2 0.2 0.5 0.2 0.7 0L8 14.5c0.2-0.2 0.5-0.2 0.7 0L9 15.5c0.2 0.2 0.5 0.2 0.7 0L10.5 14.5c0.2-0.2 0.5-0.1 0.8 0.1L12.5 15c0.2 0.3 0.6 0.2 0.8-0.1L14 13V7c0-3.3-2.7-6-6-6Z" fill="#6366f1"/>
+  
+  <!-- Simplified bracket eyes -->
+  <text x="5" y="10" font-family="monospace" font-size="5" fill="#f8f9fa" text-anchor="middle">&lt;</text>
+  <text x="11" y="10" font-family="monospace" font-size="5" fill="#f8f9fa" text-anchor="middle">&gt;</text>
+  
+  <!-- Single binary dot -->
+  <circle cx="8" cy="11.5" r="0.5" fill="#f8f9fa" opacity="0.7"/>
+</svg>
