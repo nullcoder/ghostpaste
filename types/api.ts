@@ -88,3 +88,11 @@ export interface ApiErrorResponse {
   message: string;
   details?: Record<string, unknown>;
 }
+
+/**
+ * Response from GET /api/gists/[id] - public metadata without sensitive fields
+ */
+export type GetGistMetadataResponse = Omit<
+  GistMetadata,
+  "edit_pin_hash" | "edit_pin_salt" | "encrypted_metadata"
+>;

@@ -70,6 +70,8 @@ export const ApiErrors = {
 
   storageError: (message: string, details?: Record<string, unknown>) =>
     new AppError(ErrorCode.STORAGE_ERROR, 500, message, details),
+
+  gone: (message: string) => new AppError(ErrorCode.GIST_EXPIRED, 410, message),
 };
 
 /**

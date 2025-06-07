@@ -18,7 +18,7 @@ Phase 5 focuses on implementing the API layer for GhostPaste, including R2 stora
 | GitHub # | Component          | Priority | Status      | Description                                  |
 | -------- | ------------------ | -------- | ----------- | -------------------------------------------- |
 | #105     | Create Gist API    | CRITICAL | 🟢 Complete | POST /api/gists endpoint                     |
-| #106     | Read Gist APIs     | CRITICAL | 🟡 Ready    | GET endpoints for metadata and blobs         |
+| #106     | Read Gist APIs     | CRITICAL | 🟢 Complete | GET endpoints for metadata and blobs         |
 | #107     | Update/Delete APIs | HIGH     | 🟡 Ready    | PUT and DELETE endpoints with PIN validation |
 
 ### Infrastructure (2 issues)
@@ -106,12 +106,12 @@ Phase 5 focuses on implementing the API layer for GhostPaste, including R2 stora
 
 **Tasks:**
 
-- [ ] Create GET /api/gists/[id] for metadata
-- [ ] Create GET /api/blobs/[id] for encrypted data
-- [ ] Configure edge runtime for all routes
-- [ ] Add caching headers for blobs
-- [ ] Handle 404 for missing gists
-- [ ] Implement one-time view deletion
+- [x] Create GET /api/gists/[id] for metadata
+- [x] Create GET /api/blobs/[id] for encrypted data
+- [x] Configure edge runtime for all routes
+- [x] Add caching headers for blobs
+- [x] Handle 404 for missing gists
+- [x] Implement one-time view deletion
 
 **Acceptance Criteria:**
 
@@ -300,11 +300,30 @@ gh issue edit [number] --add-label "in progress"
 - Validates datetime formats and numeric fields
 - Handles all error cases with appropriate status codes
 
+### Issue #106: Read Gist APIs ✅
+
+- Implemented GET /api/gists/[id] endpoint for gist metadata retrieval
+- Implemented GET /api/blobs/[id] endpoint for encrypted blob data
+- Added proper error handling (404 for missing, 410 for expired gists)
+- Implemented one-time view deletion after successful retrieval
+- Added appropriate caching headers for different gist types
+- Excluded sensitive fields (edit_pin_hash, edit_pin_salt, encrypted_metadata) from public responses
+- Created comprehensive test suite with 23 passing tests
+- Achieved 100% test coverage for both endpoints
+
+**Key Implementation Details:**
+
+- Uses TypeScript utility types (Omit) for type-safe response interfaces
+- Implements proper cache headers: 5min for metadata, 1hr for blobs, no-cache for one-time views
+- Security headers for blob downloads (X-Content-Type-Options, X-Frame-Options)
+- Proper logger integration for error tracking
+- Edge runtime compatible for global performance
+
 ## Next Steps
 
-### Immediate Priority: Issue #106 - Read Gist APIs (CRITICAL)
+### Immediate Priority: Issue #107 - Update/Delete APIs (HIGH)
 
-With the Create API complete, we need the Read endpoints to retrieve gists:
+With both Create and Read APIs complete, we need the Update/Delete endpoints for full CRUD operations:
 
 ### Recommended Timeline
 
@@ -313,10 +332,10 @@ With the Create API complete, we need the Read endpoints to retrieve gists:
 - ✅ Issue #103: R2 Storage Foundation (COMPLETE)
 - ✅ Issue #104: Storage Operations (COMPLETE)
 
-**Week 2 (In Progress):**
+**Week 2 (Complete):**
 
 - ✅ Issue #105: Create Gist API (COMPLETE)
-- Issue #106: Read Gist APIs (2-3 days) - Next priority
+- ✅ Issue #106: Read Gist APIs (COMPLETE)
 
 **Week 3:**
 
