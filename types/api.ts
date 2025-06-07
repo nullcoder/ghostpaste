@@ -5,11 +5,21 @@
 import { File, GistOptions, GistMetadata } from "./models";
 
 /**
- * Request body for creating a new gist
+ * Request body for creating a new gist (multipart/form-data)
+ * Parts:
+ * - metadata: JSON file containing GistMetadata fields
+ * - blob: Binary encrypted content
+ * - password: Optional edit password (plain text)
  */
-export interface CreateGistRequest {
-  files: File[];
-  options?: GistOptions;
+export interface CreateGistFormData {
+  metadata: {
+    expires_at?: string | null; // ISO 8601 datetime
+    one_time_view?: boolean;
+    file_count?: number;
+    blob_count?: number;
+  };
+  blob: Uint8Array;
+  password?: string;
 }
 
 /**
@@ -18,7 +28,9 @@ export interface CreateGistRequest {
 export interface CreateGistResponse {
   id: string;
   url: string;
-  expires_at?: string;
+  createdAt: string;
+  expiresAt: string | null;
+  isOneTimeView: boolean;
 }
 
 /**
@@ -66,4 +78,13 @@ export interface AuthHeaders {
  */
 export interface GistQueryParams {
   include_key?: boolean; // Include decryption key in response
+}
+
+/**
+ * Standard API error response
+ */
+export interface ApiErrorResponse {
+  error: string;
+  message: string;
+  details?: Record<string, unknown>;
 }
