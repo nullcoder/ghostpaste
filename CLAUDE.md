@@ -13,14 +13,35 @@ GhostPaste is a zero-knowledge encrypted code sharing platform. See `docs/SPEC.m
 ### File Structure
 
 ```
-src/
-├── app/                 # Next.js app router pages
-├── components/          # React components (using shadcn/ui)
-├── lib/
-│   ├── crypto.ts       # Encryption/decryption utilities
-│   ├── storage.ts      # R2 storage client
-│   └── binary.ts       # Binary format encoding/decoding
-└── types/              # TypeScript interfaces
+app/                     # Next.js app router pages
+├── api/                 # API routes
+├── create/              # Gist creation page
+├── g/[id]/              # Gist viewing page
+└── demo/                # Demo pages for components
+
+components/              # React components (using shadcn/ui)
+├── ui/                  # Reusable UI components
+│   ├── code-editor.tsx  # CodeMirror wrapper
+│   ├── file-editor.tsx  # Single file editor
+│   ├── multi-file-editor.tsx # Multi-file container
+│   └── copy-button.tsx  # Copy functionality
+├── header.tsx           # App header with nav
+├── share-dialog.tsx     # Share URL dialog
+├── gist-viewer.tsx      # Read-only viewer
+└── error-boundary.tsx   # Error handling
+
+lib/                     # Utilities and core logic
+├── crypto.ts            # Encryption/decryption utilities
+├── binary.ts            # Binary format encoding/decoding
+├── auth.ts              # PIN authentication
+├── copy-to-clipboard.ts # Copy utilities
+├── validation.ts        # Input validation
+└── language-detection.ts # File type detection
+
+types/                   # TypeScript interfaces
+├── models.ts            # Core data models
+├── api.ts               # API types
+└── errors.ts            # Error types
 ```
 
 ### Critical Security Rules
@@ -47,12 +68,15 @@ For more commands, see the [Local Development Guide](docs/LOCAL_DEVELOPMENT.md).
 
 ### Testing Checklist
 
-- [ ] Encryption/decryption works correctly
-- [ ] Binary format encoding/decoding
-- [ ] PIN authentication flow
-- [ ] File size limits enforced
+- [x] Encryption/decryption works correctly
+- [x] Binary format encoding/decoding
+- [x] PIN authentication flow
+- [x] File size limits enforced
 - [ ] Self-expiring gists delete properly
 - [ ] One-time view gists delete after viewing
+- [x] Copy-to-clipboard functionality
+- [x] Toast notifications
+- [x] Error boundaries contain errors properly
 
 ### Environment Variables
 
@@ -213,3 +237,39 @@ gh project item-edit --project-id PVT_kwHOAAF1rM4A6v2O --id [ITEM_ID] \
 - [ ] When creating PR: Add PR to board with "In Progress"
 - [ ] After merge: Set both issue and PR to "Done"
 - [ ] Update TODO.md to check off completed tasks
+
+## Recent Accomplishments (Phase 4 UI Components)
+
+As of June 6, 2025, we've completed 11 out of 19 Phase 4 UI components (58%):
+
+### Completed Components
+
+- **Critical Components** (3/3): CodeEditor, FileEditor, MultiFileEditor
+- **High Priority** (6/6): Header, GistViewer, ShareDialog, ErrorBoundary, Copy to Clipboard, Design Tokens
+- **Medium Priority** (2/7): AddFileButton, Toast Notifications
+
+### Key Features Implemented
+
+- Full CodeMirror 6 integration with syntax highlighting
+- Multi-file editing with GitHub Gist-style UI
+- Comprehensive copy-to-clipboard system with fallbacks
+- Toast notifications using Sonner
+- Error boundaries for graceful error handling
+- Share dialog with security warnings
+- Responsive header with theme toggle
+
+### Next Priority Components
+
+1. Container (MEDIUM) - Layout consistency
+2. ExpirySelector (MEDIUM) - Gist expiration options
+3. PINInput (MEDIUM) - Security feature for edits
+
+## Date Tracking
+
+**IMPORTANT**: Always check the current date before updating documents:
+
+```bash
+date  # Check current date/time
+```
+
+Last Updated: 2025-06-06
