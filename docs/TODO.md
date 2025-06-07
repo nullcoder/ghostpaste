@@ -142,11 +142,14 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 - [x] Create R2 client wrapper using Cloudflare Workers R2 bindings - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
 - [x] Configure R2 bucket binding in wrangler.toml - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
-- [ ] Implement metadata upload/download (JSON) using R2 API - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
-- [ ] Implement blob upload/download (binary) using R2 API - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [x] Implement metadata upload/download (JSON) using R2 API - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [x] Implement blob upload/download (binary) using R2 API - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
 - [x] Handle R2 errors (R2Error, R2ObjectNotFound) - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
 - [x] Create type-safe wrapper for R2 operations - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
-- [ ] Implement streaming for large files - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [x] Implement streaming for large files - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [x] Add retry logic for transient failures - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [x] Create storage utility functions - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [x] Create integration test framework for future API testing - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
 
 ### API Routes
 

@@ -24,6 +24,7 @@ export class R2Storage {
    */
   async initialize(): Promise<void> {
     try {
+      // Normal Cloudflare Workers environment
       const { env } = await getCloudflareContext({ async: true });
       this.bucket = env.GHOSTPASTE_BUCKET;
 
