@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Ghost } from "lucide-react";
+import { Menu, Ghost, Keyboard } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
 import {
   NavigationMenu,
@@ -21,10 +21,24 @@ import {
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { KeyboardShortcutsHelp } from "@/components/keyboard-shortcuts-help";
+import { useGlobalShortcuts } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+
+  // Set up global shortcuts
+  useGlobalShortcuts({
+    onHelp: () => setShowShortcuts(true),
+    onEscape: () => {
+      // Close mobile menu if open
+      if (isOpen) setIsOpen(false);
+      // Close shortcuts dialog if open
+      if (showShortcuts) setShowShortcuts(false);
+    },
+  });
 
   return (
     <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
@@ -78,6 +92,17 @@ export function Header() {
                   <span>GitHub</span>
                 </a>
               </NavigationMenuItem>
+              <NavigationMenuItem>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setShowShortcuts(true)}
+                  aria-label="Show keyboard shortcuts"
+                  title="Keyboard shortcuts"
+                >
+                  <Keyboard className="h-4 w-4" />
+                </Button>
+              </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
           <ThemeToggle />
@@ -130,6 +155,19 @@ export function Header() {
                     About
                   </Link>
                 </SheetClose>
+                <SheetClose asChild>
+                  <Button
+                    variant="ghost"
+                    className="hover:bg-accent hover:text-accent-foreground flex w-full items-center justify-start gap-3 rounded-lg px-3 py-3 text-base font-medium transition-colors"
+                    onClick={() => {
+                      setShowShortcuts(true);
+                      setIsOpen(false);
+                    }}
+                  >
+                    <Keyboard className="h-5 w-5" aria-hidden="true" />
+                    <span>Keyboard Shortcuts</span>
+                  </Button>
+                </SheetClose>
                 <div className="bg-border my-2 h-px" />
                 <a
                   href="https://github.com/nullcoder/ghostpaste"
@@ -146,6 +184,12 @@ export function Header() {
           </Sheet>
         </div>
       </div>
+
+      {/* Keyboard Shortcuts Dialog */}
+      <KeyboardShortcutsHelp
+        open={showShortcuts}
+        onOpenChange={setShowShortcuts}
+      />
     </header>
   );
 }
