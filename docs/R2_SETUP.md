@@ -87,13 +87,21 @@ curl -X DELETE "http://localhost:8788/api/r2-test?key=test-file"
 
 ## Storage Structure
 
-GhostPaste uses the following R2 object structure:
+GhostPaste uses a versioned storage structure following the SPEC.md design:
 
 ```
-metadata/{gistId}.json    # Unencrypted metadata
-blobs/{gistId}           # Encrypted binary data
-temp/{gistId}            # Temporary storage (optional)
+metadata/{gistId}.json                    # Unencrypted metadata (points to current version)
+versions/{gistId}/{timestamp}.bin         # Encrypted blob versions
+temp/{gistId}                            # Temporary storage (optional)
 ```
+
+Key points:
+
+- All blobs are stored as versioned files under `versions/`
+- Metadata tracks the `current_version` timestamp
+- No separate `blobs/` directory - everything is versioned
+- New versions just add a timestamp file
+- Last 50 versions are kept (older ones pruned)
 
 ## R2 Storage Client
 
@@ -120,16 +128,25 @@ await storage.putMetadata(gistId, metadata);
 // Retrieve metadata
 const metadata = await storage.getMetadata(gistId);
 
-// Store encrypted blob
-await storage.putBlob(gistId, encryptedData);
+// Store encrypted blob (returns timestamp for the version)
+const timestamp = await storage.putBlob(gistId, encryptedData);
 
-// Retrieve encrypted blob
-const blob = await storage.getBlob(gistId);
+// Retrieve specific version
+const blob = await storage.getBlob(gistId, timestamp);
+
+// Retrieve current version
+const currentBlob = await storage.getCurrentBlob(gistId);
+
+// List all versions for a gist
+const versions = await storage.listVersions(gistId);
+
+// Prune old versions (keep last 50)
+const deletedCount = await storage.pruneVersions(gistId, 50);
 
 // Check if gist exists
 const exists = await storage.exists(gistId);
 
-// Delete gist (both metadata and blob)
+// Delete gist (metadata and all versions)
 await storage.deleteGist(gistId);
 
 // List gists with pagination
@@ -143,7 +160,7 @@ The storage client uses consistent key patterns:
 ```typescript
 const StorageKeys = {
   metadata: (id: string) => `metadata/${id}.json`,
-  blob: (id: string) => `blobs/${id}`,
+  version: (id: string, timestamp: string) => `versions/${id}/${timestamp}.bin`,
   temp: (id: string) => `temp/${id}`,
 };
 ```

@@ -12,7 +12,8 @@ export interface GistMetadata {
   created_at: string; // ISO 8601
   updated_at: string; // ISO 8601
   expires_at?: string; // ISO 8601, optional expiry
-  version: 1; // Format version for future compatibility
+  version: number; // Version number, incremented on updates
+  current_version: string; // Timestamp of current blob version
 
   // Size information (unencrypted)
   total_size: number; // Total size in bytes

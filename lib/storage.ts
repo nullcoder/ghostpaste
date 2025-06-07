@@ -7,7 +7,7 @@ import type { GistMetadata } from "@/types/models";
  */
 export const StorageKeys = {
   metadata: (id: string) => `metadata/${id}.json`,
-  blob: (id: string) => `blobs/${id}`,
+  version: (id: string, timestamp: string) => `versions/${id}/${timestamp}.bin`,
   temp: (id: string) => `temp/${id}`,
 } as const;
 
@@ -120,11 +120,13 @@ export class R2Storage {
   }
 
   /**
-   * Store encrypted blob
+   * Store encrypted blob as a new version
+   * Returns the timestamp used for this version
    */
-  async putBlob(id: string, data: Uint8Array): Promise<void> {
+  async putBlob(id: string, data: Uint8Array): Promise<string> {
     const bucket = this.ensureBucket();
-    const key = StorageKeys.blob(id);
+    const timestamp = new Date().toISOString();
+    const key = StorageKeys.version(id, timestamp);
 
     try {
       await bucket.put(key, data, {
@@ -132,26 +134,28 @@ export class R2Storage {
           contentType: "application/octet-stream",
         },
         customMetadata: {
-          type: "blob",
+          type: "version",
           size: data.length.toString(),
+          timestamp,
         },
       });
+      return timestamp;
     } catch (error) {
       throw new AppError(
         ErrorCode.STORAGE_ERROR,
         500,
-        `Failed to store blob for gist ${id}`,
+        `Failed to store blob version for gist ${id}`,
         { error: error instanceof Error ? error.message : "Unknown error" }
       );
     }
   }
 
   /**
-   * Retrieve encrypted blob
+   * Retrieve encrypted blob by version timestamp
    */
-  async getBlob(id: string): Promise<Uint8Array | null> {
+  async getBlob(id: string, timestamp: string): Promise<Uint8Array | null> {
     const bucket = this.ensureBucket();
-    const key = StorageKeys.blob(id);
+    const key = StorageKeys.version(id, timestamp);
 
     try {
       const object = await bucket.get(key);
@@ -163,23 +167,42 @@ export class R2Storage {
       throw new AppError(
         ErrorCode.STORAGE_ERROR,
         500,
-        `Failed to retrieve blob for gist ${id}`,
+        `Failed to retrieve blob version ${timestamp} for gist ${id}`,
         { error: error instanceof Error ? error.message : "Unknown error" }
       );
     }
   }
 
   /**
-   * Delete gist (both metadata and blob)
+   * Get the current blob for a gist by reading metadata
+   */
+  async getCurrentBlob(id: string): Promise<Uint8Array | null> {
+    const metadata = await this.getMetadata(id);
+    if (!metadata || !metadata.current_version) return null;
+
+    return this.getBlob(id, metadata.current_version);
+  }
+
+  /**
+   * Delete gist (metadata and all versions)
    */
   async deleteGist(id: string): Promise<void> {
     const bucket = this.ensureBucket();
     const metadataKey = StorageKeys.metadata(id);
-    const blobKey = StorageKeys.blob(id);
 
     try {
-      // Delete both keys, ignoring if they don't exist
-      await Promise.all([bucket.delete(metadataKey), bucket.delete(blobKey)]);
+      // Delete metadata
+      await bucket.delete(metadataKey);
+
+      // List and delete all versions
+      const versionsPrefix = `versions/${id}/`;
+      const versions = await bucket.list({ prefix: versionsPrefix });
+
+      if (versions.objects.length > 0) {
+        await Promise.all(
+          versions.objects.map((obj) => bucket.delete(obj.key))
+        );
+      }
     } catch (error) {
       throw new AppError(
         ErrorCode.STORAGE_ERROR,
@@ -244,6 +267,66 @@ export class R2Storage {
       throw new AppError(ErrorCode.STORAGE_ERROR, 500, "Failed to list gists", {
         error: error instanceof Error ? error.message : "Unknown error",
       });
+    }
+  }
+
+  /**
+   * List all versions for a gist
+   */
+  async listVersions(id: string): Promise<
+    Array<{
+      timestamp: string;
+      size: number;
+    }>
+  > {
+    const bucket = this.ensureBucket();
+    const prefix = `versions/${id}/`;
+
+    try {
+      const result = await bucket.list({ prefix, limit: 1000 });
+
+      return result.objects
+        .map((obj) => ({
+          timestamp: obj.key.replace(prefix, "").replace(".bin", ""),
+          size: obj.size,
+        }))
+        .sort((a, b) => b.timestamp.localeCompare(a.timestamp)); // Newest first
+    } catch (error) {
+      throw new AppError(
+        ErrorCode.STORAGE_ERROR,
+        500,
+        `Failed to list versions for gist ${id}`,
+        { error: error instanceof Error ? error.message : "Unknown error" }
+      );
+    }
+  }
+
+  /**
+   * Delete old versions beyond the limit (default: 50)
+   */
+  async pruneVersions(id: string, keepCount: number = 50): Promise<number> {
+    const versions = await this.listVersions(id);
+
+    if (versions.length <= keepCount) {
+      return 0;
+    }
+
+    const bucket = this.ensureBucket();
+    const toDelete = versions.slice(keepCount);
+
+    try {
+      await Promise.all(
+        toDelete.map((v) => bucket.delete(StorageKeys.version(id, v.timestamp)))
+      );
+
+      return toDelete.length;
+    } catch (error) {
+      throw new AppError(
+        ErrorCode.STORAGE_ERROR,
+        500,
+        `Failed to prune versions for gist ${id}`,
+        { error: error instanceof Error ? error.message : "Unknown error" }
+      );
     }
   }
 

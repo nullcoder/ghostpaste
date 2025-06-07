@@ -95,6 +95,7 @@ describe("R2Storage", () => {
       created_at: "2024-01-01T00:00:00Z",
       updated_at: "2024-01-01T00:00:00Z",
       version: 1,
+      current_version: "2024-01-01T00:00:00Z",
       total_size: 1000,
       blob_count: 1,
       encrypted_metadata: {
@@ -149,6 +150,7 @@ describe("R2Storage", () => {
       created_at: "2024-01-01T00:00:00Z",
       updated_at: "2024-01-01T00:00:00Z",
       version: 1,
+      current_version: "2024-01-01T00:00:00Z",
       total_size: 1000,
       blob_count: 1,
       encrypted_metadata: {
@@ -191,18 +193,24 @@ describe("R2Storage", () => {
   });
 
   describe("putBlob", () => {
-    it("should store blob successfully", async () => {
+    it("should store blob successfully and return timestamp", async () => {
       await storage.initialize();
       const data = new Uint8Array([1, 2, 3, 4]);
-      await storage.putBlob("test-id", data);
+      const timestamp = await storage.putBlob("test-id", data);
 
-      expect(mockBucket.put).toHaveBeenCalledWith("blobs/test-id", data, {
-        httpMetadata: { contentType: "application/octet-stream" },
-        customMetadata: {
-          type: "blob",
-          size: "4",
-        },
-      });
+      expect(timestamp).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/);
+      expect(mockBucket.put).toHaveBeenCalledWith(
+        expect.stringMatching(/^versions\/test-id\/.*\.bin$/),
+        data,
+        {
+          httpMetadata: { contentType: "application/octet-stream" },
+          customMetadata: {
+            type: "version",
+            size: "4",
+            timestamp: expect.any(String),
+          },
+        }
+      );
     });
 
     it("should handle put errors", async () => {
@@ -216,39 +224,98 @@ describe("R2Storage", () => {
   });
 
   describe("getBlob", () => {
-    it("should retrieve blob successfully", async () => {
+    it("should retrieve blob by timestamp successfully", async () => {
       await storage.initialize();
       const mockData = new Uint8Array([1, 2, 3, 4]);
       mockBucket.get.mockResolvedValue({
         arrayBuffer: vi.fn().mockResolvedValue(mockData.buffer),
       });
 
-      const result = await storage.getBlob("test-id");
+      const timestamp = "2024-01-01T00:00:00Z";
+      const result = await storage.getBlob("test-id", timestamp);
       expect(result).toEqual(mockData);
-      expect(mockBucket.get).toHaveBeenCalledWith("blobs/test-id");
+      expect(mockBucket.get).toHaveBeenCalledWith(
+        "versions/test-id/2024-01-01T00:00:00Z.bin"
+      );
     });
 
     it("should return null if blob not found", async () => {
       await storage.initialize();
       mockBucket.get.mockResolvedValue(null);
 
-      const result = await storage.getBlob("test-id");
+      const result = await storage.getBlob("test-id", "2024-01-01T00:00:00Z");
+      expect(result).toBeNull();
+    });
+  });
+
+  describe("getCurrentBlob", () => {
+    const mockMetadata: GistMetadata = {
+      id: "test-id",
+      created_at: "2024-01-01T00:00:00Z",
+      updated_at: "2024-01-01T00:00:00Z",
+      version: 1,
+      current_version: "2024-01-01T00:00:00Z",
+      total_size: 1000,
+      blob_count: 1,
+      encrypted_metadata: {
+        iv: "test-iv",
+        data: "test-data",
+      },
+    };
+
+    it("should retrieve current blob using metadata", async () => {
+      await storage.initialize();
+      const mockData = new Uint8Array([1, 2, 3, 4]);
+
+      // Mock metadata get
+      mockBucket.get
+        .mockResolvedValueOnce({
+          text: vi.fn().mockResolvedValue(JSON.stringify(mockMetadata)),
+        })
+        // Mock blob get
+        .mockResolvedValueOnce({
+          arrayBuffer: vi.fn().mockResolvedValue(mockData.buffer),
+        });
+
+      const result = await storage.getCurrentBlob("test-id");
+      expect(result).toEqual(mockData);
+    });
+
+    it("should return null if metadata not found", async () => {
+      await storage.initialize();
+      mockBucket.get.mockResolvedValue(null);
+
+      const result = await storage.getCurrentBlob("test-id");
       expect(result).toBeNull();
     });
   });
 
   describe("deleteGist", () => {
-    it("should delete both metadata and blob", async () => {
+    it("should delete metadata and all versions", async () => {
       await storage.initialize();
+      mockBucket.list.mockResolvedValue({
+        objects: [
+          { key: "versions/test-id/2024-01-01T00:00:00Z.bin" },
+          { key: "versions/test-id/2024-01-02T00:00:00Z.bin" },
+        ],
+        truncated: false,
+      });
+
       await storage.deleteGist("test-id");
 
       expect(mockBucket.delete).toHaveBeenCalledWith("metadata/test-id.json");
-      expect(mockBucket.delete).toHaveBeenCalledWith("blobs/test-id");
-      expect(mockBucket.delete).toHaveBeenCalledTimes(2);
+      expect(mockBucket.delete).toHaveBeenCalledWith(
+        "versions/test-id/2024-01-01T00:00:00Z.bin"
+      );
+      expect(mockBucket.delete).toHaveBeenCalledWith(
+        "versions/test-id/2024-01-02T00:00:00Z.bin"
+      );
+      expect(mockBucket.delete).toHaveBeenCalledTimes(3);
     });
 
     it("should handle delete errors", async () => {
       await storage.initialize();
+      mockBucket.list.mockResolvedValue({ objects: [], truncated: false });
       mockBucket.delete.mockRejectedValue(new Error("Delete failed"));
 
       await expect(storage.deleteGist("test-id")).rejects.toThrow(AppError);
@@ -288,6 +355,7 @@ describe("R2Storage", () => {
       created_at: "2024-01-01T00:00:00Z",
       updated_at: "2024-01-01T00:00:00Z",
       version: 1,
+      current_version: "2024-01-01T00:00:00Z",
       total_size: 1000,
       blob_count: 1,
       encrypted_metadata: {
@@ -365,12 +433,88 @@ describe("R2Storage", () => {
       expect(stats.totalSize).toBe(300);
     });
   });
+
+  describe("listVersions", () => {
+    it("should list all versions for a gist", async () => {
+      await storage.initialize();
+      mockBucket.list.mockResolvedValue({
+        objects: [
+          { key: "versions/test-id/2024-01-02T00:00:00Z.bin", size: 200 },
+          { key: "versions/test-id/2024-01-01T00:00:00Z.bin", size: 100 },
+        ],
+        truncated: false,
+      });
+
+      const versions = await storage.listVersions("test-id");
+
+      expect(versions).toHaveLength(2);
+      expect(versions[0]).toEqual({
+        timestamp: "2024-01-02T00:00:00Z",
+        size: 200,
+      });
+      expect(versions[1]).toEqual({
+        timestamp: "2024-01-01T00:00:00Z",
+        size: 100,
+      });
+    });
+
+    it("should handle list errors", async () => {
+      await storage.initialize();
+      mockBucket.list.mockRejectedValue(new Error("List failed"));
+
+      await expect(storage.listVersions("test-id")).rejects.toThrow(AppError);
+    });
+  });
+
+  describe("pruneVersions", () => {
+    it("should delete old versions beyond limit", async () => {
+      await storage.initialize();
+      mockBucket.list.mockResolvedValue({
+        objects: [
+          { key: "versions/test-id/2024-01-05T00:00:00Z.bin", size: 100 },
+          { key: "versions/test-id/2024-01-04T00:00:00Z.bin", size: 100 },
+          { key: "versions/test-id/2024-01-03T00:00:00Z.bin", size: 100 },
+          { key: "versions/test-id/2024-01-02T00:00:00Z.bin", size: 100 },
+          { key: "versions/test-id/2024-01-01T00:00:00Z.bin", size: 100 },
+        ],
+        truncated: false,
+      });
+
+      const deleted = await storage.pruneVersions("test-id", 3);
+
+      expect(deleted).toBe(2);
+      expect(mockBucket.delete).toHaveBeenCalledWith(
+        "versions/test-id/2024-01-02T00:00:00Z.bin"
+      );
+      expect(mockBucket.delete).toHaveBeenCalledWith(
+        "versions/test-id/2024-01-01T00:00:00Z.bin"
+      );
+    });
+
+    it("should not delete if under limit", async () => {
+      await storage.initialize();
+      mockBucket.list.mockResolvedValue({
+        objects: [
+          { key: "versions/test-id/2024-01-02T00:00:00Z.bin", size: 100 },
+          { key: "versions/test-id/2024-01-01T00:00:00Z.bin", size: 100 },
+        ],
+        truncated: false,
+      });
+
+      const deleted = await storage.pruneVersions("test-id", 50);
+
+      expect(deleted).toBe(0);
+      expect(mockBucket.delete).not.toHaveBeenCalled();
+    });
+  });
 });
 
 describe("StorageKeys", () => {
   it("should generate correct keys", () => {
     expect(StorageKeys.metadata("test-id")).toBe("metadata/test-id.json");
-    expect(StorageKeys.blob("test-id")).toBe("blobs/test-id");
+    expect(StorageKeys.version("test-id", "2024-01-01T00:00:00Z")).toBe(
+      "versions/test-id/2024-01-01T00:00:00Z.bin"
+    );
     expect(StorageKeys.temp("test-id")).toBe("temp/test-id");
   });
 });
