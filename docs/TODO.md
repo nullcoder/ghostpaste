@@ -117,7 +117,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Display Components
 
-- [ ] Create GistViewer component - [#61](https://github.com/nullcoder/ghostpaste/issues/61)
+- [x] Create GistViewer component - [#61](https://github.com/nullcoder/ghostpaste/issues/61)
 - [ ] Create FileList component (vertical display for viewing) - [#66](https://github.com/nullcoder/ghostpaste/issues/66)
 - [ ] Create VersionHistory dropdown - [#71](https://github.com/nullcoder/ghostpaste/issues/71)
 - [ ] Create LoadingStates component - [#67](https://github.com/nullcoder/ghostpaste/issues/67)
