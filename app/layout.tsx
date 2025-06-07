@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
+import { FooterWithBuildInfo } from "@/components/footer";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Toaster } from "sonner";
 import "./globals.css";
@@ -43,6 +44,7 @@ export default function RootLayout({
             <main id="main-content" className="flex-1">
               <ErrorBoundary>{children}</ErrorBoundary>
             </main>
+            <FooterWithBuildInfo />
           </ErrorBoundary>
           <Toaster />
         </ThemeProvider>
