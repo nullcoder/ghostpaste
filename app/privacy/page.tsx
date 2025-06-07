@@ -37,12 +37,7 @@ export default function PrivacyPage() {
               Privacy Policy
             </h1>
             <p className="text-muted-foreground text-lg">
-              Last updated:{" "}
-              {new Date().toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
+              Last updated: January 6, 2025
             </p>
           </div>
         </Container>
