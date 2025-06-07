@@ -15,10 +15,21 @@ vi.mock("next/server", () => ({
   },
 }));
 
+// Mock logger
+const mockLogger = {
+  error: vi.fn(),
+  warn: vi.fn(),
+  info: vi.fn(),
+  debug: vi.fn(),
+};
+
+vi.mock("@/lib/logger", () => ({
+  createLogger: vi.fn(() => mockLogger),
+}));
+
 describe("API Error Utilities", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   describe("toApiErrorResponse", () => {
@@ -74,7 +85,7 @@ describe("API Error Utilities", () => {
 
       errorResponse(error);
 
-      expect(console.error).toHaveBeenCalledWith("Unexpected error:", error);
+      expect(mockLogger.error).toHaveBeenCalledWith("Unexpected error:", error);
       expect(NextResponse.json).toHaveBeenCalledWith(
         {
           error: ErrorCode.INTERNAL_SERVER_ERROR,

@@ -5,6 +5,7 @@ import { FILE_LIMITS } from "@/lib/constants";
 import { AppError } from "@/types/errors";
 import { generateSalt, hashPin } from "@/lib/auth";
 import { errorResponse, ApiErrors, validationError } from "@/lib/api-errors";
+import { createLogger } from "@/lib/logger";
 import type { CreateGistResponse } from "@/types/api";
 import type { GistMetadata } from "@/types/models";
 
@@ -56,6 +57,8 @@ async function parseMultipartFormData(request: NextRequest): Promise<{
     password: passwordValue || undefined,
   };
 }
+
+const logger = createLogger("api:gists:post");
 
 /**
  * POST /api/gists
@@ -160,12 +163,18 @@ export async function POST(request: NextRequest) {
       }
 
       // Log unexpected errors
-      console.error("Storage error:", error);
+      logger.error(
+        "Storage error:",
+        error instanceof Error ? error : new Error(String(error))
+      );
       return errorResponse(ApiErrors.storageError("Failed to store gist data"));
     }
   } catch (error) {
     // Handle unexpected errors
-    console.error("Unexpected error in POST /api/gists:", error);
+    logger.error(
+      "Unexpected error in POST /api/gists:",
+      error instanceof Error ? error : new Error(String(error))
+    );
     return errorResponse(
       error instanceof Error ? error : new Error("Unknown error")
     );
