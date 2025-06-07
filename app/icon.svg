@@ -3,15 +3,15 @@
   <!-- Background circle for better visibility -->
   <circle cx="16" cy="16" r="15" fill="#f8f9fa" stroke="#e9ecef" stroke-width="1"/>
   
-  <!-- Main ghost body -->
-  <path d="M16 6c-4.4 0-8 3.6-8 8v9l1.5 2.5c0.3 0.5 1 0.3 1.3-0.2L12 23.8c0.2-0.3 0.6-0.3 0.8 0L14 25.3c0.2 0.3 0.6 0.3 0.8 0L16 23.8c0.2-0.3 0.6-0.3 0.8 0L18 25.3c0.2 0.3 0.6 0.3 0.8 0L20 23.8c0.2-0.3 0.6-0.2 1.2 0.2L22.5 25.5c0.3 0.5 1 0.3 1.3-0.2L24 23V14c0-4.4-3.6-8-8-8Z" fill="#6366f1"/>
+  <!-- Main ghost body - enlarged to fill more space -->
+  <path d="M16 2c-6.6 0-12 5.4-12 12v13.5l2.25 3.75c0.45 0.75 1.5 0.45 1.95-0.3L10.5 28.2c0.3-0.45 0.9-0.45 1.2 0L13.5 30.45c0.3 0.45 0.9 0.45 1.2 0L16 28.2c0.3-0.45 0.9-0.45 1.2 0L18.5 30.45c0.3 0.45 0.9 0.45 1.2 0L21.5 28.2c0.3-0.45 0.9-0.3 1.8 0.3L25.75 30.75c0.45 0.75 1.5 0.45 1.95-0.3L28 27.5V14c0-6.6-5.4-12-12-12Z" fill="#6366f1"/>
   
-  <!-- Code bracket eyes -->
-  <text x="12" y="18" font-family="monospace" font-size="8" fill="#f8f9fa" text-anchor="middle">&lt;</text>
-  <text x="20" y="18" font-family="monospace" font-size="8" fill="#f8f9fa" text-anchor="middle">&gt;</text>
+  <!-- Code bracket eyes - adjusted position -->
+  <text x="10" y="20" font-family="monospace" font-size="10" fill="#f8f9fa" text-anchor="middle">&lt;</text>
+  <text x="22" y="20" font-family="monospace" font-size="10" fill="#f8f9fa" text-anchor="middle">&gt;</text>
   
-  <!-- Binary dots for tech aesthetic -->
-  <circle cx="14" cy="20" r="0.8" fill="#f8f9fa" opacity="0.8"/>
-  <circle cx="16" cy="20" r="0.8" fill="#f8f9fa" opacity="0.6"/>
-  <circle cx="18" cy="20" r="0.8" fill="#f8f9fa" opacity="0.8"/>
+  <!-- Binary dots - adjusted position and size -->
+  <circle cx="12" cy="23" r="1" fill="#f8f9fa" opacity="0.8"/>
+  <circle cx="16" cy="23" r="1" fill="#f8f9fa" opacity="0.6"/>
+  <circle cx="20" cy="23" r="1" fill="#f8f9fa" opacity="0.8"/>
 </svg>
