@@ -110,7 +110,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [x] Create FileEditor component (single file with name, language, editor) - [#55](https://github.com/nullcoder/ghostpaste/issues/55)
 - [x] Create MultiFileEditor component (vertical layout, GitHub Gist style) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
 - [x] Create CodeEditor component (CodeMirror wrapper) - [#54](https://github.com/nullcoder/ghostpaste/issues/54)
-- [ ] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
+- [x] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
 - [ ] Create ExpirySelector component - [#64](https://github.com/nullcoder/ghostpaste/issues/64)
 - [ ] Create PINInput component - [#65](https://github.com/nullcoder/ghostpaste/issues/65)
 - [x] Create ShareDialog component with copy functionality - [#60](https://github.com/nullcoder/ghostpaste/issues/60)
@@ -125,10 +125,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### UI Features
 
-- [ ] Implement dark/light theme toggle (included in Header #53)
-- [ ] Add toast notifications - [#68](https://github.com/nullcoder/ghostpaste/issues/68)
+- [x] Implement dark/light theme toggle (included in Header #53)
+- [x] Add toast notifications - [#68](https://github.com/nullcoder/ghostpaste/issues/68)
 - [ ] Create keyboard shortcuts - [#72](https://github.com/nullcoder/ghostpaste/issues/72)
-- [ ] Add copy-to-clipboard functionality - [#59](https://github.com/nullcoder/ghostpaste/issues/59)
+- [x] Add copy-to-clipboard functionality - [#59](https://github.com/nullcoder/ghostpaste/issues/59)
 - [ ] Implement responsive design
 - [x] Add file editor auto-scroll on add
 - [x] Implement filename auto-generation
@@ -328,8 +328,8 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 **Phase Completion:**
 
 - [x] Phase 1: Project Setup
-- [ ] Phase 2: Core Infrastructure
-- [ ] Phase 3: Encryption Implementation
+- [x] Phase 2: Core Infrastructure
+- [x] Phase 3: Encryption Implementation
 - [ ] Phase 4: UI Components
 - [ ] Phase 5: API Development
 - [ ] Phase 6: Features Implementation
@@ -337,7 +337,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Phase 8: Deployment
 - [ ] Phase 9: Documentation & Polish
 
-**Last Updated:** 2025-06-06
+**Last Updated:** 2025-01-06
 
 ---
 
