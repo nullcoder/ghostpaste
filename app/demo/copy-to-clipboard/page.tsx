@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   CopyButton,
@@ -31,6 +31,7 @@ import { Check, Copy, Download, FileText, Globe, Code } from "lucide-react";
 export default function CopyToClipboardDemo() {
   const [customText, setCustomText] = useState("Hello, World!");
   const [copyResult, setCopyResult] = useState<string>("");
+  const [isSupported, setIsSupported] = useState<boolean | null>(null);
   const [testFiles] = useState([
     { name: "index.js", content: 'console.log("Hello, World!");' },
     {
@@ -39,6 +40,11 @@ export default function CopyToClipboardDemo() {
     },
     { name: "README.md", content: "# My Project\n\nThis is a sample project." },
   ]);
+
+  // Check copy support on client side only
+  useEffect(() => {
+    setIsSupported(isCopySupported());
+  }, []);
 
   const handleCustomCopy = async () => {
     const result = await copyToClipboard(customText);
@@ -101,7 +107,9 @@ export default function CopyToClipboardDemo() {
           </p>
           <div className="mt-4 flex items-center gap-2">
             <span className="text-sm">Copy Support:</span>
-            {isCopySupported() ? (
+            {isSupported === null ? (
+              <span className="text-muted-foreground">Checking...</span>
+            ) : isSupported ? (
               <span className="inline-flex items-center gap-1 text-green-600">
                 <Check className="h-4 w-4" />
                 Supported
@@ -408,17 +416,30 @@ export default function CopyToClipboardDemo() {
                     <ul className="text-muted-foreground space-y-1 text-sm">
                       <li>
                         • Modern Clipboard API:{" "}
-                        {navigator.clipboard ? "✅" : "❌"}
+                        {typeof navigator !== "undefined" && navigator.clipboard
+                          ? "✅"
+                          : "❌"}
                       </li>
                       <li>
-                        • Secure Context: {window.isSecureContext ? "✅" : "❌"}
+                        • Secure Context:{" "}
+                        {typeof window !== "undefined" && window.isSecureContext
+                          ? "✅"
+                          : "❌"}
                       </li>
                       <li>
                         • Fallback Support:{" "}
-                        {document.queryCommandSupported?.("copy") ? "✅" : "❌"}
+                        {typeof document !== "undefined" &&
+                        document.queryCommandSupported?.("copy")
+                          ? "✅"
+                          : "❌"}
                       </li>
                       <li>
-                        • Overall Support: {isCopySupported() ? "✅" : "❌"}
+                        • Overall Support:{" "}
+                        {isSupported === null
+                          ? "⏳"
+                          : isSupported
+                            ? "✅"
+                            : "❌"}
                       </li>
                     </ul>
                   </div>
