@@ -24,7 +24,7 @@ describe("CodeEditor", () => {
     });
   });
 
-  it("calls onChange when content is modified", async () => {
+  it("calls onChange on blur after content is modified", async () => {
     const handleChange = vi.fn();
     const user = userEvent.setup();
 
@@ -41,8 +41,14 @@ describe("CodeEditor", () => {
     await user.click(editor);
     await user.type(editor, "test");
 
+    // onChange shouldn't be called yet
+    expect(handleChange).not.toHaveBeenCalled();
+
+    // Blur the editor
+    await user.tab();
+
     await waitFor(() => {
-      expect(handleChange).toHaveBeenCalled();
+      expect(handleChange).toHaveBeenCalledWith("test");
     });
   });
 
@@ -50,7 +56,7 @@ describe("CodeEditor", () => {
     const handleChange = vi.fn();
 
     render(
-      <CodeEditor value="readonly content" readOnly onChange={handleChange} />
+      <CodeEditor value="readonly content" readOnly onChange={handleChange} />,
     );
 
     await waitFor(() => {
@@ -73,7 +79,7 @@ describe("CodeEditor", () => {
 
   it("applies custom className", () => {
     const { container } = render(
-      <CodeEditor className="custom-editor-class" />
+      <CodeEditor className="custom-editor-class" />,
     );
 
     expect(container.firstChild).toHaveClass("custom-editor-class");
@@ -138,6 +144,26 @@ describe("CodeEditor", () => {
       const editor = document.querySelector(".cm-editor");
       expect(editor).toBeInTheDocument();
     });
+  });
+
+  it("exposes an imperative API to get the current value", async () => {
+    const ref = { current: null } as React.MutableRefObject<any>;
+    const user = userEvent.setup();
+
+    render(<CodeEditor ref={ref} />);
+
+    await waitFor(() => {
+      const editor = document.querySelector(".cm-content");
+      expect(editor).toBeInTheDocument();
+    });
+
+    const editor = document.querySelector(".cm-content") as HTMLElement;
+    await user.click(editor);
+    await user.type(editor, "value");
+
+    await user.tab();
+
+    expect(ref.current?.getValue()).toBe("value");
   });
 
   it("renders loading state during SSR", () => {

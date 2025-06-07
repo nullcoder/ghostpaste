@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import {
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+  useImperativeHandle,
+  forwardRef,
+} from "react";
 import { EditorState, Extension, Compartment } from "@codemirror/state";
 import { EditorView, keymap, lineNumbers, placeholder } from "@codemirror/view";
 import { defaultKeymap, indentWithTab } from "@codemirror/commands";
@@ -72,6 +79,15 @@ export interface CodeEditorProps {
   theme?: "light" | "dark";
 }
 
+export interface CodeEditorHandle {
+  /** Get the current editor value */
+  getValue: () => string;
+  /** Replace the editor content */
+  setValue: (val: string) => void;
+  /** Focus the editor */
+  focus: () => void;
+}
+
 // Create compartments for dynamic configuration
 const languageCompartment = new Compartment();
 const themeCompartment = new Compartment();
@@ -79,210 +95,240 @@ const readOnlyCompartment = new Compartment();
 const lineNumbersCompartment = new Compartment();
 const lineWrappingCompartment = new Compartment();
 
-export function CodeEditor({
-  value = "",
-  onChange,
-  language = "javascript",
-  placeholder: placeholderText = "Enter your code here...",
-  readOnly = false,
-  showLineNumbers = true,
-  wordWrap = false,
-  className,
-  height = "400px",
-  theme: themeOverride,
-}: CodeEditorProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const viewRef = useRef<EditorView | null>(null);
-  const { theme: systemTheme } = useTheme();
+export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
+  function CodeEditor(
+    {
+      value = "",
+      onChange,
+      language = "javascript",
+      placeholder: placeholderText = "Enter your code here...",
+      readOnly = false,
+      showLineNumbers = true,
+      wordWrap = false,
+      className,
+      height = "400px",
+      theme: themeOverride,
+    }: CodeEditorProps,
+    ref,
+  ) {
+    const containerRef = useRef<HTMLDivElement>(null);
+    const viewRef = useRef<EditorView | null>(null);
+    const { theme: systemTheme } = useTheme();
 
-  // Store the onChange callback in a ref to avoid stale closures
-  const onChangeRef = useRef(onChange);
-  onChangeRef.current = onChange;
+    // Store the onChange callback in a ref to avoid stale closures
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
 
-  // Determine the active theme
-  const activeTheme = themeOverride || systemTheme || "light";
-
-  // Get language extension
-  const getLanguageExtension = useCallback((lang: string) => {
-    const langKey = lang.toLowerCase();
-    const langFunc = languageModes[langKey];
-    return langFunc ? langFunc() : javascript();
-  }, []);
-
-  // Get theme extension
-  const getThemeExtension = useCallback((theme: string) => {
-    return theme === "dark" ? oneDark : githubLight;
-  }, []);
-
-  // Create base extensions that don't change
-  const baseExtensions = useMemo(
-    () => [
-      indentOnInput(),
-      bracketMatching(),
-      closeBrackets(),
-      autocompletion(),
-      highlightActiveLine(),
-      highlightSelectionMatches(),
-      keymap.of([...defaultKeymap, ...searchKeymap, indentWithTab]),
-      placeholder(placeholderText),
-      EditorView.theme({
-        "&": {
-          fontSize: "14px",
-          height: height,
-          fontFamily:
-            "var(--font-geist-mono), ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
+    useImperativeHandle(
+      ref,
+      () => ({
+        getValue: () => viewRef.current?.state.doc.toString() ?? "",
+        setValue: (val: string) => {
+          if (!viewRef.current) return;
+          const current = viewRef.current.state.doc.toString();
+          if (val !== current) {
+            viewRef.current.dispatch({
+              changes: { from: 0, to: current.length, insert: val },
+            });
+          }
         },
-        ".cm-content": {
-          padding: "12px",
-          fontFamily: "inherit",
-        },
-        ".cm-focused": {
-          outline: "none",
-        },
-        "&.cm-editor.cm-focused": {
-          outline: "2px solid var(--color-ring)",
-          outlineOffset: "2px",
-        },
-        ".cm-placeholder": {
-          color: "var(--color-muted-foreground)",
-          fontStyle: "italic",
-        },
-        ".cm-cursor": {
-          borderLeftWidth: "2px",
-        },
-        ".cm-scroller": {
-          fontFamily: "inherit",
-          lineHeight: "1.5",
-        },
-        ".cm-gutters": {
-          fontFamily: "inherit",
+        focus: () => {
+          viewRef.current?.focus();
         },
       }),
-    ],
-    [placeholderText, height]
-  );
+      [],
+    );
 
-  // Initialize the editor
-  useEffect(() => {
-    if (!containerRef.current || viewRef.current) return;
+    // Determine the active theme
+    const activeTheme = themeOverride || systemTheme || "light";
 
-    // Create extensions with compartments
-    const extensions = [
-      ...baseExtensions,
-      languageCompartment.of(getLanguageExtension(language)),
-      themeCompartment.of(getThemeExtension(activeTheme)),
-      readOnlyCompartment.of(EditorState.readOnly.of(readOnly)),
-      lineNumbersCompartment.of(
-        showLineNumbers ? [lineNumbers(), foldGutter()] : []
-      ),
-      lineWrappingCompartment.of(wordWrap ? EditorView.lineWrapping : []),
-      EditorView.updateListener.of((update) => {
-        if (update.docChanged && onChangeRef.current) {
-          const newValue = update.state.doc.toString();
-          onChangeRef.current(newValue);
-        }
-      }),
-    ];
+    // Get language extension
+    const getLanguageExtension = useCallback((lang: string) => {
+      const langKey = lang.toLowerCase();
+      const langFunc = languageModes[langKey];
+      return langFunc ? langFunc() : javascript();
+    }, []);
 
-    // Create editor state
-    const state = EditorState.create({
-      doc: value,
-      extensions,
-    });
+    // Get theme extension
+    const getThemeExtension = useCallback((theme: string) => {
+      return theme === "dark" ? oneDark : githubLight;
+    }, []);
 
-    // Create editor view
-    const view = new EditorView({
-      state,
-      parent: containerRef.current,
-    });
+    // Create base extensions that don't change
+    const baseExtensions = useMemo(
+      () => [
+        indentOnInput(),
+        bracketMatching(),
+        closeBrackets(),
+        autocompletion(),
+        highlightActiveLine(),
+        highlightSelectionMatches(),
+        keymap.of([...defaultKeymap, ...searchKeymap, indentWithTab]),
+        placeholder(placeholderText),
+        EditorView.theme({
+          "&": {
+            fontSize: "14px",
+            height: height,
+            fontFamily:
+              "var(--font-geist-mono), ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
+          },
+          ".cm-content": {
+            padding: "12px",
+            fontFamily: "inherit",
+          },
+          ".cm-focused": {
+            outline: "none",
+          },
+          "&.cm-editor.cm-focused": {
+            outline: "2px solid var(--color-ring)",
+            outlineOffset: "2px",
+          },
+          ".cm-placeholder": {
+            color: "var(--color-muted-foreground)",
+            fontStyle: "italic",
+          },
+          ".cm-cursor": {
+            borderLeftWidth: "2px",
+          },
+          ".cm-scroller": {
+            fontFamily: "inherit",
+            lineHeight: "1.5",
+          },
+          ".cm-gutters": {
+            fontFamily: "inherit",
+          },
+        }),
+      ],
+      [placeholderText, height],
+    );
 
-    viewRef.current = view;
+    // Initialize the editor
+    useEffect(() => {
+      if (!containerRef.current || viewRef.current) return;
 
-    // Cleanup
-    return () => {
-      view.destroy();
-      viewRef.current = null;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only run once on mount - we handle all updates through compartments
+      // Create extensions with compartments
+      const extensions = [
+        ...baseExtensions,
+        languageCompartment.of(getLanguageExtension(language)),
+        themeCompartment.of(getThemeExtension(activeTheme)),
+        readOnlyCompartment.of(EditorState.readOnly.of(readOnly)),
+        lineNumbersCompartment.of(
+          showLineNumbers ? [lineNumbers(), foldGutter()] : [],
+        ),
+        lineWrappingCompartment.of(wordWrap ? EditorView.lineWrapping : []),
+      ];
 
-  // Update language
-  useEffect(() => {
-    if (!viewRef.current) return;
-
-    viewRef.current.dispatch({
-      effects: languageCompartment.reconfigure(getLanguageExtension(language)),
-    });
-  }, [language, getLanguageExtension]);
-
-  // Update theme
-  useEffect(() => {
-    if (!viewRef.current) return;
-
-    viewRef.current.dispatch({
-      effects: themeCompartment.reconfigure(getThemeExtension(activeTheme)),
-    });
-  }, [activeTheme, getThemeExtension]);
-
-  // Update read-only state
-  useEffect(() => {
-    if (!viewRef.current) return;
-
-    viewRef.current.dispatch({
-      effects: readOnlyCompartment.reconfigure(
-        EditorState.readOnly.of(readOnly)
-      ),
-    });
-  }, [readOnly]);
-
-  // Update line numbers
-  useEffect(() => {
-    if (!viewRef.current) return;
-
-    viewRef.current.dispatch({
-      effects: lineNumbersCompartment.reconfigure(
-        showLineNumbers ? [lineNumbers(), foldGutter()] : []
-      ),
-    });
-  }, [showLineNumbers]);
-
-  // Update line wrapping
-  useEffect(() => {
-    if (!viewRef.current) return;
-
-    viewRef.current.dispatch({
-      effects: lineWrappingCompartment.reconfigure(
-        wordWrap ? EditorView.lineWrapping : []
-      ),
-    });
-  }, [wordWrap]);
-
-  // Update content when value changes from outside
-  useEffect(() => {
-    if (!viewRef.current) return;
-
-    const currentValue = viewRef.current.state.doc.toString();
-    if (value !== currentValue) {
-      // Use transaction to update the document
-      viewRef.current.dispatch({
-        changes: {
-          from: 0,
-          to: currentValue.length,
-          insert: value,
-        },
+      // Create editor state
+      const state = EditorState.create({
+        doc: value,
+        extensions,
       });
-    }
-  }, [value]);
 
-  return (
-    <div
-      ref={containerRef}
-      className={cn(
-        "bg-background overflow-hidden rounded-lg border",
-        "focus-within:ring-ring focus-within:ring-2 focus-within:ring-offset-2",
-        readOnly && "opacity-80",
-        className
-      )}
-    />
-  );
-}
+      // Create editor view
+      const view = new EditorView({
+        state,
+        parent: containerRef.current,
+      });
+
+      const handleBlur = () => {
+        if (onChangeRef.current) {
+          onChangeRef.current(view.state.doc.toString());
+        }
+      };
+
+      view.dom.addEventListener("blur", handleBlur);
+
+      viewRef.current = view;
+
+      // Cleanup
+      return () => {
+        view.dom.removeEventListener("blur", handleBlur);
+        view.destroy();
+        viewRef.current = null;
+      };
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Only run once on mount - we handle all updates through compartments
+
+    // Update language
+    useEffect(() => {
+      if (!viewRef.current) return;
+
+      viewRef.current.dispatch({
+        effects: languageCompartment.reconfigure(
+          getLanguageExtension(language),
+        ),
+      });
+    }, [language, getLanguageExtension]);
+
+    // Update theme
+    useEffect(() => {
+      if (!viewRef.current) return;
+
+      viewRef.current.dispatch({
+        effects: themeCompartment.reconfigure(getThemeExtension(activeTheme)),
+      });
+    }, [activeTheme, getThemeExtension]);
+
+    // Update read-only state
+    useEffect(() => {
+      if (!viewRef.current) return;
+
+      viewRef.current.dispatch({
+        effects: readOnlyCompartment.reconfigure(
+          EditorState.readOnly.of(readOnly),
+        ),
+      });
+    }, [readOnly]);
+
+    // Update line numbers
+    useEffect(() => {
+      if (!viewRef.current) return;
+
+      viewRef.current.dispatch({
+        effects: lineNumbersCompartment.reconfigure(
+          showLineNumbers ? [lineNumbers(), foldGutter()] : [],
+        ),
+      });
+    }, [showLineNumbers]);
+
+    // Update line wrapping
+    useEffect(() => {
+      if (!viewRef.current) return;
+
+      viewRef.current.dispatch({
+        effects: lineWrappingCompartment.reconfigure(
+          wordWrap ? EditorView.lineWrapping : [],
+        ),
+      });
+    }, [wordWrap]);
+
+    // Update content when value changes from outside
+    useEffect(() => {
+      if (!viewRef.current) return;
+
+      const currentValue = viewRef.current.state.doc.toString();
+      if (value !== currentValue) {
+        // Use transaction to update the document
+        viewRef.current.dispatch({
+          changes: {
+            from: 0,
+            to: currentValue.length,
+            insert: value,
+          },
+        });
+      }
+    }, [value]);
+
+    return (
+      <div
+        ref={containerRef}
+        className={cn(
+          "bg-background overflow-hidden rounded-lg border",
+          "focus-within:ring-ring focus-within:ring-2 focus-within:ring-offset-2",
+          readOnly && "opacity-80",
+          className,
+        )}
+      />
+    );
+  },
+);
