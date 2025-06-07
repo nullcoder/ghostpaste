@@ -57,7 +57,10 @@ export function Header() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold transition-opacity hover:opacity-80"
         >
-          <GhostLogo size="lg" className="text-primary" />
+          <GhostLogo
+            size="lg"
+            className="text-indigo-600 dark:text-indigo-400"
+          />
           <span>GhostPaste</span>
         </Link>
 
@@ -130,7 +133,10 @@ export function Header() {
             >
               <SheetHeader className="p-6 pb-0">
                 <SheetTitle className="flex items-center gap-2 text-lg">
-                  <GhostLogo size="sm" className="text-primary" />
+                  <GhostLogo
+                    size="sm"
+                    className="text-indigo-600 dark:text-indigo-400"
+                  />
                   <span>GhostPaste</span>
                 </SheetTitle>
               </SheetHeader>

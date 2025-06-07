@@ -8,7 +8,7 @@ export default function NotFound() {
     <div className="container mx-auto flex min-h-[80vh] flex-col items-center justify-center px-4 text-center">
       {/* Floating Ghost */}
       <div className="animate-float mb-8">
-        <GhostLogo size="2xl" className="text-muted-foreground/50" />
+        <GhostLogo size="2xl" className="text-indigo-500/50" />
       </div>
 
       {/* 404 Text with Glitch Effect */}
