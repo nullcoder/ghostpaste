@@ -112,7 +112,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [x] Create CodeEditor component (CodeMirror wrapper) - [#54](https://github.com/nullcoder/ghostpaste/issues/54)
 - [x] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
 - [x] Create ExpirySelector component - [#64](https://github.com/nullcoder/ghostpaste/issues/64)
-- [ ] Create PINInput component - [#65](https://github.com/nullcoder/ghostpaste/issues/65)
+- [x] Create PasswordInput component (formerly PINInput) - [#65](https://github.com/nullcoder/ghostpaste/issues/65)
 - [x] Create ShareDialog component with copy functionality - [#60](https://github.com/nullcoder/ghostpaste/issues/60)
 
 ### Display Components

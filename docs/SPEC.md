@@ -75,8 +75,8 @@ interface GistMetadata {
   schema_version: 1; // For future migrations
 
   // Edit authentication (optional)
-  edit_pin_hash?: string; // PBKDF2 hash of edit PIN
-  edit_pin_salt?: string; // Random salt for hash
+  edit_password_hash?: string; // PBKDF2 hash of edit password
+  edit_password_salt?: string; // Random salt for hash
 
   // Editor preferences (unencrypted for quick UI setup)
   editor: {
@@ -133,14 +133,17 @@ Stored format:
 - **IV:** Fresh 12-byte IV per encryption
 - **URL Format:** `https://ghostpaste.dev/g/{id}#key={base64-key}`
 
-### PIN Protection
+### Password Protection
 
 For editable gists:
 
-- **Algorithm:** PBKDF2-SHA256
+- **Algorithm:** PBKDF2-SHA256 (server-side)
 - **Iterations:** 100,000
 - **Salt:** Random 16 bytes per gist
-- **Input:** User PIN (4-8 digits)
+- **Input:** User password (8-64 characters, alphanumeric + special characters)
+- **Implementation:** All hashing performed server-side for security
+- **Transport:** Password sent over HTTPS only
+- **Future:** Consider OPAQUE protocol for zero-knowledge password authentication
 
 ---
 
@@ -157,7 +160,7 @@ Content-Type: multipart/form-data
 Parts:
 - metadata: JSON with GistMetadata
 - blob: Binary encrypted content
-- pin: Optional edit PIN (plain text)
+- password: Optional edit password (plain text)
 
 Response: 201 Created
 {
@@ -192,7 +195,7 @@ Response: 200 OK
 ```http
 PUT /api/gists/{id}
 Content-Type: multipart/form-data
-X-Edit-PIN: {pin}
+X-Edit-Password: {password}
 
 Parts:
 - metadata: Updated metadata JSON
@@ -217,7 +220,7 @@ Response: 200 OK
 Error codes:
 
 - `NOT_FOUND` - Gist doesn't exist
-- `INVALID_PIN` - Wrong edit PIN
+- `INVALID_PASSWORD` - Wrong edit password
 - `VERSION_CONFLICT` - Concurrent edit
 - `SIZE_LIMIT` - Exceeds limits
 - `RATE_LIMIT` - Too many requests
@@ -226,18 +229,18 @@ Error codes:
 
 ## 📏 Limits
 
-| Resource           | Limit      | Rationale                |
-| ------------------ | ---------- | ------------------------ |
-| File size          | 500 KB     | Covers 99% of code files |
-| Gist size          | 5 MB       | ~10-20 typical files     |
-| Files per gist     | 20         | UI performance           |
-| Versions kept      | 50         | Storage management       |
-| Create rate        | 30/hour/IP | Prevent abuse            |
-| Update rate        | 60/hour/IP | Allow active editing     |
-| Minimum PIN length | 4 digits   | Basic security           |
-| Maximum PIN length | 8 digits   | Usability                |
-| Request size       | 100 MB     | Cloudflare Workers limit |
-| CPU time           | 50ms       | Workers CPU limit        |
+| Resource                | Limit         | Rationale                |
+| ----------------------- | ------------- | ------------------------ |
+| File size               | 500 KB        | Covers 99% of code files |
+| Gist size               | 5 MB          | ~10-20 typical files     |
+| Files per gist          | 20            | UI performance           |
+| Versions kept           | 50            | Storage management       |
+| Create rate             | 30/hour/IP    | Prevent abuse            |
+| Update rate             | 60/hour/IP    | Allow active editing     |
+| Minimum password length | 8 characters  | Security best practice   |
+| Maximum password length | 64 characters | Usability and security   |
+| Request size            | 100 MB        | Cloudflare Workers limit |
+| CPU time                | 50ms          | Workers CPU limit        |
 
 ---
 
@@ -319,7 +322,7 @@ img-src 'self' data: https:;
 3. Sets preferences:
    - Description (optional)
    - Expiration (optional)
-   - Edit PIN (optional)
+   - Edit password (optional)
    - One-time view (optional)
 4. Click "Create"
 5. Get shareable URL
@@ -336,7 +339,7 @@ img-src 'self' data: https:;
 ### Editing a Gist
 
 1. Click "Edit" button
-2. Enter PIN if required
+2. Enter password if required
 3. Make changes:
    - Edit existing files inline
    - Add new files at the bottom
