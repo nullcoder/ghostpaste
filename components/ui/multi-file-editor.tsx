@@ -25,6 +25,8 @@ export interface MultiFileEditorProps {
   maxFileSize?: number;
   /** Custom class name */
   className?: string;
+  /** Callback when validation state changes */
+  onValidationChange?: (isValid: boolean) => void;
 }
 
 const DEFAULT_MAX_FILES = 20;
@@ -39,6 +41,7 @@ export function MultiFileEditor({
   maxTotalSize = DEFAULT_MAX_TOTAL_SIZE,
   maxFileSize: _maxFileSize = DEFAULT_MAX_FILE_SIZE, // Currently unused but available for future file size validation
   className,
+  onValidationChange,
 }: MultiFileEditorProps) {
   // Initialize with at least one file
   const [files, setFiles] = useState<FileData[]>(() => {
@@ -65,17 +68,33 @@ export function MultiFileEditor({
     }, 0);
   }, [files]);
 
-  // Get all files for validation (we need both name and id)
-  const allFiles = useMemo(
-    () => files.map((f) => ({ id: f.id, name: f.name })),
-    [files]
-  );
-
   // Check if we can add more files
   const canAddFile = files.length < maxFiles && !readOnly;
 
   // Check if we can remove files
   const canRemoveFile = files.length > 1 && !readOnly;
+
+  // Track files with duplicate names
+  const duplicateFilenames = useMemo(() => {
+    const nameCount = new Map<string, number>();
+    const duplicates = new Set<string>();
+
+    // Count occurrences of each filename (case-insensitive)
+    files.forEach((file) => {
+      const lowerName = file.name.toLowerCase();
+      nameCount.set(lowerName, (nameCount.get(lowerName) || 0) + 1);
+    });
+
+    // Find which files have duplicates
+    files.forEach((file) => {
+      const lowerName = file.name.toLowerCase();
+      if ((nameCount.get(lowerName) || 0) > 1) {
+        duplicates.add(file.id);
+      }
+    });
+
+    return duplicates;
+  }, [files]);
 
   // Handle file changes
   const handleFileChange = useCallback(
@@ -136,20 +155,6 @@ export function MultiFileEditor({
     }, 100);
   }, [files, canAddFile, onChange]);
 
-  // Keyboard shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl/Cmd + Enter to add new file
-      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
-        e.preventDefault();
-        addNewFile();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [addNewFile]);
-
   // Total size status
   const sizeStatus = useMemo(() => {
     if (totalSize > maxTotalSize) {
@@ -166,6 +171,30 @@ export function MultiFileEditor({
     }
     return { type: "ok" as const };
   }, [totalSize, maxTotalSize]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + Enter to add new file
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        addNewFile();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [addNewFile]);
+
+  // Notify parent of validation state changes
+  useEffect(() => {
+    if (onValidationChange) {
+      const hasDuplicates = duplicateFilenames.size > 0;
+      const sizeExceeded = sizeStatus.type === "error";
+      const isValid = !hasDuplicates && !sizeExceeded;
+      onValidationChange(isValid);
+    }
+  }, [duplicateFilenames.size, sizeStatus.type, onValidationChange]);
 
   return (
     <div ref={containerRef} className={cn("space-y-6", className)}>
@@ -197,10 +226,12 @@ export function MultiFileEditor({
               onChange={handleFileChange}
               onDelete={handleFileDelete}
               showDelete={canRemoveFile}
-              existingFilenames={allFiles
-                .filter((f) => f.id !== file.id)
-                .map((f) => f.name)}
               readOnly={readOnly}
+              error={
+                duplicateFilenames.has(file.id)
+                  ? "Filename already exists"
+                  : undefined
+              }
             />
           </div>
         ))}
@@ -216,6 +247,13 @@ export function MultiFileEditor({
           )}
         >
           {sizeStatus.message}
+        </p>
+      )}
+
+      {/* Duplicate filename error */}
+      {duplicateFilenames.size > 0 && (
+        <p className="text-destructive text-sm">
+          Please fix duplicate filenames before proceeding
         </p>
       )}
 

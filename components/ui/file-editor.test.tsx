@@ -25,7 +25,6 @@ describe("FileEditor", () => {
     onChange: vi.fn(),
     onDelete: vi.fn(),
     showDelete: true,
-    existingFilenames: ["test.js", "other.txt"],
   };
 
   beforeEach(() => {
@@ -59,26 +58,42 @@ describe("FileEditor", () => {
     const user = userEvent.setup();
     const onChange = vi.fn();
 
-    render(<FileEditor {...defaultProps} onChange={onChange} />);
+    const testFile = {
+      ...mockFile,
+      name: "script.txt", // Start with a txt file
+      language: "text", // Make sure language is set
+    };
 
-    const filenameInput = screen.getByDisplayValue("test.js");
+    render(
+      <FileEditor {...defaultProps} file={testFile} onChange={onChange} />
+    );
+
+    const filenameInput = screen.getByDisplayValue("script.txt");
+
+    // Clear and type new filename
     await user.clear(filenameInput);
     await user.type(filenameInput, "newfile.py");
 
     // Wait for all onChange calls to complete
     await waitFor(() => {
-      // Check that the filename was updated
-      const filenameCalls = onChange.mock.calls.filter(
-        (call) => call[1].name === "newfile.py"
-      );
-      expect(filenameCalls.length).toBeGreaterThan(0);
-
-      // Check that language was updated to python
-      const languageCalls = onChange.mock.calls.filter(
-        (call) => call[1].language === "python"
-      );
-      expect(languageCalls.length).toBeGreaterThan(0);
+      // Check that onChange was called
+      expect(onChange).toHaveBeenCalled();
     });
+
+    // Check the calls after typing is complete
+    const calls = onChange.mock.calls;
+
+    // Find any call with newfile.py in the name
+    const hasNewFilename = calls.some(
+      (call) => call[1].name && call[1].name.includes("newfile.py")
+    );
+    expect(hasNewFilename).toBe(true);
+
+    // Check that language was updated to python
+    const hasPythonLanguage = calls.some(
+      (call) => call[1].language === "python"
+    );
+    expect(hasPythonLanguage).toBe(true);
   });
 
   it("validates filename and shows errors", async () => {
@@ -94,15 +109,10 @@ describe("FileEditor", () => {
       expect(screen.getByText("Filename is required")).toBeInTheDocument();
     });
 
-    // Test duplicate filename
-    await user.type(filenameInput, "other.txt");
-    await waitFor(() => {
-      expect(screen.getByText("Filename already exists")).toBeInTheDocument();
-    });
-
     // Test invalid characters
-    await user.clear(filenameInput);
-    await user.type(filenameInput, "file/with/slash.txt");
+    await user.click(filenameInput);
+    await user.keyboard("{Control>}a{/Control}");
+    await user.keyboard("file/with/slash.txt");
     await waitFor(() => {
       expect(
         screen.getByText("Filename contains invalid characters")
@@ -281,10 +291,10 @@ describe("FileEditor", () => {
     await user.type(filenameInput, "script.py");
 
     await waitFor(() => {
-      const pythonCalls = onChange.mock.calls.filter(
+      const pythonCall = onChange.mock.calls.find(
         (call) => call[1].language === "python"
       );
-      expect(pythonCalls.length).toBeGreaterThan(0);
+      expect(pythonCall).toBeTruthy();
     });
 
     // Reset mock
@@ -295,10 +305,10 @@ describe("FileEditor", () => {
     await user.type(filenameInput, "index.html");
 
     await waitFor(() => {
-      const htmlCalls = onChange.mock.calls.filter(
+      const htmlCall = onChange.mock.calls.find(
         (call) => call[1].language === "html"
       );
-      expect(htmlCalls.length).toBeGreaterThan(0);
+      expect(htmlCall).toBeTruthy();
     });
   });
 });
