@@ -69,8 +69,6 @@ body {
     ]);
   };
 
-  const getAllFilenames = () => files.map((f) => f.name);
-
   return (
     <div className="container mx-auto max-w-6xl p-8">
       <Card className="mb-8">
@@ -110,7 +108,6 @@ body {
                 onChange={handleChange}
                 onDelete={handleDelete}
                 showDelete={files.length > 1}
-                existingFilenames={getAllFilenames()}
                 readOnly={readOnly}
               />
             </CardContent>
@@ -125,7 +122,7 @@ body {
         </CardHeader>
         <CardContent className="space-y-2 text-sm">
           <p>• Try changing filenames and see language auto-detection</p>
-          <p>• Test filename validation (empty, duplicates, invalid chars)</p>
+          <p>• Test filename validation (empty, invalid chars)</p>
           <p>• Switch languages manually using the dropdown</p>
           <p>• Add content to see file size indicators</p>
           <p>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +15,6 @@ import { Button } from "@/components/ui/button";
 import { CodeEditor } from "@/components/ui/code-editor";
 import {
   detectLanguage,
-  validateFilename,
   formatFileSize,
   checkFileSize,
   SUPPORTED_LANGUAGES,
@@ -34,9 +33,9 @@ export interface FileEditorProps {
   onChange: (id: string, updates: Partial<FileData>) => void;
   onDelete: (id: string) => void;
   showDelete: boolean;
-  existingFilenames: string[];
   readOnly?: boolean;
   className?: string;
+  error?: string;
 }
 
 export function FileEditor({
@@ -44,12 +43,14 @@ export function FileEditor({
   onChange,
   onDelete,
   showDelete,
-  existingFilenames,
   readOnly = false,
   className,
+  error,
 }: FileEditorProps) {
-  const [filenameError, setFilenameError] = useState<string>("");
-  const [isDirty, setIsDirty] = useState(false);
+  const [localFilenameError, setLocalFilenameError] = useState<string>("");
+
+  // Combine local validation error with external error (e.g., duplicate filename)
+  const filenameError = localFilenameError || error || "";
 
   // Calculate file size and check status
   const fileSize = useMemo(() => {
@@ -60,24 +61,21 @@ export function FileEditor({
     return checkFileSize(fileSize);
   }, [fileSize]);
 
-  // Validate filename on mount and changes
-  useEffect(() => {
-    if (!isDirty) return;
-
-    const validation = validateFilename(file.name, existingFilenames);
-
-    if (!validation.valid) {
-      setFilenameError(validation.error || "");
-    } else {
-      setFilenameError("");
-    }
-  }, [file.name, existingFilenames, isDirty]);
-
   // Handle filename change
   const handleFilenameChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newName = e.target.value;
-      setIsDirty(true);
+
+      // Basic validation (empty name, invalid characters)
+      if (!newName.trim()) {
+        setLocalFilenameError("Filename is required");
+      } else if (/[/\\:*?"<>|]/.test(newName)) {
+        setLocalFilenameError("Filename contains invalid characters");
+      } else if (newName.length > 255) {
+        setLocalFilenameError("Filename must be 255 characters or less");
+      } else {
+        setLocalFilenameError("");
+      }
 
       // Auto-detect language from new filename
       const detectedLanguage = detectLanguage(newName);

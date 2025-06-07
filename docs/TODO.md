@@ -108,7 +108,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ### Form Components
 
 - [x] Create FileEditor component (single file with name, language, editor) - [#55](https://github.com/nullcoder/ghostpaste/issues/55)
-- [ ] Create MultiFileEditor component (vertical layout, GitHub Gist style) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
+- [x] Create MultiFileEditor component (vertical layout, GitHub Gist style) - [#56](https://github.com/nullcoder/ghostpaste/issues/56)
 - [x] Create CodeEditor component (CodeMirror wrapper) - [#54](https://github.com/nullcoder/ghostpaste/issues/54)
 - [ ] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
 - [ ] Create ExpirySelector component - [#64](https://github.com/nullcoder/ghostpaste/issues/64)
@@ -130,10 +130,10 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create keyboard shortcuts - [#72](https://github.com/nullcoder/ghostpaste/issues/72)
 - [ ] Add copy-to-clipboard functionality - [#59](https://github.com/nullcoder/ghostpaste/issues/59)
 - [ ] Implement responsive design
-- [ ] Add file editor auto-scroll on add
-- [ ] Implement filename auto-generation
-- [ ] Add language auto-detection from filename
-- [ ] Prevent duplicate filenames
+- [x] Add file editor auto-scroll on add
+- [x] Implement filename auto-generation
+- [x] Add language auto-detection from filename
+- [x] Prevent duplicate filenames
 - [ ] Add file reordering (drag and drop - stretch goal)
 
 ## 🔌 Phase 5: API Development
@@ -337,7 +337,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Phase 8: Deployment
 - [ ] Phase 9: Documentation & Polish
 
-**Last Updated:** 2025-06-05
+**Last Updated:** 2025-06-06
 
 ---
 
