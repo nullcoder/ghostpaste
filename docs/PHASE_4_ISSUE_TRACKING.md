@@ -28,7 +28,7 @@ All 19 Phase 4 UI component issues have been successfully created on GitHub. Thi
 
 | GitHub # | Component      | Priority | Status      | Description                          |
 | -------- | -------------- | -------- | ----------- | ------------------------------------ |
-| #64      | ExpirySelector | MEDIUM   | 🟡 Ready    | Gist expiration time selector        |
+| #64      | ExpirySelector | MEDIUM   | 🟢 Complete | Gist expiration time selector        |
 | #65      | PINInput       | MEDIUM   | 🟡 Ready    | Secure PIN input for edit protection |
 | #60      | ShareDialog    | HIGH     | 🟢 Complete | Share URL dialog with copy function  |
 
@@ -73,7 +73,7 @@ Note: Issue #69 appears to be a duplicate of #59 (both for copy to clipboard fun
 
 10. **#62** - Container (Layout consistency) ✅ COMPLETE
 11. **#63** - AddFileButton (File management) ✅ COMPLETE
-12. **#64** - ExpirySelector (Gist options)
+12. **#64** - ExpirySelector (Gist options) ✅ COMPLETE
 13. **#65** - PINInput (Security feature)
 14. **#66** - FileList (Navigation)
 15. **#67** - LoadingStates (UX improvement)
@@ -89,7 +89,7 @@ Note: Issue #69 appears to be a duplicate of #59 (both for copy to clipboard fun
 
 - **CRITICAL** (3): #54 ✅, #55 ✅, #56 ✅
 - **HIGH** (6): #53 ✅, #57 ✅, #58 ✅, #59 ✅, #60 ✅, #61 ✅
-- **MEDIUM** (7): #62 ✅, #63 ✅, #64, #65, #66, #67, #68 ✅
+- **MEDIUM** (7): #62 ✅, #63 ✅, #64 ✅, #65, #66, #67, #68 ✅
 - **LOW** (3): #70, #71, #72
 
 ## Status Legend
@@ -117,6 +117,7 @@ Note: Issue #69 appears to be a duplicate of #59 (both for copy to clipboard fun
    - #59 (Copy to Clipboard) - PR #87 ✅
    - #68 (Toast Notifications) - Implemented in PR #87 ✅
    - #62 (Container) - PR #90 ✅
+   - #64 (ExpirySelector) - PR #93 ✅
 
 ## Quick Commands
 
@@ -136,19 +137,19 @@ gh pr create --title "feat: implement [component]" --body "Closes #[number]"
 
 ## Progress Summary
 
-- **Completed**: 12 out of 19 issues (63%)
+- **Completed**: 13 out of 19 issues (68%)
   - All CRITICAL issues are complete ✅
   - All HIGH priority issues are complete ✅
-  - 4 out of 7 MEDIUM priority issues complete
-- **Remaining**: 7 issues
+  - 5 out of 7 MEDIUM priority issues complete
+- **Remaining**: 6 issues
   - 0 HIGH priority
-  - 3 MEDIUM priority
+  - 2 MEDIUM priority
   - 3 LOW priority
 
 ### Next Priority Issues
 
-1. **#64** - ExpirySelector (MEDIUM) - Gist options
-2. **#65** - PINInput (MEDIUM) - Security feature
-3. **#66** - FileList (MEDIUM) - File navigation
+1. **#65** - PINInput (MEDIUM) - Security feature
+2. **#66** - FileList (MEDIUM) - File navigation
+3. **#67** - LoadingStates (MEDIUM) - UX improvement
 
 Last Updated: 2025-06-07
