@@ -127,7 +127,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 - [x] Implement dark/light theme toggle (included in Header #53)
 - [x] Add toast notifications - [#68](https://github.com/nullcoder/ghostpaste/issues/68)
-- [ ] Create keyboard shortcuts - [#72](https://github.com/nullcoder/ghostpaste/issues/72)
+- [x] Create keyboard shortcuts - [#72](https://github.com/nullcoder/ghostpaste/issues/72)
 - [x] Add copy-to-clipboard functionality - [#59](https://github.com/nullcoder/ghostpaste/issues/59)
 - [ ] Implement responsive design
 - [x] Add file editor auto-scroll on add
@@ -330,7 +330,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [x] Phase 1: Project Setup
 - [x] Phase 2: Core Infrastructure
 - [x] Phase 3: Encryption Implementation
-- [ ] Phase 4: UI Components
+- [x] Phase 4: UI Components
 - [ ] Phase 5: API Development
 - [ ] Phase 6: Features Implementation
 - [ ] Phase 7: Testing
