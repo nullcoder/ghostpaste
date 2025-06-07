@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { CopyIconButton } from "@/components/ui/copy-button";
 import { CodeEditor } from "@/components/ui/code-editor";
 import { Copy, Download, FileText } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -12,6 +13,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { copyHelpers } from "@/lib/copy-to-clipboard";
 import type { File } from "@/types";
 
 export interface GistViewerProps {
@@ -24,12 +26,11 @@ export function GistViewer({ files, className }: GistViewerProps) {
   const [wordWrap, setWordWrap] = useState(false);
   const { resolvedTheme } = useTheme();
 
-  const handleCopyFile = async (content: string) => {
+  const handleCopyAll = async () => {
     try {
-      await navigator.clipboard.writeText(content);
-      // TODO: Show toast notification
+      await copyHelpers.copyMultipleFiles(files);
     } catch (error) {
-      console.error("Failed to copy:", error);
+      console.error("Failed to copy all files:", error);
     }
   };
 
@@ -82,15 +83,26 @@ export function GistViewer({ files, className }: GistViewerProps) {
               Word Wrap: {wordWrap ? "On" : "Off"}
             </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleDownloadAll}
-            className="text-xs"
-          >
-            <Download className="mr-1 h-3 w-3" />
-            Download All
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleCopyAll}
+              className="text-xs"
+            >
+              <Copy className="mr-1 h-3 w-3" />
+              Copy All
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleDownloadAll}
+              className="text-xs"
+            >
+              <Download className="mr-1 h-3 w-3" />
+              Download All
+            </Button>
+          </div>
         </div>
 
         {/* Files List - Vertical Layout */}
@@ -102,7 +114,7 @@ export function GistViewer({ files, className }: GistViewerProps) {
               theme={resolvedTheme === "dark" ? "dark" : "light"}
               showLineNumbers={showLineNumbers}
               wordWrap={wordWrap}
-              onCopy={() => handleCopyFile(file.content)}
+              onCopy={() => {}}
               onDownload={() => handleDownloadFile(file)}
             />
           ))}
@@ -126,7 +138,7 @@ function FileContent({
   theme,
   showLineNumbers,
   wordWrap,
-  onCopy,
+  onCopy: _onCopy,
   onDownload,
 }: FileContentProps) {
   return (
@@ -141,16 +153,13 @@ function FileContent({
         <div className="flex gap-1">
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
+              <CopyIconButton
+                text={file.content}
                 className="h-7 w-7"
-                onClick={onCopy}
                 aria-label={`Copy ${file.name} to clipboard`}
                 data-testid={`copy-${file.name}`}
-              >
-                <Copy className="h-3 w-3" />
-              </Button>
+                successMessage={`${file.name} copied to clipboard!`}
+              />
             </TooltipTrigger>
             <TooltipContent>Copy to clipboard</TooltipContent>
           </Tooltip>
