@@ -8,8 +8,6 @@ import { errorResponse, ApiErrors, validationError } from "@/lib/api-errors";
 import type { CreateGistResponse } from "@/types/api";
 import type { GistMetadata } from "@/types/models";
 
-export const runtime = "edge";
-
 // Validation schema for gist metadata
 const metadataSchema = z.object({
   expires_at: z.string().datetime().nullable().optional(),

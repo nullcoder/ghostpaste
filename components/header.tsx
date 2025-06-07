@@ -77,8 +77,18 @@ export function Header() {
               </NavigationMenuItem>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>
-                  <Link href="/about" className={navigationMenuTriggerStyle()}>
-                    About
+                  <Link
+                    href="/examples"
+                    className={navigationMenuTriggerStyle()}
+                  >
+                    Examples
+                  </Link>
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink asChild>
+                  <Link href="/help" className={navigationMenuTriggerStyle()}>
+                    Help
                   </Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
@@ -155,11 +165,20 @@ export function Header() {
                 </SheetClose>
                 <SheetClose asChild>
                   <Link
-                    href="/about"
+                    href="/examples"
                     className="hover:bg-accent hover:text-accent-foreground flex items-center justify-start gap-3 rounded-lg px-3 py-3 text-base font-medium transition-colors"
                   >
-                    <span className="text-xl">ℹ️</span>
-                    About
+                    <span className="text-xl">💡</span>
+                    Examples
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link
+                    href="/help"
+                    className="hover:bg-accent hover:text-accent-foreground flex items-center justify-start gap-3 rounded-lg px-3 py-3 text-base font-medium transition-colors"
+                  >
+                    <span className="text-xl">❓</span>
+                    Help
                   </Link>
                 </SheetClose>
                 <SheetClose asChild>
