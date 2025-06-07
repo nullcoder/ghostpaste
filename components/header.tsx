@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, Ghost, Keyboard } from "lucide-react";
+import { Menu, Keyboard } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github-icon";
+import { GhostLogo } from "@/components/ghost-logo";
 import {
   NavigationMenu,
   NavigationMenuList,
@@ -56,7 +57,7 @@ export function Header() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold transition-opacity hover:opacity-80"
         >
-          <Ghost className="h-6 w-6" aria-hidden="true" />
+          <GhostLogo size="lg" className="text-primary" />
           <span>GhostPaste</span>
         </Link>
 
@@ -129,7 +130,7 @@ export function Header() {
             >
               <SheetHeader className="p-6 pb-0">
                 <SheetTitle className="flex items-center gap-2 text-lg">
-                  <Ghost className="h-5 w-5" aria-hidden="true" />
+                  <GhostLogo size="sm" className="text-primary" />
                   <span>GhostPaste</span>
                 </SheetTitle>
               </SheetHeader>

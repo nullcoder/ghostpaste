@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="8" cy="8" r="7.5" fill="#f8f9fa" stroke="#e9ecef" stroke-width="0.5"/>
+  
+  <!-- Simplified ghost body for small size -->
+  <path d="M8 3c-2.2 0-4 1.8-4 4v4.5l0.8 1.2c0.1 0.2 0.4 0.1 0.5-0.1L6 11.9c0.1-0.15 0.3-0.15 0.4 0L7 12.6c0.1 0.15 0.3 0.15 0.4 0L8 11.9c0.1-0.15 0.3-0.15 0.4 0L9 12.6c0.1 0.15 0.3 0.15 0.4 0L10 11.9c0.1-0.15 0.3-0.1 0.5 0.1L11.2 12.5c0.1 0.2 0.4 0.1 0.5-0.1L12 11.5V7c0-2.2-1.8-4-4-4Z" fill="#6366f1"/>
+  
+  <!-- Simplified bracket eyes -->
+  <text x="6" y="9.5" font-family="monospace" font-size="4" fill="#f8f9fa" text-anchor="middle">&lt;</text>
+  <text x="10" y="9.5" font-family="monospace" font-size="4" fill="#f8f9fa" text-anchor="middle">&gt;</text>
+  
+  <!-- Single binary dot -->
+  <circle cx="8" cy="10.5" r="0.4" fill="#f8f9fa" opacity="0.7"/>
+</svg>

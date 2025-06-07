@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle for better visibility -->
+  <circle cx="90" cy="90" r="85" fill="#f8f9fa" stroke="#e9ecef" stroke-width="5"/>
+  
+  <!-- Main ghost body -->
+  <path d="M90 34c-24.9 0-45 20.1-45 45v50.6l8.4 14c1.7 2.8 5.6 1.7 7.3-1.1L67 134c1.1-1.7 3.4-1.7 4.5 0L78 143c1.1 1.7 3.4 1.7 4.5 0L90 134c1.1-1.7 3.4-1.7 4.5 0L102 143c1.1 1.7 3.4 1.7 4.5 0L113 134c1.1-1.7 3.4-1.1 6.7 1.1L126.3 142.5c1.7 2.8 5.6 1.7 7.3-1.1L135 129.6V79c0-24.9-20.1-45-45-45Z" fill="#6366f1"/>
+  
+  <!-- Code bracket eyes -->
+  <text x="67.5" y="101.25" font-family="monospace" font-size="45" fill="#f8f9fa" text-anchor="middle">&lt;</text>
+  <text x="112.5" y="101.25" font-family="monospace" font-size="45" fill="#f8f9fa" text-anchor="middle">&gt;</text>
+  
+  <!-- Binary dots for tech aesthetic -->
+  <circle cx="78.75" cy="112.5" r="4.5" fill="#f8f9fa" opacity="0.8"/>
+  <circle cx="90" cy="112.5" r="4.5" fill="#f8f9fa" opacity="0.6"/>
+  <circle cx="101.25" cy="112.5" r="4.5" fill="#f8f9fa" opacity="0.8"/>
+</svg>

@@ -1,8 +1,18 @@
-# 👻 GhostPaste
+<div align="center">
+  <img src="assets/logo.svg" alt="GhostPaste Logo" width="128" height="128">
+  
+  # GhostPaste
+  
+  ### Zero-knowledge encrypted code sharing platform where your secrets stay secret
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+  [![Built with Next.js](https://img.shields.io/badge/Built%20with-Next.js%2015-black)](https://nextjs.org)
+  [![Deployed on Cloudflare](https://img.shields.io/badge/Deployed%20on-Cloudflare-orange)](https://cloudflare.com)
+  
+  [Live Demo](https://ghostpaste.dev) • [Report Bug](https://github.com/nullcoder/ghostpaste/issues) • [Request Feature](https://github.com/nullcoder/ghostpaste/issues)
+</div>
 
-> Zero-knowledge encrypted code sharing platform where your secrets stay secret
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+---
 
 ## 🔐 What is GhostPaste?
 
@@ -253,3 +263,10 @@ This project demonstrates that AI can be more than just a coding assistant - it 
   <a href="https://github.com/nullcoder/ghostpaste/issues">Report Bug</a> •
   <a href="https://github.com/nullcoder/ghostpaste/issues">Request Feature</a>
 </p>
+
+<div align="center">
+  <br>
+  <img src="assets/logo.svg" alt="GhostPaste" width="64" height="64">
+  <br>
+  <sub>Share code. Keep secrets. Stay ghosted. 👻</sub>
+</div>
