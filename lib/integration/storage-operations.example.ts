@@ -5,10 +5,13 @@ import type { File } from "@/types/models";
 import { encrypt } from "../crypto";
 
 /**
- * Integration tests for storage operations
- * These tests run against the actual R2 storage using wrangler's built-in miniflare
+ * Example integration tests for storage operations
  *
- * Run with: npm run test:integration
+ * These tests demonstrate how storage operations should work with real R2 storage.
+ * They cannot currently run because they require API endpoints to be implemented first.
+ *
+ * Once API endpoints are ready, these can be converted to actual integration tests
+ * that make HTTP requests to test the full end-to-end functionality.
  */
 describe("Storage Operations Integration", () => {
   // Test data
