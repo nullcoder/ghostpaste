@@ -1,13 +1,8 @@
-import { ThemeToggle } from "@/components/theme-toggle";
 import { R2Test } from "@/components/r2-test";
 
 export default function Home() {
   return (
     <div className="min-h-screen p-8">
-      <header className="mb-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold">GhostPaste</h1>
-        <ThemeToggle />
-      </header>
       <main className="mx-auto max-w-4xl">
         <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
           <h2 className="mb-4 text-2xl font-semibold">

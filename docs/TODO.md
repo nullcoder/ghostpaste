@@ -100,7 +100,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Layout Components
 
-- [ ] Create Header component with navigation - [#53](https://github.com/nullcoder/ghostpaste/issues/53)
+- [x] Create Header component with navigation - [#53](https://github.com/nullcoder/ghostpaste/issues/53)
 - [ ] Create Footer component - [#70](https://github.com/nullcoder/ghostpaste/issues/70)
 - [ ] Create Container component for consistent spacing - [#62](https://github.com/nullcoder/ghostpaste/issues/62)
 - [x] Implement responsive design tokens - [#57](https://github.com/nullcoder/ghostpaste/issues/57)
@@ -125,7 +125,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### UI Features
 
-- [ ] Implement dark/light theme toggle (included in Header #53)
+- [x] Implement dark/light theme toggle (included in Header #53)
 - [ ] Add toast notifications - [#68](https://github.com/nullcoder/ghostpaste/issues/68)
 - [ ] Create keyboard shortcuts - [#72](https://github.com/nullcoder/ghostpaste/issues/72)
 - [ ] Add copy-to-clipboard functionality - [#59](https://github.com/nullcoder/ghostpaste/issues/59)
