@@ -154,7 +154,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 ### API Routes
 
 - [ ] Configure all routes with `export const runtime = 'edge'` - [#105](https://github.com/nullcoder/ghostpaste/issues/105), [#106](https://github.com/nullcoder/ghostpaste/issues/106), [#107](https://github.com/nullcoder/ghostpaste/issues/107)
-- [ ] `POST /api/gists` - Create gist endpoint - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
+- [x] `POST /api/gists` - Create gist endpoint - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
 - [ ] `GET /api/gists/[id]` - Get gist metadata - [#106](https://github.com/nullcoder/ghostpaste/issues/106)
 - [ ] `GET /api/blobs/[id]` - Get encrypted blob - [#106](https://github.com/nullcoder/ghostpaste/issues/106)
 - [ ] `PUT /api/gists/[id]` - Update gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
@@ -166,8 +166,8 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### API Features
 
-- [ ] Implement multipart form data parsing (Workers-compatible) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
-- [ ] Add request size validation (Workers limit: 100MB) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
+- [x] Implement multipart form data parsing (Workers-compatible) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
+- [x] Add request size validation (Workers limit: 100MB) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
 - [ ] Create consistent error responses - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 - [ ] Add API documentation - [#109](https://github.com/nullcoder/ghostpaste/issues/109)
 - [ ] Implement CORS configuration - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
