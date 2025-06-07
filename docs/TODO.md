@@ -113,7 +113,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create AddFileButton component - [#63](https://github.com/nullcoder/ghostpaste/issues/63)
 - [ ] Create ExpirySelector component - [#64](https://github.com/nullcoder/ghostpaste/issues/64)
 - [ ] Create PINInput component - [#65](https://github.com/nullcoder/ghostpaste/issues/65)
-- [ ] Create ShareDialog component with copy functionality - [#60](https://github.com/nullcoder/ghostpaste/issues/60)
+- [x] Create ShareDialog component with copy functionality - [#60](https://github.com/nullcoder/ghostpaste/issues/60)
 
 ### Display Components
 
@@ -121,7 +121,7 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 - [ ] Create FileList component (vertical display for viewing) - [#66](https://github.com/nullcoder/ghostpaste/issues/66)
 - [ ] Create VersionHistory dropdown - [#71](https://github.com/nullcoder/ghostpaste/issues/71)
 - [ ] Create LoadingStates component - [#67](https://github.com/nullcoder/ghostpaste/issues/67)
-- [ ] Create ErrorBoundary component - [#58](https://github.com/nullcoder/ghostpaste/issues/58)
+- [x] Create ErrorBoundary component - [#58](https://github.com/nullcoder/ghostpaste/issues/58)
 
 ### UI Features
 
