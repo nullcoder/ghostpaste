@@ -1,9 +1,10 @@
 import { R2Test } from "@/components/r2-test";
+import { Container } from "@/components/ui/container";
 
 export default function Home() {
   return (
-    <div className="min-h-screen p-8">
-      <main className="mx-auto max-w-4xl">
+    <main className="min-h-screen py-8">
+      <Container>
         <div className="bg-card text-card-foreground rounded-lg border p-6 shadow-sm">
           <h2 className="mb-4 text-2xl font-semibold">
             Zero-Knowledge Encrypted Code Sharing
@@ -30,7 +31,7 @@ export default function Home() {
           <h3 className="mb-4 text-xl font-semibold">R2 Bucket Test</h3>
           <R2Test />
         </div>
-      </main>
-    </div>
+      </Container>
+    </main>
   );
 }
