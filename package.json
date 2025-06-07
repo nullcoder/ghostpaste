@@ -22,7 +22,8 @@
     "test": "vitest",
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "test:integration": "vitest run lib/integration/*.integration.test.ts"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
