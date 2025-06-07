@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { cn } from "@/lib/utils";
 import { GhostLogo } from "@/components/ghost-logo";
+import { DynamicYear } from "@/components/dynamic-year";
 
 export interface FooterProps {
   /**
@@ -19,8 +20,6 @@ export interface FooterProps {
  * Footer component with branding, copyright, and navigation links
  */
 export function Footer({ className, buildId }: FooterProps) {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer
       className={cn("bg-background/50 border-t backdrop-blur-sm", className)}
@@ -39,7 +38,7 @@ export function Footer({ className, buildId }: FooterProps) {
                 Zero-knowledge encrypted code sharing. Your code stays private.
               </p>
               <p className="text-muted-foreground text-xs">
-                © {currentYear} GhostPaste
+                © <DynamicYear /> GhostPaste
               </p>
             </div>
 
