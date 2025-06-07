@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { CopyIconButton, CopyTextButton } from "@/components/ui/copy-button";
 import {
   Dialog,
   DialogClose,
@@ -11,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Check, Copy, Download, AlertTriangle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Check, Download, AlertTriangle } from "lucide-react";
+import { type CopyResult } from "@/lib/copy-to-clipboard";
 
 export interface ShareDialogProps {
   /** Whether the dialog is open */
@@ -37,45 +37,14 @@ export function ShareDialog({
   onCopy,
   onDownload,
 }: ShareDialogProps) {
-  const [copySuccess, setCopySuccess] = useState(false);
-
   // Split the URL at the fragment for visual display
   const urlParts = shareUrl.split("#");
   const baseUrl = urlParts[0];
   const fragment = urlParts[1] ? `#${urlParts[1]}` : "";
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopySuccess(true);
+  const handleCopyResult = (result: CopyResult) => {
+    if (result.success) {
       onCopy?.();
-
-      // Reset success state after 2 seconds
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (error) {
-      console.error("Failed to copy URL:", error);
-      // Fallback for older browsers
-      fallbackCopy();
-    }
-  };
-
-  const fallbackCopy = () => {
-    const textArea = document.createElement("textarea");
-    textArea.value = shareUrl;
-    textArea.style.position = "absolute";
-    textArea.style.left = "-999999px";
-    document.body.appendChild(textArea);
-    textArea.select();
-
-    try {
-      document.execCommand("copy");
-      setCopySuccess(true);
-      onCopy?.();
-      setTimeout(() => setCopySuccess(false), 2000);
-    } catch (error) {
-      console.error("Fallback copy failed:", error);
-    } finally {
-      document.body.removeChild(textArea);
     }
   };
 
@@ -126,20 +95,13 @@ export function ShareDialog({
                   )}
                 </div>
               </div>
-              <Button
-                size="sm"
-                variant="outline"
-                className="absolute top-2 right-2 h-7 w-7 p-0"
-                onClick={handleCopy}
-                disabled={copySuccess}
+              <CopyIconButton
+                text={shareUrl}
+                className="absolute top-2 right-2"
+                onCopy={handleCopyResult}
+                successMessage="URL copied to clipboard!"
                 aria-label="Copy URL to clipboard"
-              >
-                {copySuccess ? (
-                  <Check className="h-3 w-3 text-green-600" />
-                ) : (
-                  <Copy className="h-3 w-3" />
-                )}
-              </Button>
+              />
             </div>
           </div>
 
@@ -174,26 +136,14 @@ export function ShareDialog({
             <Download className="mr-2 h-4 w-4" />
             Download as Text
           </Button>
-          <Button
-            onClick={handleCopy}
-            disabled={copySuccess}
-            className={cn(
-              "w-full sm:w-auto",
-              copySuccess && "bg-green-600 hover:bg-green-600"
-            )}
-          >
-            {copySuccess ? (
-              <>
-                <Check className="mr-2 h-4 w-4" />
-                Copied!
-              </>
-            ) : (
-              <>
-                <Copy className="mr-2 h-4 w-4" />
-                Copy Link
-              </>
-            )}
-          </Button>
+          <CopyTextButton
+            text={shareUrl}
+            label="Copy Link"
+            className="w-full sm:w-auto"
+            onCopy={handleCopyResult}
+            successMessage="URL copied to clipboard!"
+            variant="default"
+          />
           <DialogClose asChild>
             <Button variant="secondary" className="w-full sm:w-auto">
               Done
