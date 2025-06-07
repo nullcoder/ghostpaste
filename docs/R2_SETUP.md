@@ -87,11 +87,82 @@ curl -X DELETE "http://localhost:8788/api/r2-test?key=test-file"
 
 ## Storage Structure
 
-GhostPaste will use the following R2 object structure:
+GhostPaste uses a versioned storage structure following the SPEC.md design:
 
 ```
-metadata/{gistId}.json    # Unencrypted metadata
-blobs/{gistId}.bin       # Encrypted binary data
+metadata/{gistId}.json                    # Unencrypted metadata (points to current version)
+versions/{gistId}/{timestamp}.bin         # Encrypted blob versions
+temp/{gistId}                            # Temporary storage (optional)
+```
+
+Key points:
+
+- All blobs are stored as versioned files under `versions/`
+- Metadata tracks the `current_version` timestamp
+- No separate `blobs/` directory - everything is versioned
+- New versions just add a timestamp file
+- Last 50 versions are kept (older ones pruned)
+
+## R2 Storage Client
+
+GhostPaste includes a type-safe R2 storage client wrapper (`lib/storage.ts`) that provides:
+
+### Features
+
+- **Type-safe operations**: Strongly typed methods for all R2 operations
+- **Error handling**: Custom error types with detailed error messages
+- **Singleton pattern**: Efficient connection reuse across requests
+- **Binary support**: Handle both JSON metadata and binary blobs
+
+### Usage
+
+```typescript
+import { getR2Storage } from "@/lib/storage";
+
+// Get storage instance (automatically initialized)
+const storage = await getR2Storage();
+
+// Store metadata
+await storage.putMetadata(gistId, metadata);
+
+// Retrieve metadata
+const metadata = await storage.getMetadata(gistId);
+
+// Store encrypted blob (returns timestamp for the version)
+const timestamp = await storage.putBlob(gistId, encryptedData);
+
+// Retrieve specific version
+const blob = await storage.getBlob(gistId, timestamp);
+
+// Retrieve current version
+const currentBlob = await storage.getCurrentBlob(gistId);
+
+// List all versions for a gist
+const versions = await storage.listVersions(gistId);
+
+// Prune old versions (keep last 50)
+const deletedCount = await storage.pruneVersions(gistId, 50);
+
+// Check if gist exists
+const exists = await storage.exists(gistId);
+
+// Delete gist (metadata and all versions)
+await storage.deleteGist(gistId);
+
+// List gists with pagination
+const { gists, cursor } = await storage.listGists({ limit: 100 });
+```
+
+### Key Structure
+
+The storage client uses consistent key patterns:
+
+```typescript
+const StorageKeys = {
+  metadata: (id: string) => `metadata/${id}.json`,
+  version: (id: string, timestamp: string) => `versions/${id}/${timestamp}.bin`,
+  temp: (id: string) => `temp/${id}`,
+};
 ```
 
 ## Important Notes
