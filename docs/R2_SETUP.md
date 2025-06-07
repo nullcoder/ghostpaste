@@ -87,11 +87,65 @@ curl -X DELETE "http://localhost:8788/api/r2-test?key=test-file"
 
 ## Storage Structure
 
-GhostPaste will use the following R2 object structure:
+GhostPaste uses the following R2 object structure:
 
 ```
 metadata/{gistId}.json    # Unencrypted metadata
-blobs/{gistId}.bin       # Encrypted binary data
+blobs/{gistId}           # Encrypted binary data
+temp/{gistId}            # Temporary storage (optional)
+```
+
+## R2 Storage Client
+
+GhostPaste includes a type-safe R2 storage client wrapper (`lib/storage.ts`) that provides:
+
+### Features
+
+- **Type-safe operations**: Strongly typed methods for all R2 operations
+- **Error handling**: Custom error types with detailed error messages
+- **Singleton pattern**: Efficient connection reuse across requests
+- **Binary support**: Handle both JSON metadata and binary blobs
+
+### Usage
+
+```typescript
+import { getR2Storage } from "@/lib/storage";
+
+// Get storage instance (automatically initialized)
+const storage = await getR2Storage();
+
+// Store metadata
+await storage.putMetadata(gistId, metadata);
+
+// Retrieve metadata
+const metadata = await storage.getMetadata(gistId);
+
+// Store encrypted blob
+await storage.putBlob(gistId, encryptedData);
+
+// Retrieve encrypted blob
+const blob = await storage.getBlob(gistId);
+
+// Check if gist exists
+const exists = await storage.exists(gistId);
+
+// Delete gist (both metadata and blob)
+await storage.deleteGist(gistId);
+
+// List gists with pagination
+const { gists, cursor } = await storage.listGists({ limit: 100 });
+```
+
+### Key Structure
+
+The storage client uses consistent key patterns:
+
+```typescript
+const StorageKeys = {
+  metadata: (id: string) => `metadata/${id}.json`,
+  blob: (id: string) => `blobs/${id}`,
+  temp: (id: string) => `temp/${id}`,
+};
 ```
 
 ## Important Notes
