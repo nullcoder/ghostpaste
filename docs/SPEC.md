@@ -45,13 +45,18 @@ All data stored in Cloudflare R2:
 ```
 ghostpaste-bucket/
 ├── metadata/
-│   └── {gist-id}.json       # Mixed encrypted/unencrypted metadata
-├── blobs/
-│   └── {gist-id}.bin        # Encrypted binary content
+│   └── {gist-id}.json       # Metadata with current version pointer
 └── versions/
     └── {gist-id}/
-        └── {timestamp}.bin  # Encrypted version history
+        └── {timestamp}.bin  # All encrypted blobs (no separate blobs/ directory)
 ```
+
+**Key improvements:**
+
+- No redundant storage - all blobs stored only in `versions/`
+- Current version tracked via `current_version` field in metadata
+- Simpler updates - just add new version file and update metadata pointer
+- No file copying/moving needed when creating versions
 
 ---
 
@@ -68,6 +73,7 @@ interface GistMetadata {
   created_at: string; // ISO 8601
   updated_at: string; // ISO 8601
   expires_at?: string; // ISO 8601 (optional)
+  current_version: string; // ISO 8601 timestamp pointing to latest version
   version: number; // Current version number
   version_count: number; // Total versions
   total_size: number; // Total size in bytes
@@ -187,8 +193,10 @@ Response: 200 OK
 GET /api/blobs/{id}
 
 Response: 200 OK
-[Binary data]
+[Binary data from versions/{id}/{current_version}.bin]
 ```
+
+Note: The blob endpoint internally fetches from the versions directory using the current_version timestamp from metadata.
 
 ### Update Gist
 
@@ -273,9 +281,15 @@ Gists that delete after first decryption:
 ### 3. Version History
 
 - Last 50 versions kept
-- Each version timestamped
+- Each version stored as `versions/{gist-id}/{timestamp}.bin`
+- Metadata tracks `current_version` timestamp
+- Creating new version:
+  1. Upload blob to `versions/{gist-id}/{new-timestamp}.bin`
+  2. Update metadata with new `current_version` and increment `version`
+  3. No copying/moving of blobs required
 - Accessible via dropdown UI
 - Same encryption key for all versions
+- Version cleanup removes old timestamp files beyond limit
 
 ---
 
@@ -420,7 +434,16 @@ export interface Env {
 
 // Example usage in API route
 export async function POST(request: Request, env: Env) {
-  // Direct R2 access without credentials
+  // Store new version
+  const timestamp = new Date().toISOString();
+  await env.GHOSTPASTE_BUCKET.put(
+    `versions/${id}/${timestamp}.bin`,
+    encryptedBlob
+  );
+
+  // Update metadata to point to new version
+  metadata.current_version = timestamp;
+  metadata.version += 1;
   await env.GHOSTPASTE_BUCKET.put(
     `metadata/${id}.json`,
     JSON.stringify(metadata)
@@ -463,4 +486,18 @@ const keyBase64 = btoa(String.fromCharCode(...new Uint8Array(keyData)));
 
 ---
 
-Last updated: 2025-06-04
+## 📝 Storage Design Notes
+
+The storage structure uses a single `versions/` directory for all blobs rather than separate `blobs/` and `versions/` directories. This design:
+
+1. **Eliminates redundancy** - No duplicate storage of current blob
+2. **Simplifies updates** - New versions just add a timestamp file
+3. **Improves atomicity** - Single write operation for new versions
+4. **Reduces complexity** - No file copying or moving operations
+5. **Better consistency** - Metadata always points to valid version file
+
+When fetching the current blob, the system reads metadata to get the `current_version` timestamp, then fetches from `versions/{id}/{current_version}.bin`.
+
+---
+
+Last updated: 2025-06-07
