@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { AppError, ErrorCode } from "@/types/errors";
 import type { ApiErrorResponse } from "@/types/api";
+import { createLogger } from "@/lib/logger";
 
 /**
  * Convert an AppError to ApiErrorResponse format
@@ -30,7 +31,11 @@ export function errorResponse(
   }
 
   // Handle unexpected errors
-  console.error("Unexpected error:", error);
+  const logger = createLogger("api-errors");
+  logger.error(
+    "Unexpected error:",
+    error instanceof Error ? error : new Error(String(error))
+  );
   return NextResponse.json<ApiErrorResponse>(
     {
       error: ErrorCode.INTERNAL_SERVER_ERROR,
@@ -70,6 +75,8 @@ export const ApiErrors = {
 
   storageError: (message: string, details?: Record<string, unknown>) =>
     new AppError(ErrorCode.STORAGE_ERROR, 500, message, details),
+
+  gone: (message: string) => new AppError(ErrorCode.GIST_EXPIRED, 410, message),
 };
 
 /**
