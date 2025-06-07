@@ -140,35 +140,35 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### Storage Client (`lib/storage.ts`)
 
-- [ ] Create R2 client wrapper using Cloudflare Workers R2 bindings
-- [ ] Configure R2 bucket binding in wrangler.toml
-- [ ] Implement metadata upload/download (JSON) using R2 API
-- [ ] Implement blob upload/download (binary) using R2 API
-- [ ] Handle R2 errors (R2Error, R2ObjectNotFound)
-- [ ] Create type-safe wrapper for R2 operations
-- [ ] Implement streaming for large files
+- [ ] Create R2 client wrapper using Cloudflare Workers R2 bindings - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
+- [ ] Configure R2 bucket binding in wrangler.toml - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
+- [ ] Implement metadata upload/download (JSON) using R2 API - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [ ] Implement blob upload/download (binary) using R2 API - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
+- [ ] Handle R2 errors (R2Error, R2ObjectNotFound) - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
+- [ ] Create type-safe wrapper for R2 operations - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
+- [ ] Implement streaming for large files - [#104](https://github.com/nullcoder/ghostpaste/issues/104)
 
 ### API Routes
 
-- [ ] Configure all routes with `export const runtime = 'edge'`
-- [ ] `POST /api/gists` - Create gist endpoint
-- [ ] `GET /api/gists/[id]` - Get gist metadata
-- [ ] `GET /api/blobs/[id]` - Get encrypted blob
-- [ ] `PUT /api/gists/[id]` - Update gist
-- [ ] `DELETE /api/gists/[id]` - Delete gist
-- [ ] Implement Cloudflare rate limiting rules
-- [ ] Add input validation middleware
-- [ ] Add error handling middleware
-- [ ] Configure API routes to access R2 bindings
+- [ ] Configure all routes with `export const runtime = 'edge'` - [#105](https://github.com/nullcoder/ghostpaste/issues/105), [#106](https://github.com/nullcoder/ghostpaste/issues/106), [#107](https://github.com/nullcoder/ghostpaste/issues/107)
+- [ ] `POST /api/gists` - Create gist endpoint - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
+- [ ] `GET /api/gists/[id]` - Get gist metadata - [#106](https://github.com/nullcoder/ghostpaste/issues/106)
+- [ ] `GET /api/blobs/[id]` - Get encrypted blob - [#106](https://github.com/nullcoder/ghostpaste/issues/106)
+- [ ] `PUT /api/gists/[id]` - Update gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
+- [ ] `DELETE /api/gists/[id]` - Delete gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
+- [ ] Implement Cloudflare rate limiting rules - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [ ] Add input validation middleware - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [ ] Add error handling middleware - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [ ] Configure API routes to access R2 bindings - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
 
 ### API Features
 
-- [ ] Implement multipart form data parsing (Workers-compatible)
-- [ ] Add request size validation (Workers limit: 100MB)
-- [ ] Create consistent error responses
-- [ ] Add API documentation
-- [ ] Implement CORS configuration
-- [ ] Handle Workers CPU time limits (50ms)
+- [ ] Implement multipart form data parsing (Workers-compatible) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
+- [ ] Add request size validation (Workers limit: 100MB) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
+- [ ] Create consistent error responses - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [ ] Add API documentation - [#109](https://github.com/nullcoder/ghostpaste/issues/109)
+- [ ] Implement CORS configuration - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [ ] Handle Workers CPU time limits (50ms) - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 
 ## ✨ Phase 6: Features Implementation
 
