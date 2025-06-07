@@ -133,14 +133,17 @@ Stored format:
 - **IV:** Fresh 12-byte IV per encryption
 - **URL Format:** `https://ghostpaste.dev/g/{id}#key={base64-key}`
 
-### PIN Protection
+### Password Protection
 
 For editable gists:
 
-- **Algorithm:** PBKDF2-SHA256
+- **Algorithm:** PBKDF2-SHA256 (server-side)
 - **Iterations:** 100,000
 - **Salt:** Random 16 bytes per gist
 - **Input:** User password (8-64 characters, alphanumeric + special characters)
+- **Implementation:** All hashing performed server-side for security
+- **Transport:** Password sent over HTTPS only
+- **Future:** Consider OPAQUE protocol for zero-knowledge password authentication
 
 ---
 
