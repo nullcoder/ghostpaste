@@ -1,7 +1,8 @@
 "use client";
 
+import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { CopyIconButton, CopyTextButton } from "@/components/ui/copy-button";
+import { CopyButton, CopyIconButton } from "@/components/ui/copy-button";
 import {
   Dialog,
   DialogClose,
@@ -136,13 +137,14 @@ export function ShareDialog({
             <Download className="mr-2 h-4 w-4" />
             Download as Text
           </Button>
-          <CopyTextButton
+          <CopyButton
             text={shareUrl}
+            variant="default"
+            size="default"
             label="Copy Link"
             className="w-full sm:w-auto"
             onCopy={handleCopyResult}
             successMessage="URL copied to clipboard!"
-            variant="default"
           />
           <DialogClose asChild>
             <Button variant="secondary" className="w-full sm:w-auto">

@@ -82,7 +82,8 @@ export async function GET(
       indent_size: metadata.indent_size,
       wrap_mode: metadata.wrap_mode,
       theme: metadata.theme,
-      // Note: We exclude edit_pin_hash, edit_pin_salt, and encrypted_metadata for security
+      encrypted_metadata: metadata.encrypted_metadata,
+      // Note: We exclude edit_pin_hash and edit_pin_salt for security
     };
 
     return NextResponse.json<GetGistMetadataResponse>(responseMetadata, {

@@ -189,7 +189,7 @@ function FileContent({
         readOnly={true}
         showLineNumbers={showLineNumbers}
         wordWrap={wordWrap}
-        className="min-h-[200px]"
+        height="auto"
       />
     </div>
   );

@@ -25,6 +25,7 @@ export interface GistMetadata {
 
   // View restrictions (unencrypted)
   one_time_view?: boolean; // Delete after first view
+  viewed_at?: string; // ISO 8601, when one-time view was accessed
 
   // Editor preferences (unencrypted)
   indent_mode?: "tabs" | "spaces";
