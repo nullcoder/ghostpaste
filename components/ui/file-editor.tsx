@@ -27,6 +27,7 @@ import {
   SUPPORTED_LANGUAGES,
 } from "@/lib/language-detection";
 import { cn } from "@/lib/utils";
+import { LanguageIcon } from "@/components/language-icon";
 
 export interface FileData {
   id: string;
@@ -209,7 +210,10 @@ export const FileEditor = forwardRef<FileEditorHandle, FileEditorProps>(
               <SelectContent>
                 {SUPPORTED_LANGUAGES.map((lang) => (
                   <SelectItem key={lang.value} value={lang.value}>
-                    {lang.label}
+                    <div className="flex items-center gap-2">
+                      <LanguageIcon language={lang.value} />
+                      {lang.label}
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>

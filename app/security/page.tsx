@@ -17,6 +17,7 @@ import {
   Code2,
   Github,
   ArrowRight,
+  Clock,
 } from "lucide-react";
 import { GhostLogo } from "@/components/ghost-logo";
 
@@ -173,7 +174,8 @@ export default function SecurityPage() {
                       <p className="font-medium">Binary Format</p>
                       <p className="text-muted-foreground text-sm">
                         Encrypted data is packed into a custom binary format
-                        with metadata
+                        with version info and file metadata. Enforces limits:
+                        500KB/file, 5MB total, 20 files max
                       </p>
                     </div>
                   </div>
@@ -238,12 +240,6 @@ export default function SecurityPage() {
                         128 bits (16 bytes)
                       </dd>
                     </div>
-                    <div>
-                      <dt className="font-medium">PBKDF2 for PINs</dt>
-                      <dd className="text-muted-foreground">
-                        SHA-256, 100,000 iterations
-                      </dd>
-                    </div>
                   </dl>
                 </Card>
 
@@ -291,6 +287,286 @@ export default function SecurityPage() {
         </Container>
       </section>
 
+      {/* Password Protection */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <Key className="text-primary h-6 w-6" />
+              Password Protection & Authentication
+            </h2>
+
+            <div className="prose prose-sm dark:prose-invert mb-8 max-w-none">
+              <p className="text-base">
+                GhostPaste offers optional password protection for your gists,
+                allowing you to control who can edit or delete them. This
+                feature uses industry-standard password hashing to ensure your
+                password remains secure even if our servers are compromised.
+              </p>
+            </div>
+
+            <div className="grid gap-6">
+              {/* Password Security Flow */}
+              <Card className="p-6">
+                <h3 className="mb-4 font-semibold">
+                  How Password Protection Works
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      1
+                    </div>
+                    <div>
+                      <p className="font-medium">Password Creation</p>
+                      <p className="text-muted-foreground text-sm">
+                        When you set a password, it&apos;s sent securely to our
+                        server where it&apos;s immediately hashed using{" "}
+                        <code className="bg-muted rounded px-1 py-0.5 text-xs">
+                          PBKDF2-SHA256
+                        </code>{" "}
+                        with 100,000 iterations and a random salt
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      2
+                    </div>
+                    <div>
+                      <p className="font-medium">Secure Storage</p>
+                      <p className="text-muted-foreground text-sm">
+                        Only the hash and salt are stored in our database. Your
+                        original password is discarded immediately after hashing
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      3
+                    </div>
+                    <div>
+                      <p className="font-medium">Edit Verification</p>
+                      <p className="text-muted-foreground text-sm">
+                        When editing, your password is sent to the server where
+                        it&apos;s re-hashed with the same salt and compared
+                        against the stored hash
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      4
+                    </div>
+                    <div>
+                      <p className="font-medium">Zero Knowledge</p>
+                      <p className="text-muted-foreground text-sm">
+                        We can verify your password without ever knowing what it
+                        is, maintaining zero-knowledge principles
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Technical Details */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card className="p-6">
+                  <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                    <Lock className="h-5 w-5" />
+                    Hashing Specifications
+                  </h3>
+                  <dl className="space-y-3 text-sm">
+                    <div>
+                      <dt className="font-medium">Algorithm</dt>
+                      <dd className="text-muted-foreground">
+                        PBKDF2 with SHA-256
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Iterations</dt>
+                      <dd className="text-muted-foreground">
+                        100,000 (OWASP recommended minimum)
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Salt Size</dt>
+                      <dd className="text-muted-foreground">
+                        128 bits (16 bytes) of cryptographically secure random
+                        data
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Hash Output</dt>
+                      <dd className="text-muted-foreground">
+                        256 bits (32 bytes)
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Password Requirements</dt>
+                      <dd className="text-muted-foreground">
+                        4-20 characters with at least one letter and one number
+                      </dd>
+                    </div>
+                  </dl>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                    <Shield className="h-5 w-5" />
+                    Security Benefits
+                  </h3>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Brute-force resistance:</strong> 100,000
+                        iterations make cracking computationally expensive
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Rainbow table protection:</strong> Unique salts
+                        prevent precomputed attacks
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Server compromise safety:</strong> Even if
+                        hashes leak, passwords remain protected
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Zero-knowledge:</strong> We never see or store
+                        your actual password
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Timing attack protection:</strong> Constant-time
+                        comparison prevents timing-based attacks
+                      </span>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+
+              {/* Password Best Practices */}
+              <Card className="border-blue-200 bg-blue-50 p-6 dark:border-blue-800 dark:bg-blue-900/10">
+                <h3 className="mb-4 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300">
+                  <AlertTriangle className="h-5 w-5" />
+                  Password Best Practices
+                </h3>
+                <div className="grid gap-4 text-sm md:grid-cols-2">
+                  <div className="space-y-2">
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <span>Use a unique password not used elsewhere</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <span>Consider longer passwords for sensitive data</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <span>Include numbers, letters, and symbols</span>
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="flex items-start gap-2">
+                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                      <span>Avoid common patterns (1234, password)</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                      <span>
+                        Don&apos;t reuse passwords from other services
+                      </span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                      <span>
+                        Remember: password protects edits, not viewing
+                      </span>
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Data Retention */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <Clock className="text-primary h-6 w-6" />
+              Data Retention & Cleanup
+            </h2>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="p-6">
+                <h3 className="mb-4 font-semibold">Automatic Expiration</h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>
+                      All gists have mandatory expiration times (default: 7
+                      days)
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>
+                      Encrypted data is permanently deleted after expiration
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>No data recovery possible after expiration</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>Metadata (size, timestamp) is also purged</span>
+                  </li>
+                </ul>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="mb-4 font-semibold">View-Once Security</h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Gist is immediately deleted after first view</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Perfect for sharing sensitive credentials</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Prevents accidental re-access</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <Shield className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Link becomes permanently invalid</span>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* Security Guarantees */}
       <section className="border-b py-12">
         <Container>
@@ -327,6 +603,107 @@ export default function SecurityPage() {
                 </p>
               </Card>
             </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Browser Security & Metadata */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <Shield className="text-primary h-6 w-6" />
+              Browser Security & Privacy
+            </h2>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <Card className="p-6">
+                <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                  <Eye className="h-5 w-5 text-green-600 dark:text-green-400" />
+                  What&apos;s Encrypted
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>All file contents and code</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>File names and descriptions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>Programming language information</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                    <span>Number of files in gist</span>
+                  </li>
+                </ul>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                  <EyeOff className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                  Visible Metadata
+                </h3>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-600 dark:text-orange-400" />
+                    <span>Gist ID and creation timestamp</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-600 dark:text-orange-400" />
+                    <span>Expiration time and view-once status</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-600 dark:text-orange-400" />
+                    <span>Encrypted blob size (but not content size)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-600 dark:text-orange-400" />
+                    <span>Whether password protection is enabled</span>
+                  </li>
+                </ul>
+              </Card>
+            </div>
+
+            <Card className="mt-6 border-blue-200 bg-blue-50 p-6 dark:border-blue-800 dark:bg-blue-900/10">
+              <h3 className="mb-4 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300">
+                <Code2 className="h-5 w-5" />
+                Browser Requirements
+              </h3>
+              <div className="grid gap-4 text-sm md:grid-cols-2">
+                <div className="space-y-2">
+                  <p className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Modern browser with Web Crypto API support</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>JavaScript enabled for encryption/decryption</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>HTTPS required (enforced automatically)</span>
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Chrome 37+, Firefox 34+, Safari 11+</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                    <span>Mobile browsers with crypto support</span>
+                  </p>
+                  <p className="flex items-start gap-2">
+                    <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                    <span>Internet Explorer not supported</span>
+                  </p>
+                </div>
+              </div>
+            </Card>
           </div>
         </Container>
       </section>

@@ -52,6 +52,18 @@ export interface PasswordInputProps {
    * Placeholder text for the input
    */
   placeholder?: string;
+  /**
+   * Field name to use in error messages (defaults to "Password")
+   */
+  fieldName?: string;
+  /**
+   * Minimum length requirement (defaults to 4 for PINs, 8 for passwords)
+   */
+  minLength?: number;
+  /**
+   * Maximum length requirement (defaults to 50)
+   */
+  maxLength?: number;
 }
 
 /**
@@ -106,6 +118,9 @@ export function PasswordInput({
   showConfirm = true,
   error: externalError,
   placeholder = "Enter password",
+  fieldName = "Password",
+  minLength = 4,
+  maxLength = 50,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = React.useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
@@ -132,10 +147,10 @@ export function PasswordInput({
   React.useEffect(() => {
     const newErrors: typeof errors = {};
 
-    if (value && value.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (value && value.length > 64) {
-      newErrors.password = "Password must be no more than 64 characters";
+    if (value && value.length < minLength) {
+      newErrors.password = `${fieldName} must be at least ${minLength} characters`;
+    } else if (value && value.length > maxLength) {
+      newErrors.password = `${fieldName} must be no more than ${maxLength} characters`;
     }
 
     if (
@@ -144,11 +159,11 @@ export function PasswordInput({
       confirmValue &&
       value !== confirmValue
     ) {
-      newErrors.confirm = "Passwords do not match";
+      newErrors.confirm = `${fieldName}s do not match`;
     }
 
     setErrors(newErrors);
-  }, [value, confirmValue, mode, showConfirm]);
+  }, [value, confirmValue, mode, showConfirm, fieldName, minLength, maxLength]);
 
   const strengthColors = {
     weak: "text-destructive",
@@ -172,7 +187,7 @@ export function PasswordInput({
     <div className={cn("space-y-4", className)}>
       {/* Password field */}
       <div className="space-y-2">
-        <Label htmlFor="password">{label}</Label>
+        {label && <Label htmlFor="password">{label}</Label>}
         <div className="relative">
           <Input
             id="password"
@@ -258,7 +273,7 @@ export function PasswordInput({
       {/* Confirm password field */}
       {mode === "create" && showConfirm && (
         <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm Password</Label>
+          <Label htmlFor="confirm-password">Confirm {fieldName}</Label>
           <div className="relative">
             <Input
               id="confirm-password"

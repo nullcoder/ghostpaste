@@ -261,3 +261,14 @@
 .animate-glitch {
   animation: glitch 2s ease-in-out infinite alternate-reverse;
 }
+
+/* Loading animation for security components */
+@keyframes loading {
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(300%);
+  }
+}

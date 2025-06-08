@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CopyButton } from "@/components/ui/copy-button";
 import {
   Code2,
   FileCode,
@@ -52,16 +53,18 @@ function ExampleCard({
   expiry = "1 day",
 }: ExampleProps) {
   return (
-    <Card className="flex h-full flex-col p-6">
-      <div className="mb-4 flex items-start justify-between">
-        <div className="flex items-center gap-3">
+    <Card className="flex h-full min-w-0 flex-col p-4 sm:p-6">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 items-center gap-3">
           <div className="bg-primary/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full">
             {icon}
           </div>
-          <h3 className="font-semibold">{title}</h3>
+          <h3 className="text-sm font-semibold break-words sm:text-base">
+            {title}
+          </h3>
         </div>
         {security === "high" && (
-          <Badge variant="destructive" className="text-xs">
+          <Badge variant="destructive" className="w-fit flex-shrink-0 text-xs">
             <Shield className="mr-1 h-3 w-3" />
             High Security
           </Badge>
@@ -70,26 +73,42 @@ function ExampleCard({
 
       <p className="text-muted-foreground mb-4 text-sm">{description}</p>
 
-      <div className="bg-muted mb-4 flex-grow rounded-lg p-4">
-        <div className="mb-2 flex items-center justify-between">
+      <div className="bg-muted mb-4 flex-grow rounded-lg p-3 sm:p-4">
+        <div className="mb-2 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
           <code className="text-muted-foreground text-xs">{language}</code>
           <div className="text-muted-foreground flex items-center gap-2 text-xs">
             <Clock className="h-3 w-3" />
             {expiry}
           </div>
         </div>
-        <pre className="overflow-x-auto text-xs">
-          <code>{code}</code>
-        </pre>
+        <div className="bg-muted/50 relative overflow-hidden rounded border">
+          <div className="absolute top-2 right-2">
+            <CopyButton
+              value={code}
+              size="sm"
+              variant="ghost"
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100"
+            />
+          </div>
+          <pre className="max-h-48 overflow-x-auto p-3 pr-10 text-xs leading-relaxed">
+            <code className="text-foreground font-mono break-words whitespace-pre-wrap sm:whitespace-pre">
+              {code}
+            </code>
+          </pre>
+        </div>
       </div>
 
       <div className="space-y-3">
-        <p className="text-sm">
+        <p className="text-sm break-words">
           <span className="font-medium">Best for:</span> {useCase}
         </p>
         <div className="flex flex-wrap gap-1">
           {tags.map((tag) => (
-            <Badge key={tag} variant="secondary" className="text-xs">
+            <Badge
+              key={tag}
+              variant="secondary"
+              className="text-xs whitespace-nowrap"
+            >
               {tag}
             </Badge>
           ))}
@@ -288,7 +307,7 @@ echo "🚀 Starting deployment..."
 
 # Check environment
 if [ "$NODE_ENV" != "production" ]; then
-  echo "❌ Error: NODE_ENV must be &apos;production&apos;"
+  echo "❌ Error: NODE_ENV must be 'production'"
   exit 1
 fi
 
@@ -345,7 +364,7 @@ Component Stack:
   return (
     <>
       {/* Hero Section */}
-      <section className="from-background to-muted/20 relative overflow-hidden bg-gradient-to-b py-12">
+      <section className="from-background to-muted/20 relative overflow-hidden bg-gradient-to-b py-8 sm:py-12">
         <Container>
           <div className="mx-auto max-w-3xl space-y-4 text-center">
             <div className="mb-4 inline-flex items-center justify-center">
@@ -354,10 +373,10 @@ Component Stack:
                 className="text-indigo-600 dark:text-indigo-400"
               />
             </div>
-            <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
               Use Cases & Examples
             </h1>
-            <p className="text-muted-foreground text-lg">
+            <p className="text-muted-foreground text-base sm:text-lg">
               See how developers use GhostPaste to share code securely in
               real-world scenarios
             </p>
@@ -366,32 +385,38 @@ Component Stack:
       </section>
 
       {/* Quick Stats */}
-      <section className="border-b py-8">
+      <section className="border-b py-6 sm:py-8">
         <Container>
-          <div className="flex flex-wrap justify-center gap-8 text-center">
+          <div className="grid grid-cols-2 gap-4 text-center sm:flex sm:flex-wrap sm:justify-center sm:gap-8">
             <div>
-              <div className="text-primary text-2xl font-bold">
+              <div className="text-primary text-lg font-bold sm:text-2xl">
                 One-Time View
               </div>
-              <div className="text-muted-foreground text-sm">
+              <div className="text-muted-foreground text-xs sm:text-sm">
                 For passwords & secrets
               </div>
             </div>
             <div>
-              <div className="text-primary text-2xl font-bold">1 Hour</div>
-              <div className="text-muted-foreground text-sm">
+              <div className="text-primary text-lg font-bold sm:text-2xl">
+                1 Hour
+              </div>
+              <div className="text-muted-foreground text-xs sm:text-sm">
                 For sensitive configs
               </div>
             </div>
             <div>
-              <div className="text-primary text-2xl font-bold">7 Days</div>
-              <div className="text-muted-foreground text-sm">
+              <div className="text-primary text-lg font-bold sm:text-2xl">
+                7 Days
+              </div>
+              <div className="text-muted-foreground text-xs sm:text-sm">
                 For code reviews
               </div>
             </div>
             <div>
-              <div className="text-primary text-2xl font-bold">30 Days</div>
-              <div className="text-muted-foreground text-sm">
+              <div className="text-primary text-lg font-bold sm:text-2xl">
+                30 Days
+              </div>
+              <div className="text-muted-foreground text-xs sm:text-sm">
                 For documentation
               </div>
             </div>
@@ -400,12 +425,14 @@ Component Stack:
       </section>
 
       {/* Examples Grid */}
-      <section className="py-12">
+      <section className="py-8 sm:py-12">
         <Container>
           <div className="mx-auto max-w-6xl">
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid min-w-0 auto-rows-fr gap-4 sm:gap-6 lg:grid-cols-2">
               {examples.map((example, index) => (
-                <ExampleCard key={index} {...example} />
+                <div key={index} className="min-w-0">
+                  <ExampleCard {...example} />
+                </div>
               ))}
             </div>
           </div>
@@ -413,18 +440,20 @@ Component Stack:
       </section>
 
       {/* Best Practices */}
-      <section className="bg-muted/30 border-y py-12">
+      <section className="bg-muted/30 border-y py-8 sm:py-12">
         <Container>
           <div className="mx-auto max-w-4xl">
-            <h2 className="mb-8 text-center text-2xl font-bold">
+            <h2 className="mb-6 text-center text-xl font-bold sm:mb-8 sm:text-2xl">
               Best Practices by Use Case
             </h2>
 
-            <div className="grid gap-6 md:grid-cols-3">
-              <Card className="p-6">
+            <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
+              <Card className="p-4 sm:p-6">
                 <div className="mb-3 flex items-center gap-2">
                   <Eye className="h-5 w-5 text-green-600 dark:text-green-400" />
-                  <h3 className="font-semibold">Public Sharing</h3>
+                  <h3 className="text-sm font-semibold sm:text-base">
+                    Public Sharing
+                  </h3>
                 </div>
                 <ul className="text-muted-foreground space-y-2 text-sm">
                   <li>• Remove sensitive data</li>
@@ -434,23 +463,27 @@ Component Stack:
                 </ul>
               </Card>
 
-              <Card className="p-6">
+              <Card className="p-4 sm:p-6">
                 <div className="mb-3 flex items-center gap-2">
                   <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-                  <h3 className="font-semibold">Team Sharing</h3>
+                  <h3 className="text-sm font-semibold sm:text-base">
+                    Team Sharing
+                  </h3>
                 </div>
                 <ul className="text-muted-foreground space-y-2 text-sm">
                   <li>• Set appropriate expiry</li>
-                  <li>• Use PINs for editing</li>
+                  <li>• Use passwords for editing</li>
                   <li>• Share via secure channels</li>
                   <li>• Document the context</li>
                 </ul>
               </Card>
 
-              <Card className="p-6">
+              <Card className="p-4 sm:p-6">
                 <div className="mb-3 flex items-center gap-2">
                   <EyeOff className="h-5 w-5 text-red-600 dark:text-red-400" />
-                  <h3 className="font-semibold">Sensitive Data</h3>
+                  <h3 className="text-sm font-semibold sm:text-base">
+                    Sensitive Data
+                  </h3>
                 </div>
                 <ul className="text-muted-foreground space-y-2 text-sm">
                   <li>• Use one-time view</li>
@@ -465,24 +498,29 @@ Component Stack:
       </section>
 
       {/* CTA Section */}
-      <section className="py-12">
+      <section className="py-8 sm:py-12">
         <Container>
-          <div className="mx-auto max-w-2xl space-y-6 text-center">
-            <h2 className="text-2xl font-bold">
+          <div className="mx-auto max-w-2xl space-y-4 text-center sm:space-y-6">
+            <h2 className="text-xl font-bold sm:text-2xl">
               Ready to Share Your Code Securely?
             </h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground text-sm sm:text-base">
               Join thousands of developers who trust GhostPaste for secure code
               sharing. No account needed, just paste and go.
             </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Button asChild size="lg">
+            <div className="flex flex-col justify-center gap-3 sm:flex-row sm:gap-4">
+              <Button asChild size="lg" className="w-full sm:w-auto">
                 <Link href="/create">
                   Start Sharing Now
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
                 <Link href="/security">
                   <Shield className="mr-2 h-4 w-4" />
                   Learn About Security

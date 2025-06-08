@@ -33,12 +33,14 @@ GhostPaste is a privacy-focused code sharing platform that ensures your code sni
 
 ### ✅ Available Features
 
-- **👁️ One-Time View** - Create snippets that disappear after being viewed once (implemented with secure deletion flow)
+- **⏱️ Self-Expiring Content** - Set snippets to auto-delete after a specified time
+- **👁️ One-Time View** - Create snippets that disappear after being viewed once
 - **📝 Version History** - Track changes with automatic versioning (storage ready)
 
 ### 🚧 Coming Soon
 
-- **⏱️ Self-Expiring Content** - Set snippets to auto-delete after a specified time
+- **✏️ Edit Existing Gists** - Edit your gists with password protection
+- **🔍 Advanced Search** - Search within your gists and filter by language
 
 ## 🚀 Quick Start
 
@@ -56,8 +58,8 @@ Simply open the shared link - the decryption key is in the URL fragment (#key=..
 
 ### Keyboard Shortcuts
 
-- `Cmd/Ctrl + S` - Save gist
-- `Cmd/Ctrl + Enter` - Create/update gist
+- `Cmd/Ctrl + Enter` - Add new file (in editor)
+- `Cmd/Ctrl + Enter` - Create gist (on create page)
 - `Cmd/Ctrl + ?` - Show all shortcuts
 - `Escape` - Close dialogs
 
@@ -81,12 +83,12 @@ Simply open the shared link - the decryption key is in the URL fragment (#key=..
 
 ## 📊 Limits
 
-| Resource        | Limit  | Why?                            |
-| --------------- | ------ | ------------------------------- |
-| File size       | 500 KB | Covers 99% of code files        |
-| Total size      | 5 MB   | Enough for ~10-20 typical files |
-| Files per paste | 20     | Keeps the UI responsive         |
-| Versions kept   | 50     | Balances history with storage   |
+| Resource       | Limit  | Why?                            |
+| -------------- | ------ | ------------------------------- |
+| File size      | 500 KB | Covers 99% of code files        |
+| Total size     | 5 MB   | Enough for ~10-20 typical files |
+| Files per gist | 20     | Keeps the UI responsive         |
+| Versions kept  | 50     | Balances history with storage   |
 
 ## 📁 Project Structure
 
@@ -172,31 +174,29 @@ npm run deploy
 
 GhostPaste is actively being developed. Here's what's completed and what's in progress:
 
-### ✅ Completed
+### ✅ Completed (Phase 1-5)
 
-- Core encryption/decryption system
-- Multi-file editor with syntax highlighting
-- Password-protected editing
-- Responsive UI with dark/light mode
-- Copy-to-clipboard functionality
-- Keyboard shortcuts
-- Error handling and boundaries
-- R2 storage with versioning support
-- 100% of UI components (Phase 4)
+- **Core Infrastructure**: Encryption/decryption system, binary format, authentication
+- **UI Components**: 100% of components complete (19/19) with comprehensive testing
+- **API Implementation**: Complete CRUD operations for gists and blobs
+- **Create Gist Flow**: Full end-to-end gist creation with encryption and sharing
+- **View Gist Flow**: Complete gist viewing with decryption and syntax highlighting
+- **Multi-file Support**: Add, remove, and manage up to 20 files per gist
+- **Security Features**: Password protection, expiry settings, one-time view
+- **Modern UI**: Responsive design, dark/light mode, keyboard shortcuts
+- **Developer Experience**: Comprehensive documentation, testing, and tooling
 
-### 🚧 In Progress
+### 🚧 In Progress (Phase 6)
 
-- API endpoints (Phase 5 - Core CRUD operations complete)
-- Self-expiring gists
-- Version history UI
-- Complete frontend integration
+- **Gist Editing**: Edit existing gists with password validation
+- **File Management**: Enhanced file operations and reordering
+- **Performance**: Loading states and error handling improvements
 
 ### 📅 Upcoming
 
-- Full API implementation
-- Deployment to production
-- Performance optimizations
-- Additional features based on user feedback
+- **Version History**: View and restore previous versions
+- **Advanced Features**: Search, themes, keyboard navigation
+- **Polish**: Animations, PWA support, print/export
 
 ## 📖 Documentation
 
@@ -207,7 +207,7 @@ GhostPaste is actively being developed. Here's what's completed and what's in pr
 - [Implementation TODO](docs/TODO.md) - Development roadmap and progress tracking
 - [Contributing Guide](CONTRIBUTING.md) - How to contribute to the project
 - [Local Development](docs/LOCAL_DEVELOPMENT.md) - Setting up your development environment
-- [Phase Tracking](docs/PHASE_5_ISSUE_TRACKING.md) - Current development phase status
+- [Phase Tracking](docs/PHASE_6_ISSUE_TRACKING.md) - Current development phase status
 
 ## 🤝 Contributing
 
