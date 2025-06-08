@@ -239,7 +239,7 @@ export default function SecurityPage() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="font-medium">PBKDF2 for PINs</dt>
+                      <dt className="font-medium">PBKDF2 for Passwords</dt>
                       <dd className="text-muted-foreground">
                         SHA-256, 100,000 iterations
                       </dd>
@@ -291,38 +291,40 @@ export default function SecurityPage() {
         </Container>
       </section>
 
-      {/* PIN Protection */}
+      {/* Password Protection */}
       <section className="border-b py-12">
         <Container>
           <div className="mx-auto max-w-5xl">
             <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
               <Key className="text-primary h-6 w-6" />
-              PIN Protection & Authentication
+              Password Protection & Authentication
             </h2>
 
             <div className="prose prose-sm dark:prose-invert mb-8 max-w-none">
               <p className="text-base">
-                GhostPaste offers optional PIN protection for your gists,
+                GhostPaste offers optional password protection for your gists,
                 allowing you to control who can edit or delete them. This
                 feature uses industry-standard password hashing to ensure your
-                PIN remains secure even if our servers are compromised.
+                password remains secure even if our servers are compromised.
               </p>
             </div>
 
             <div className="grid gap-6">
-              {/* PIN Security Flow */}
+              {/* Password Security Flow */}
               <Card className="p-6">
-                <h3 className="mb-4 font-semibold">How PIN Protection Works</h3>
+                <h3 className="mb-4 font-semibold">
+                  How Password Protection Works
+                </h3>
                 <div className="space-y-4">
                   <div className="flex gap-4">
                     <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
                       1
                     </div>
                     <div>
-                      <p className="font-medium">PIN Creation</p>
+                      <p className="font-medium">Password Creation</p>
                       <p className="text-muted-foreground text-sm">
-                        When you set a PIN, it&apos;s immediately hashed in your
-                        browser using{" "}
+                        When you set a password, it&apos;s immediately hashed in
+                        your browser using{" "}
                         <code className="bg-muted rounded px-1 py-0.5 text-xs">
                           PBKDF2-SHA256
                         </code>{" "}
@@ -339,7 +341,7 @@ export default function SecurityPage() {
                       <p className="font-medium">Secure Storage</p>
                       <p className="text-muted-foreground text-sm">
                         Only the hash and salt are sent to our servers. Your
-                        original PIN never leaves your browser
+                        original password never leaves your browser
                       </p>
                     </div>
                   </div>
@@ -351,8 +353,8 @@ export default function SecurityPage() {
                     <div>
                       <p className="font-medium">Edit Verification</p>
                       <p className="text-muted-foreground text-sm">
-                        When editing, your PIN is re-hashed with the same salt
-                        and compared against the stored hash
+                        When editing, your password is re-hashed with the same
+                        salt and compared against the stored hash
                       </p>
                     </div>
                   </div>
@@ -364,8 +366,8 @@ export default function SecurityPage() {
                     <div>
                       <p className="font-medium">Zero Knowledge</p>
                       <p className="text-muted-foreground text-sm">
-                        We can verify your PIN without ever knowing what it is,
-                        maintaining zero-knowledge principles
+                        We can verify your password without ever knowing what it
+                        is, maintaining zero-knowledge principles
                       </p>
                     </div>
                   </div>
@@ -406,7 +408,7 @@ export default function SecurityPage() {
                       </dd>
                     </div>
                     <div>
-                      <dt className="font-medium">PIN Requirements</dt>
+                      <dt className="font-medium">Password Requirements</dt>
                       <dd className="text-muted-foreground">
                         4-50 characters, any Unicode characters allowed
                       </dd>
@@ -438,35 +440,35 @@ export default function SecurityPage() {
                       <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
                       <span>
                         <strong>Server compromise safety:</strong> Even if
-                        hashes leak, PINs remain protected
+                        hashes leak, passwords remain protected
                       </span>
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
                       <span>
                         <strong>Zero-knowledge:</strong> We never see or store
-                        your actual PIN
+                        your actual password
                       </span>
                     </li>
                   </ul>
                 </Card>
               </div>
 
-              {/* PIN Best Practices */}
+              {/* Password Best Practices */}
               <Card className="border-blue-200 bg-blue-50 p-6 dark:border-blue-800 dark:bg-blue-900/10">
                 <h3 className="mb-4 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300">
                   <AlertTriangle className="h-5 w-5" />
-                  PIN Best Practices
+                  Password Best Practices
                 </h3>
                 <div className="grid gap-4 text-sm md:grid-cols-2">
                   <div className="space-y-2">
                     <p className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                      <span>Use a unique PIN not used elsewhere</span>
+                      <span>Use a unique password not used elsewhere</span>
                     </p>
                     <p className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-                      <span>Consider longer PINs for sensitive data</span>
+                      <span>Consider longer passwords for sensitive data</span>
                     </p>
                     <p className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
@@ -480,11 +482,15 @@ export default function SecurityPage() {
                     </p>
                     <p className="flex items-start gap-2">
                       <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
-                      <span>Don&apos;t reuse PINs from other services</span>
+                      <span>
+                        Don&apos;t reuse passwords from other services
+                      </span>
                     </p>
                     <p className="flex items-start gap-2">
                       <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
-                      <span>Remember: PIN protects edits, not viewing</span>
+                      <span>
+                        Remember: password protects edits, not viewing
+                      </span>
                     </p>
                   </div>
                 </div>

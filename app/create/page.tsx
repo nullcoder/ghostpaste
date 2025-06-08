@@ -23,6 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { encryptGist } from "@/lib/crypto-utils";
 import type { FileData } from "@/components/ui/file-editor";
 
@@ -272,19 +273,27 @@ export default function CreateGistPage() {
               </p>
             </div>
 
-            {/* PIN Protection */}
+            {/* Password Protection */}
             <div className="space-y-2">
-              <Label htmlFor="password">Edit Protection (Optional)</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="password">Edit Password</Label>
+                <Badge variant="secondary" className="text-xs">
+                  Optional
+                </Badge>
+              </div>
+              <p className="text-muted-foreground text-sm">
+                Add a password to control who can edit or delete your gist.
+                Leave empty if you don&apos;t need edit protection.
+              </p>
               <PasswordInput
                 value={password}
                 onChange={setPassword}
                 mode="create"
-                placeholder="Set a PIN to protect edits"
+                placeholder="Leave empty for no protection"
                 showConfirm={false}
+                label=""
+                fieldName="Password"
               />
-              <p className="text-muted-foreground text-sm">
-                Lock down your gist - only you can edit or delete it
-              </p>
             </div>
           </CardContent>
         </Card>

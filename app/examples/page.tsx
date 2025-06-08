@@ -463,7 +463,7 @@ Component Stack:
                 </div>
                 <ul className="text-muted-foreground space-y-2 text-sm">
                   <li>• Set appropriate expiry</li>
-                  <li>• Use PINs for editing</li>
+                  <li>• Use passwords for editing</li>
                   <li>• Share via secure channels</li>
                   <li>• Document the context</li>
                 </ul>
