@@ -75,7 +75,7 @@ export default function HelpPage() {
               <Card className="p-6">
                 <h3 className="mb-3 flex items-center gap-2 font-semibold">
                   <Code2 className="text-primary h-5 w-5" />
-                  Creating a Paste
+                  Creating a Gist
                 </h3>
                 <ol className="text-muted-foreground space-y-2 text-sm">
                   <li>
@@ -91,7 +91,7 @@ export default function HelpPage() {
                   <li>
                     3. Set options (expiry, password for editing, one-time view)
                   </li>
-                  <li>4. Click &quot;Create Secure Paste&quot;</li>
+                  <li>4. Click &quot;Create Secure Gist&quot;</li>
                   <li>5. Share the generated link</li>
                 </ol>
               </Card>
@@ -99,11 +99,11 @@ export default function HelpPage() {
               <Card className="p-6">
                 <h3 className="mb-3 flex items-center gap-2 font-semibold">
                   <Key className="text-primary h-5 w-5" />
-                  Viewing a Paste
+                  Viewing a Gist
                 </h3>
                 <ol className="text-muted-foreground space-y-2 text-sm">
                   <li>1. Click on a GhostPaste link</li>
-                  <li>2. The paste decrypts automatically</li>
+                  <li>2. The gist decrypts automatically</li>
                   <li>3. View code with syntax highlighting</li>
                   <li>4. Copy code or download files</li>
                   <li>5. Edit if you have the password</li>
@@ -148,7 +148,7 @@ export default function HelpPage() {
                           don&apos;t send to servers.
                         </p>
                         <p>
-                          We literally cannot decrypt your pastes, even if asked
+                          We literally cannot decrypt your gists, even if asked
                           by authorities.
                         </p>
                       </div>
@@ -157,7 +157,7 @@ export default function HelpPage() {
 
                   <AccordionItem value="how-long">
                     <AccordionTrigger>
-                      How long are pastes stored?
+                      How long are gists stored?
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 text-sm">
@@ -169,9 +169,7 @@ export default function HelpPage() {
                           <li>30 days (maximum)</li>
                           <li>One-time view (deleted after first view)</li>
                         </ul>
-                        <p>
-                          All pastes are automatically deleted after expiry.
-                        </p>
+                        <p>All gists are automatically deleted after expiry.</p>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -184,8 +182,8 @@ export default function HelpPage() {
                       <div className="space-y-2 text-sm">
                         <ul className="list-inside list-disc space-y-1">
                           <li>500KB per file</li>
-                          <li>5MB total per paste</li>
-                          <li>Up to 20 files per paste</li>
+                          <li>5MB total per gist</li>
+                          <li>Up to 20 files per gist</li>
                         </ul>
                         <p>
                           These limits ensure fast encryption/decryption in your
@@ -204,11 +202,11 @@ export default function HelpPage() {
                         </p>
                         <p>
                           Since we use zero-knowledge encryption, we have no way
-                          to find or decrypt your paste without the original
+                          to find or decrypt your gist without the original
                           link.
                         </p>
                         <p>
-                          Always save important paste links immediately after
+                          Always save important gist links immediately after
                           creation.
                         </p>
                       </div>
@@ -217,22 +215,22 @@ export default function HelpPage() {
 
                   <AccordionItem value="edit-paste">
                     <AccordionTrigger>
-                      Can I edit my paste after creation?
+                      Can I edit my gist after creation?
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 text-sm">
                         <p>
-                          Yes, if you set a password when creating the paste:
+                          Yes, if you set a password when creating the gist:
                         </p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
-                          <li>Click &quot;Edit&quot; on the paste page</li>
+                          <li>Click &quot;Edit&quot; on the gist page</li>
                           <li>Enter your password to unlock editing</li>
                           <li>Make your changes</li>
-                          <li>Save the updated paste</li>
+                          <li>Save the updated gist</li>
                         </ul>
                         <p>
                           The password also allows you to manually delete the
-                          paste. Without a password, pastes are read-only.
+                          gist. Without a password, gists are read-only.
                         </p>
                       </div>
                     </AccordionContent>
@@ -405,11 +403,11 @@ export default function HelpPage() {
                         </p>
                         <p>
                           Due to zero-knowledge encryption, we cannot decrypt
-                          pastes to verify their contents. We can only:
+                          gists to verify their contents. We can only:
                         </p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
-                          <li>Remove specific paste IDs if provided</li>
-                          <li>Cannot confirm what the paste contains</li>
+                          <li>Remove specific gist IDs if provided</li>
+                          <li>Cannot confirm what the gist contains</li>
                           <li>Cannot search for infringing content</li>
                         </ul>
                         <p className="text-muted-foreground text-xs">
@@ -450,7 +448,7 @@ export default function HelpPage() {
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="law-enforcement">
                     <AccordionTrigger>
-                      Can law enforcement access my pastes?
+                      Can law enforcement access my gists?
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 text-sm">
@@ -459,10 +457,10 @@ export default function HelpPage() {
                         </p>
                         <p>Even if compelled by law enforcement, we cannot:</p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
-                          <li>Decrypt your pastes (we don&apos;t have keys)</li>
-                          <li>Identify who created a paste</li>
-                          <li>Track who accessed a paste</li>
-                          <li>Recover deleted or expired pastes</li>
+                          <li>Decrypt your gists (we don&apos;t have keys)</li>
+                          <li>Identify who created a gist</li>
+                          <li>Track who accessed a gist</li>
+                          <li>Recover deleted or expired gists</li>
                         </ul>
                         <p>
                           We can only provide the encrypted blob, which is
@@ -607,7 +605,7 @@ export default function HelpPage() {
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 text-sm">
-                        <p>GhostPaste supports multi-file pastes:</p>
+                        <p>GhostPaste supports multi-file gists:</p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
                           <li>Drag & drop up to 20 files at once</li>
                           <li>Or use &quot;Add File&quot; button</li>
@@ -685,9 +683,9 @@ export default function HelpPage() {
                             Pastebin Advantages:
                           </p>
                           <ul className="ml-2 list-inside list-disc space-y-1">
-                            <li>Permanent pastes available</li>
+                            <li>Permanent storage available</li>
                             <li>User accounts & history</li>
-                            <li>Public paste discovery</li>
+                            <li>Public content discovery</li>
                             <li>Larger file sizes</li>
                             <li>API for automation</li>
                           </ul>
@@ -779,9 +777,9 @@ export default function HelpPage() {
                       Ensure you copied the complete URL including everything
                       after #
                     </li>
-                    <li>Check if the paste has expired</li>
+                    <li>Check if the gist has expired</li>
                     <li>
-                      Verify the paste wasn&apos;t a one-time view that&apos;s
+                      Verify the gist wasn&apos;t a one-time view that&apos;s
                       already been accessed
                     </li>
                   </ul>
@@ -790,22 +788,20 @@ export default function HelpPage() {
 
               <Card className="p-6">
                 <h3 className="mb-2 font-semibold text-orange-600 dark:text-orange-400">
-                  &quot;Paste not found&quot; error
+                  &quot;Gist not found&quot; error
                 </h3>
                 <p className="text-muted-foreground mb-3 text-sm">
-                  The paste doesn&apos;t exist in our system.
+                  The gist doesn&apos;t exist in our system.
                 </p>
                 <div className="space-y-1 text-sm">
                   <p>
                     <strong>Possible reasons:</strong>
                   </p>
                   <ul className="ml-2 list-inside list-disc space-y-1">
-                    <li>The paste has expired and been deleted</li>
-                    <li>
-                      It was a one-time view paste that&apos;s been viewed
-                    </li>
+                    <li>The gist has expired and been deleted</li>
+                    <li>It was a one-time view gist that&apos;s been viewed</li>
                     <li>The URL is incorrect</li>
-                    <li>The paste was manually deleted</li>
+                    <li>The gist was manually deleted</li>
                   </ul>
                 </div>
               </Card>
@@ -815,7 +811,7 @@ export default function HelpPage() {
                   Slow loading or timeout
                 </h3>
                 <p className="text-muted-foreground mb-3 text-sm">
-                  Large pastes may take a moment to encrypt/decrypt.
+                  Large gists may take a moment to encrypt/decrypt.
                 </p>
                 <div className="space-y-1 text-sm">
                   <p>
@@ -826,7 +822,7 @@ export default function HelpPage() {
                     <li>Try refreshing the page</li>
                     <li>
                       For very large files, consider splitting into multiple
-                      pastes
+                      gists
                     </li>
                     <li>Check your internet connection</li>
                   </ul>
@@ -852,7 +848,7 @@ export default function HelpPage() {
                   DO ✓
                 </h3>
                 <ul className="space-y-2 text-sm text-green-600 dark:text-green-400">
-                  <li>• Save paste links immediately</li>
+                  <li>• Save gist links immediately</li>
                   <li>• Use short expiry times for sensitive data</li>
                   <li>• Set passwords if you need to edit later</li>
                   <li>• Share links through secure channels</li>
