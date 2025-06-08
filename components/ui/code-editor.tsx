@@ -296,6 +296,20 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
       });
     }, [activeTheme, getThemeExtension]);
 
+    // Handle initial theme resolution when resolvedTheme becomes available
+    useEffect(() => {
+      if (!viewRef.current || !resolvedTheme) return;
+
+      // Only update if we're not using a theme override
+      if (!themeOverride) {
+        viewRef.current.dispatch({
+          effects: themeCompartment.reconfigure(
+            getThemeExtension(resolvedTheme)
+          ),
+        });
+      }
+    }, [resolvedTheme, themeOverride, getThemeExtension]);
+
     // Update read-only state
     useEffect(() => {
       if (!viewRef.current) return;
