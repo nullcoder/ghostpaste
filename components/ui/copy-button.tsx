@@ -13,7 +13,9 @@ import {
 
 export interface CopyButtonProps {
   /** Text to copy to clipboard */
-  text: string;
+  text?: string;
+  /** Alternative prop name for text (for compatibility) */
+  value?: string;
   /** Button variant */
   variant?:
     | "default"
@@ -58,6 +60,7 @@ export interface CopyButtonProps {
  */
 export function CopyButton({
   text,
+  value,
   variant = "ghost",
   size = "icon",
   className,
@@ -79,6 +82,9 @@ export function CopyButton({
   const [copySuccess, setCopySuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Use value prop if provided, otherwise fall back to text
+  const textToCopy = value || text || "";
+
   const handleCopy = async () => {
     if (disabled || isLoading) return;
 
@@ -86,8 +92,8 @@ export function CopyButton({
 
     try {
       const result = useRetry
-        ? await copyToClipboardWithRetry(text, maxRetries)
-        : await copyToClipboard(text);
+        ? await copyToClipboardWithRetry(textToCopy, maxRetries)
+        : await copyToClipboard(textToCopy);
 
       // Call custom callback if provided
       onCopy?.(result);
@@ -137,7 +143,9 @@ export function CopyButton({
     if (isLoading) {
       icon = <Copy className="h-4 w-4 animate-pulse" />;
     } else if (copySuccess && showVisualFeedback) {
-      icon = <Check className="h-4 w-4 text-green-600" />;
+      icon = (
+        <Check className="animate-in zoom-in-75 h-4 w-4 text-green-600 duration-200" />
+      );
     } else {
       icon = <Copy className="h-4 w-4" />;
     }

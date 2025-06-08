@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Clock } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export interface ExpiryOption {
   label: string;
@@ -127,7 +128,10 @@ export function ExpirySelector({
       onValueChange={handleValueChange}
       disabled={disabled}
     >
-      <SelectTrigger className={className} aria-label="Select expiration time">
+      <SelectTrigger
+        className={cn("data-[size=default]:h-auto", className)}
+        aria-label="Select expiration time"
+      >
         <div className="flex items-center gap-2">
           <Clock className="text-muted-foreground h-4 w-4" />
           <SelectValue placeholder="Select expiration time" />

@@ -96,6 +96,12 @@ export function Footer({ className, buildId }: FooterProps) {
                   Security
                 </Link>
                 <Link
+                  href="/architecture"
+                  className="text-muted-foreground hover:text-foreground text-sm transition-colors hover:underline"
+                >
+                  Architecture
+                </Link>
+                <Link
                   href="https://github.com/nullcoder/ghostpaste"
                   target="_blank"
                   rel="noopener noreferrer"

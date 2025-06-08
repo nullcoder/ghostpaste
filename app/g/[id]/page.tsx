@@ -4,12 +4,12 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import { Container } from "@/components/ui/container";
 import { GistViewer } from "@/components/gist-viewer";
-import { LoadingState } from "@/components/ui/loading-state";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CopyButton } from "@/components/ui/copy-button";
+import { SecurityLoading } from "@/components/security-loading";
 import {
   ExternalLink,
   AlertTriangle,
@@ -185,10 +185,12 @@ export default function ViewGistPage({ params: _params }: ViewGistPageProps) {
   if (loading) {
     return (
       <Container className="py-8">
-        <LoadingState
-          type="spinner"
-          message="Decrypting gist... Please wait while we decrypt your content"
-        />
+        <div className="flex min-h-[400px] items-center justify-center">
+          <SecurityLoading
+            type="decrypt"
+            message="Decrypting your gist securely..."
+          />
+        </div>
       </Container>
     );
   }

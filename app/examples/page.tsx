@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/container";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CopyButton } from "@/components/ui/copy-button";
 import {
   Code2,
   FileCode,
@@ -80,9 +81,17 @@ function ExampleCard({
             {expiry}
           </div>
         </div>
-        <div className="bg-background overflow-hidden rounded border">
-          <pre className="max-h-48 overflow-x-auto p-2 text-xs leading-relaxed">
-            <code className="break-words whitespace-pre-wrap sm:whitespace-pre">
+        <div className="bg-muted/50 relative overflow-hidden rounded border">
+          <div className="absolute top-2 right-2">
+            <CopyButton
+              value={code}
+              size="sm"
+              variant="ghost"
+              className="h-6 w-6 p-0 opacity-60 hover:opacity-100"
+            />
+          </div>
+          <pre className="max-h-48 overflow-x-auto p-3 pr-10 text-xs leading-relaxed">
+            <code className="text-foreground font-mono break-words whitespace-pre-wrap sm:whitespace-pre">
               {code}
             </code>
           </pre>

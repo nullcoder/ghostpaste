@@ -14,6 +14,7 @@ import {
   Github,
 } from "lucide-react";
 import { GhostLogo } from "@/components/ghost-logo";
+import { RotatingTaglines } from "@/components/rotating-taglines";
 
 export const metadata: Metadata = {
   title: "GhostPaste - Zero-Knowledge Encrypted Code Sharing",
@@ -47,8 +48,12 @@ export default function HomePage() {
 
             {/* Subheading */}
             <p className="text-muted-foreground mx-auto max-w-2xl text-xl md:text-2xl">
-              Zero-knowledge encrypted code sharing. Your code is encrypted in
-              your browser. We can&apos;t see it. Nobody can.
+              Zero-knowledge encrypted code sharing. Perfect for{" "}
+              <span className="text-foreground font-medium">
+                <RotatingTaglines />
+              </span>
+              . Your code is encrypted in your browser. We can&apos;t see it.
+              Nobody can.
             </p>
 
             {/* CTA Buttons */}

@@ -26,6 +26,7 @@ import { AlertCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { encryptGist } from "@/lib/crypto-utils";
 import type { FileData } from "@/components/ui/file-editor";
+import { SecurityLoading } from "@/components/security-loading";
 
 export default function CreateGistPage() {
   const router = useRouter();
@@ -325,6 +326,18 @@ export default function CreateGistPage() {
             )}
           </Button>
         </div>
+
+        {/* Security Loading Overlay */}
+        {isCreating && (
+          <div className="bg-background/80 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+            <div className="bg-card rounded-lg border p-8 shadow-lg">
+              <SecurityLoading
+                type="encrypt"
+                message="Encrypting your files securely..."
+              />
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Share Dialog */}
