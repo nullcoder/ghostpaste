@@ -205,12 +205,12 @@ export default function CreateGistPage() {
   };
 
   return (
-    <Container className="max-w-6xl py-8">
+    <Container className="py-8">
       <div className="mb-8">
-        <h1 className="mb-2 text-3xl font-bold">Create New Gist</h1>
+        <h1 className="mb-2 text-2xl font-bold">Create New Gist</h1>
         <p className="text-muted-foreground">
-          Share code snippets with zero-knowledge encryption. Your files are
-          encrypted in your browser before being uploaded.
+          Share code snippets securely with zero-knowledge encryption. Your
+          files are encrypted locally in your browser before upload.
         </p>
       </div>
 
@@ -220,13 +220,13 @@ export default function CreateGistPage() {
           <CardHeader>
             <CardTitle>Description</CardTitle>
             <CardDescription>
-              Add an optional description for your gist
+              Give your gist a memorable title or description
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Input
               type="text"
-              placeholder="Enter a brief description..."
+              placeholder="What's in this gist?"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className="w-full"
@@ -239,7 +239,7 @@ export default function CreateGistPage() {
           <CardHeader>
             <CardTitle>Files</CardTitle>
             <CardDescription>
-              Add up to 20 files. Each file can be up to 500KB.
+              Add your code, configs, or notes. Up to 20 files, 500KB each.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -259,7 +259,7 @@ export default function CreateGistPage() {
           <CardHeader>
             <CardTitle>Options</CardTitle>
             <CardDescription>
-              Configure expiration and edit protection for your gist.
+              Control who can edit and when your gist expires
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -268,7 +268,7 @@ export default function CreateGistPage() {
               <Label htmlFor="expiry">Expiration</Label>
               <ExpirySelector value={expiresAt} onChange={setExpiresAt} />
               <p className="text-muted-foreground text-sm">
-                The gist will be automatically deleted after this time.
+                Your gist will self-destruct at the selected time
               </p>
             </div>
 
@@ -283,7 +283,7 @@ export default function CreateGistPage() {
                 showConfirm={false}
               />
               <p className="text-muted-foreground text-sm">
-                If set, this PIN will be required to edit or delete the gist.
+                Lock down your gist - only you can edit or delete it
               </p>
             </div>
           </CardContent>

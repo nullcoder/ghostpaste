@@ -48,6 +48,8 @@ export interface CopyButtonProps {
   "aria-label"?: string;
   /** Custom onCopy callback */
   onCopy?: (result: CopyResult) => void;
+  /** Optional label text to show alongside icon */
+  label?: string;
 }
 
 /**
@@ -70,6 +72,7 @@ export function CopyButton({
   disabled = false,
   "aria-label": ariaLabel,
   onCopy,
+  label,
   ...props
 }: CopyButtonProps &
   Omit<React.ComponentProps<typeof Button>, keyof CopyButtonProps>) {
@@ -129,16 +132,28 @@ export function CopyButton({
       return children;
     }
 
-    // Default icon behavior
+    // Get the icon
+    let icon;
     if (isLoading) {
-      return <Copy className="h-4 w-4 animate-pulse" />;
+      icon = <Copy className="h-4 w-4 animate-pulse" />;
+    } else if (copySuccess && showVisualFeedback) {
+      icon = <Check className="h-4 w-4 text-green-600" />;
+    } else {
+      icon = <Copy className="h-4 w-4" />;
     }
 
-    if (copySuccess && showVisualFeedback) {
-      return <Check className="h-4 w-4 text-green-600" />;
+    // If label is provided, show icon + label
+    if (label) {
+      return (
+        <>
+          {icon}
+          <span className="ml-2">{label}</span>
+        </>
+      );
     }
 
-    return <Copy className="h-4 w-4" />;
+    // Otherwise just the icon
+    return icon;
   };
 
   // Generate accessible label
@@ -161,7 +176,13 @@ export function CopyButton({
       size={size}
       className={cn(
         "transition-colors",
-        copySuccess && showVisualFeedback && "bg-green-50 dark:bg-green-950/20",
+        copySuccess &&
+          showVisualFeedback &&
+          "bg-green-50 hover:bg-green-50/80 dark:bg-green-950/20 dark:hover:bg-green-950/30",
+        copySuccess &&
+          showVisualFeedback &&
+          variant === "default" &&
+          "text-green-700 dark:text-green-400",
         className
       )}
       onClick={handleCopy}

@@ -93,5 +93,5 @@ export interface ApiErrorResponse {
  */
 export type GetGistMetadataResponse = Omit<
   GistMetadata,
-  "edit_pin_hash" | "edit_pin_salt" | "encrypted_metadata"
+  "edit_pin_hash" | "edit_pin_salt"
 >;

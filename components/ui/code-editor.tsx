@@ -174,7 +174,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
         EditorView.theme({
           "&": {
             fontSize: "14px",
-            height: height,
+            height: height === "auto" ? "auto" : height,
             fontFamily:
               "var(--font-geist-mono), ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace",
           },
