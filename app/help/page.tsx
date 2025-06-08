@@ -25,6 +25,17 @@ export const metadata: Metadata = {
   title: "Help & FAQ - GhostPaste",
   description:
     "Get help with GhostPaste. Learn how to share code securely with zero-knowledge encryption.",
+  openGraph: {
+    title: "Help & FAQ - GhostPaste",
+    description:
+      "Everything you need to know about sharing encrypted code with GhostPaste. Guides, FAQs, and security best practices.",
+    url: "https://ghostpaste.dev/help",
+  },
+  twitter: {
+    title: "Help & FAQ - GhostPaste",
+    description:
+      "Learn how to share encrypted code securely. Guides, FAQs, and best practices for GhostPaste.",
+  },
 };
 
 export default function HelpPage() {
@@ -64,7 +75,7 @@ export default function HelpPage() {
               <Card className="p-6">
                 <h3 className="mb-3 flex items-center gap-2 font-semibold">
                   <Code2 className="text-primary h-5 w-5" />
-                  Creating a Paste
+                  Creating a Gist
                 </h3>
                 <ol className="text-muted-foreground space-y-2 text-sm">
                   <li>
@@ -78,9 +89,9 @@ export default function HelpPage() {
                   </li>
                   <li>2. Paste your code or drag & drop files</li>
                   <li>
-                    3. Set options (expiry, PIN for editing, one-time view)
+                    3. Set options (expiry, password for editing, one-time view)
                   </li>
-                  <li>4. Click &quot;Create Secure Paste&quot;</li>
+                  <li>4. Click &quot;Create Secure Gist&quot;</li>
                   <li>5. Share the generated link</li>
                 </ol>
               </Card>
@@ -88,14 +99,14 @@ export default function HelpPage() {
               <Card className="p-6">
                 <h3 className="mb-3 flex items-center gap-2 font-semibold">
                   <Key className="text-primary h-5 w-5" />
-                  Viewing a Paste
+                  Viewing a Gist
                 </h3>
                 <ol className="text-muted-foreground space-y-2 text-sm">
                   <li>1. Click on a GhostPaste link</li>
-                  <li>2. The paste decrypts automatically</li>
+                  <li>2. The gist decrypts automatically</li>
                   <li>3. View code with syntax highlighting</li>
                   <li>4. Copy code or download files</li>
-                  <li>5. Edit if you have the PIN</li>
+                  <li>5. Edit if you have the password</li>
                 </ol>
               </Card>
             </div>
@@ -137,7 +148,7 @@ export default function HelpPage() {
                           don&apos;t send to servers.
                         </p>
                         <p>
-                          We literally cannot decrypt your pastes, even if asked
+                          We literally cannot decrypt your gists, even if asked
                           by authorities.
                         </p>
                       </div>
@@ -146,7 +157,7 @@ export default function HelpPage() {
 
                   <AccordionItem value="how-long">
                     <AccordionTrigger>
-                      How long are pastes stored?
+                      How long are gists stored?
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 text-sm">
@@ -158,9 +169,7 @@ export default function HelpPage() {
                           <li>30 days (maximum)</li>
                           <li>One-time view (deleted after first view)</li>
                         </ul>
-                        <p>
-                          All pastes are automatically deleted after expiry.
-                        </p>
+                        <p>All gists are automatically deleted after expiry.</p>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -173,8 +182,8 @@ export default function HelpPage() {
                       <div className="space-y-2 text-sm">
                         <ul className="list-inside list-disc space-y-1">
                           <li>500KB per file</li>
-                          <li>5MB total per paste</li>
-                          <li>Up to 20 files per paste</li>
+                          <li>5MB total per gist</li>
+                          <li>Up to 20 files per gist</li>
                         </ul>
                         <p>
                           These limits ensure fast encryption/decryption in your
@@ -193,11 +202,11 @@ export default function HelpPage() {
                         </p>
                         <p>
                           Since we use zero-knowledge encryption, we have no way
-                          to find or decrypt your paste without the original
+                          to find or decrypt your gist without the original
                           link.
                         </p>
                         <p>
-                          Always save important paste links immediately after
+                          Always save important gist links immediately after
                           creation.
                         </p>
                       </div>
@@ -206,20 +215,22 @@ export default function HelpPage() {
 
                   <AccordionItem value="edit-paste">
                     <AccordionTrigger>
-                      Can I edit my paste after creation?
+                      Can I edit my gist after creation?
                     </AccordionTrigger>
                     <AccordionContent>
                       <div className="space-y-2 text-sm">
-                        <p>Yes, if you set a PIN when creating the paste:</p>
+                        <p>
+                          Yes, if you set a password when creating the gist:
+                        </p>
                         <ul className="ml-2 list-inside list-disc space-y-1">
-                          <li>Click &quot;Edit&quot; on the paste page</li>
-                          <li>Enter your PIN to unlock editing</li>
+                          <li>Click &quot;Edit&quot; on the gist page</li>
+                          <li>Enter your password to unlock editing</li>
                           <li>Make your changes</li>
-                          <li>Save the updated paste</li>
+                          <li>Save the updated gist</li>
                         </ul>
                         <p>
-                          The PIN also allows you to manually delete the paste.
-                          Without a PIN, pastes are read-only.
+                          The password also allows you to manually delete the
+                          gist. Without a password, gists are read-only.
                         </p>
                       </div>
                     </AccordionContent>
@@ -320,8 +331,420 @@ export default function HelpPage() {
                       </div>
                     </AccordionContent>
                   </AccordionItem>
+
+                  <AccordionItem value="command-line">
+                    <AccordionTrigger>
+                      Is there a command-line tool?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p>
+                          Currently, GhostPaste is web-interface only. However:
+                        </p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>The codebase is open source</li>
+                          <li>Community CLI tools may be available</li>
+                          <li>You can build your own using our code</li>
+                        </ul>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
                 </Accordion>
               </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Privacy & Legal Questions */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <Shield className="text-primary h-6 w-6" />
+              Privacy & Legal Questions
+            </h2>
+
+            <div className="grid gap-8 md:grid-cols-2">
+              <div className="space-y-6">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="tracking">
+                    <AccordionTrigger>
+                      Do you log IP addresses or track users?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="font-semibold text-green-600 dark:text-green-400">
+                          No tracking whatsoever.
+                        </p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>No analytics or tracking scripts</li>
+                          <li>No IP address logging</li>
+                          <li>No cookies (except theme preference)</li>
+                          <li>No user accounts or profiles</li>
+                          <li>No view counting or statistics</li>
+                        </ul>
+                        <p>
+                          We believe in absolute privacy. We don&apos;t know who
+                          you are or what you share.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="dmca">
+                    <AccordionTrigger>
+                      Can you comply with DMCA takedowns?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="font-semibold">
+                          We cannot verify content claims.
+                        </p>
+                        <p>
+                          Due to zero-knowledge encryption, we cannot decrypt
+                          gists to verify their contents. We can only:
+                        </p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Remove specific gist IDs if provided</li>
+                          <li>Cannot confirm what the gist contains</li>
+                          <li>Cannot search for infringing content</li>
+                        </ul>
+                        <p className="text-muted-foreground text-xs">
+                          This is by design for your privacy protection.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="gdpr">
+                    <AccordionTrigger>
+                      Is this GDPR/CCPA compliant?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="font-semibold text-green-600 dark:text-green-400">
+                          Yes, fully compliant.
+                        </p>
+                        <p>We collect zero personal data:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>No personal information required</li>
+                          <li>No data processing or profiling</li>
+                          <li>No third-party sharing</li>
+                          <li>No data retention beyond expiry</li>
+                          <li>Automatic deletion after expiration</li>
+                        </ul>
+                        <p>
+                          There&apos;s simply no personal data to request or
+                          delete.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+
+              <div className="space-y-6">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="law-enforcement">
+                    <AccordionTrigger>
+                      Can law enforcement access my gists?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="font-semibold text-green-600 dark:text-green-400">
+                          No, it&apos;s technically impossible.
+                        </p>
+                        <p>Even if compelled by law enforcement, we cannot:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Decrypt your gists (we don&apos;t have keys)</li>
+                          <li>Identify who created a gist</li>
+                          <li>Track who accessed a gist</li>
+                          <li>Recover deleted or expired gists</li>
+                        </ul>
+                        <p>
+                          We can only provide the encrypted blob, which is
+                          useless without the key from your URL.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="data-location">
+                    <AccordionTrigger>
+                      Where is my data stored?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p>
+                          Your encrypted data is stored on Cloudflare&apos;s
+                          global network:
+                        </p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Distributed across multiple regions</li>
+                          <li>Automatic geographic redundancy</li>
+                          <li>Enterprise-grade infrastructure</li>
+                          <li>DDoS protection included</li>
+                        </ul>
+                        <p>
+                          For self-hosted instances, data location depends on
+                          your deployment choice.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Use Cases & Scenarios */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <Code2 className="text-primary h-6 w-6" />
+              Common Use Cases & Scenarios
+            </h2>
+
+            <div className="grid gap-8 md:grid-cols-2">
+              <div className="space-y-6">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="multiple-people">
+                    <AccordionTrigger>
+                      How do I share with multiple people?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p>Simply share the same link with everyone:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Each person gets the complete URL with key</li>
+                          <li>No limit on number of viewers</li>
+                          <li>Everyone sees the same content</li>
+                          <li>Consider expiry time for all viewers</li>
+                        </ul>
+                        <p className="text-orange-600 dark:text-orange-400">
+                          Note: Anyone with the link can view. For sensitive
+                          data, use one-time view or short expiry.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="password-viewing">
+                    <AccordionTrigger>
+                      Can I password-protect viewing?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p>No, passwords only protect editing/deletion:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Anyone with the link can view the content</li>
+                          <li>Passwords prevent unauthorized edits</li>
+                          <li>For view protection, use one-time view</li>
+                          <li>Or share links through secure channels only</li>
+                        </ul>
+                        <p>
+                          The encryption key in the URL is your main protection.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="link-intercepted">
+                    <AccordionTrigger>
+                      What if someone intercepts my link?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="font-semibold text-orange-600 dark:text-orange-400">
+                          They can decrypt and view the content.
+                        </p>
+                        <p>To minimize risk:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Share links through encrypted channels</li>
+                          <li>Use one-time view for sensitive data</li>
+                          <li>Set short expiration times</li>
+                          <li>Never post links publicly</li>
+                          <li>Consider self-hosting for extra control</li>
+                        </ul>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+
+              <div className="space-y-6">
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="business-use">
+                    <AccordionTrigger>
+                      Can I use this for my company?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p>Yes! Options for business use:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Use ghostpaste.dev for non-critical data</li>
+                          <li>Self-host for complete control</li>
+                          <li>Deploy to your own infrastructure</li>
+                          <li>Customize branding (open source)</li>
+                          <li>No licensing fees or restrictions</li>
+                        </ul>
+                        <p>
+                          Many companies self-host for compliance requirements.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="bulk-files">
+                    <AccordionTrigger>
+                      How do I share multiple files?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p>GhostPaste supports multi-file gists:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Drag & drop up to 20 files at once</li>
+                          <li>Or use &quot;Add File&quot; button</li>
+                          <li>Each file can be up to 500KB</li>
+                          <li>5MB total size limit</li>
+                          <li>All files encrypted together</li>
+                        </ul>
+                        <p>
+                          Perfect for sharing related code files or configs.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="tampering">
+                    <AccordionTrigger>
+                      How do I know content wasn&apos;t tampered with?
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm">
+                        <p className="font-semibold text-green-600 dark:text-green-400">
+                          Built-in authentication protects integrity.
+                        </p>
+                        <p>AES-GCM encryption includes authentication:</p>
+                        <ul className="ml-2 list-inside list-disc space-y-1">
+                          <li>Any tampering causes decryption to fail</li>
+                          <li>Cryptographic verification built-in</li>
+                          <li>Cannot modify without detection</li>
+                          <li>Server cannot alter encrypted data</li>
+                        </ul>
+                        <p>If decryption succeeds, the content is authentic.</p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Comparison with Other Services */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-4xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <HelpCircle className="text-primary h-6 w-6" />
+              How GhostPaste Compares
+            </h2>
+
+            <div className="space-y-6">
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="vs-pastebin">
+                  <AccordionTrigger>
+                    How is this different from Pastebin?
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-3 text-sm">
+                      <div className="grid gap-4 md:grid-cols-2">
+                        <div>
+                          <p className="mb-2 font-semibold text-green-600 dark:text-green-400">
+                            GhostPaste Advantages:
+                          </p>
+                          <ul className="ml-2 list-inside list-disc space-y-1">
+                            <li>End-to-end encryption</li>
+                            <li>Zero-knowledge architecture</li>
+                            <li>No ads or tracking</li>
+                            <li>Clean, modern interface</li>
+                            <li>Multi-file support</li>
+                            <li>Open source</li>
+                          </ul>
+                        </div>
+                        <div>
+                          <p className="mb-2 font-semibold text-orange-600 dark:text-orange-400">
+                            Pastebin Advantages:
+                          </p>
+                          <ul className="ml-2 list-inside list-disc space-y-1">
+                            <li>Permanent storage available</li>
+                            <li>User accounts & history</li>
+                            <li>Public content discovery</li>
+                            <li>Larger file sizes</li>
+                            <li>API for automation</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <p className="text-muted-foreground">
+                        Choose GhostPaste when privacy matters.
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="vs-github-gists">
+                  <AccordionTrigger>Why not use GitHub Gists?</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-3 text-sm">
+                      <p>GhostPaste is better when you need:</p>
+                      <ul className="ml-2 list-inside list-disc space-y-1">
+                        <li>Complete anonymity (no account required)</li>
+                        <li>Automatic expiration</li>
+                        <li>Zero-knowledge encryption</li>
+                        <li>One-time view options</li>
+                        <li>No public profile or history</li>
+                      </ul>
+                      <p>GitHub Gists are better for:</p>
+                      <ul className="ml-2 list-inside list-disc space-y-1">
+                        <li>Long-term code storage</li>
+                        <li>Version control & history</li>
+                        <li>Public sharing & discovery</li>
+                        <li>Integration with GitHub ecosystem</li>
+                      </ul>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="vs-privatebin">
+                  <AccordionTrigger>What about PrivateBin?</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-3 text-sm">
+                      <p>
+                        Both offer client-side encryption, but GhostPaste
+                        provides:
+                      </p>
+                      <ul className="ml-2 list-inside list-disc space-y-1">
+                        <li>Modern, responsive UI design</li>
+                        <li>Better mobile experience</li>
+                        <li>Multi-file support out of the box</li>
+                        <li>Cleaner codebase (Next.js + TypeScript)</li>
+                        <li>Cloudflare Workers deployment</li>
+                        <li>Built-in syntax highlighting</li>
+                      </ul>
+                      <p>
+                        PrivateBin has been around longer and may have more
+                        deployment options.
+                      </p>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </div>
           </div>
         </Container>
@@ -354,9 +777,9 @@ export default function HelpPage() {
                       Ensure you copied the complete URL including everything
                       after #
                     </li>
-                    <li>Check if the paste has expired</li>
+                    <li>Check if the gist has expired</li>
                     <li>
-                      Verify the paste wasn&apos;t a one-time view that&apos;s
+                      Verify the gist wasn&apos;t a one-time view that&apos;s
                       already been accessed
                     </li>
                   </ul>
@@ -365,22 +788,20 @@ export default function HelpPage() {
 
               <Card className="p-6">
                 <h3 className="mb-2 font-semibold text-orange-600 dark:text-orange-400">
-                  &quot;Paste not found&quot; error
+                  &quot;Gist not found&quot; error
                 </h3>
                 <p className="text-muted-foreground mb-3 text-sm">
-                  The paste doesn&apos;t exist in our system.
+                  The gist doesn&apos;t exist in our system.
                 </p>
                 <div className="space-y-1 text-sm">
                   <p>
                     <strong>Possible reasons:</strong>
                   </p>
                   <ul className="ml-2 list-inside list-disc space-y-1">
-                    <li>The paste has expired and been deleted</li>
-                    <li>
-                      It was a one-time view paste that&apos;s been viewed
-                    </li>
+                    <li>The gist has expired and been deleted</li>
+                    <li>It was a one-time view gist that&apos;s been viewed</li>
                     <li>The URL is incorrect</li>
-                    <li>The paste was manually deleted</li>
+                    <li>The gist was manually deleted</li>
                   </ul>
                 </div>
               </Card>
@@ -390,7 +811,7 @@ export default function HelpPage() {
                   Slow loading or timeout
                 </h3>
                 <p className="text-muted-foreground mb-3 text-sm">
-                  Large pastes may take a moment to encrypt/decrypt.
+                  Large gists may take a moment to encrypt/decrypt.
                 </p>
                 <div className="space-y-1 text-sm">
                   <p>
@@ -401,7 +822,7 @@ export default function HelpPage() {
                     <li>Try refreshing the page</li>
                     <li>
                       For very large files, consider splitting into multiple
-                      pastes
+                      gists
                     </li>
                     <li>Check your internet connection</li>
                   </ul>
@@ -427,9 +848,9 @@ export default function HelpPage() {
                   DO ✓
                 </h3>
                 <ul className="space-y-2 text-sm text-green-600 dark:text-green-400">
-                  <li>• Save paste links immediately</li>
+                  <li>• Save gist links immediately</li>
                   <li>• Use short expiry times for sensitive data</li>
-                  <li>• Set PINs if you need to edit later</li>
+                  <li>• Set passwords if you need to edit later</li>
                   <li>• Share links through secure channels</li>
                   <li>• Use one-time view for passwords</li>
                   <li>• Verify recipients before sharing</li>
@@ -446,7 +867,7 @@ export default function HelpPage() {
                   <li>• Rely on GhostPaste as your only backup</li>
                   <li>• Share links over unencrypted channels</li>
                   <li>• Ignore expiry times</li>
-                  <li>• Share the PIN in the same message as the link</li>
+                  <li>• Share the password in the same message as the link</li>
                 </ul>
               </Card>
             </div>

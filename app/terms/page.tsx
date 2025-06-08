@@ -10,6 +10,17 @@ export const metadata: Metadata = {
   title: "Terms of Service - GhostPaste",
   description:
     "Terms of Service for GhostPaste - Zero-knowledge encrypted code sharing",
+  openGraph: {
+    title: "Terms of Service - GhostPaste",
+    description:
+      "Simple, fair terms for using GhostPaste. We respect your privacy and your code.",
+    url: "https://ghostpaste.dev/terms",
+  },
+  twitter: {
+    title: "Terms of Service - GhostPaste",
+    description:
+      "Simple, fair terms. We can't see your code, we don't track you, we just provide secure sharing.",
+  },
 };
 
 export default function TermsPage() {

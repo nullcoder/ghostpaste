@@ -18,6 +18,17 @@ export const metadata: Metadata = {
   title: "Privacy Policy - GhostPaste",
   description:
     "Privacy Policy for GhostPaste - How we protect your data with zero-knowledge encryption",
+  openGraph: {
+    title: "Privacy Policy - GhostPaste",
+    description:
+      "We can't read your code. Zero-knowledge encryption, no tracking, no cookies, no analytics. Your privacy is our architecture.",
+    url: "https://ghostpaste.dev/privacy",
+  },
+  twitter: {
+    title: "Privacy Policy - GhostPaste",
+    description:
+      "Zero-knowledge encryption, no tracking, no cookies. We can't read your code even if we wanted to.",
+  },
 };
 
 export default function PrivacyPage() {
@@ -138,8 +149,8 @@ export default function PrivacyPage() {
                       file count
                     </li>
                     <li>
-                      <strong>Hashed PINs:</strong> If you set a password (we
-                      can&apos;t reverse it)
+                      <strong>Hashed Passwords:</strong> If you set a password
+                      (we can&apos;t reverse it)
                     </li>
                     <li>
                       <strong>Random IDs:</strong> To identify your pastes
@@ -352,7 +363,7 @@ export default function PrivacyPage() {
                   <ul className="space-y-2 text-sm">
                     <li>After your set expiry time (1 hour to 30 days)</li>
                     <li>Immediately for one-time view pastes</li>
-                    <li>When you manually delete with your PIN</li>
+                    <li>When you manually delete with your password</li>
                     <li>Default retention: 30 days maximum</li>
                   </ul>
                   <p className="mt-4 text-sm">
@@ -386,7 +397,7 @@ export default function PrivacyPage() {
                   <p>You have the right to:</p>
                   <ul className="space-y-2 text-sm">
                     <li>Use the service anonymously</li>
-                    <li>Delete your content anytime (with PIN)</li>
+                    <li>Delete your content anytime (with password)</li>
                     <li>Not be tracked or profiled</li>
                     <li>Review our open-source code</li>
                     <li>Run your own instance</li>

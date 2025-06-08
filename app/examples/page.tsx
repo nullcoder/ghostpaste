@@ -27,6 +27,17 @@ export const metadata: Metadata = {
   title: "Examples - GhostPaste",
   description:
     "Discover how developers use GhostPaste for secure code sharing in different scenarios.",
+  openGraph: {
+    title: "Use Cases & Examples - GhostPaste",
+    description:
+      "See how developers use GhostPaste for code reviews, bug reports, interviews, and more. Secure code sharing for every scenario.",
+    url: "https://ghostpaste.dev/examples",
+  },
+  twitter: {
+    title: "Use Cases & Examples - GhostPaste",
+    description:
+      "Code reviews, bug reports, interviews, and more. See how GhostPaste enables secure code sharing.",
+  },
 };
 
 interface ExampleProps {
@@ -64,7 +75,10 @@ function ExampleCard({
           </h3>
         </div>
         {security === "high" && (
-          <Badge variant="destructive" className="w-fit flex-shrink-0 text-xs">
+          <Badge
+            variant="destructive"
+            className="w-fit flex-shrink-0 bg-red-600 text-xs text-white dark:bg-red-700 dark:text-white"
+          >
             <Shield className="mr-1 h-3 w-3" />
             High Security
           </Badge>
