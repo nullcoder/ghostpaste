@@ -31,11 +31,14 @@ GhostPaste is a privacy-focused code sharing platform that ensures your code sni
 - **📱 Responsive Design** - Works perfectly on all devices
 - **🚀 Global Edge Deployment** - Fast access from anywhere in the world
 
+### ✅ Available Features
+
+- **👁️ One-Time View** - Create snippets that disappear after being viewed once (implemented with secure deletion flow)
+- **📝 Version History** - Track changes with automatic versioning (storage ready)
+
 ### 🚧 Coming Soon
 
 - **⏱️ Self-Expiring Content** - Set snippets to auto-delete after a specified time
-- **👁️ One-Time View** - Create snippets that disappear after being viewed once
-- **📝 Version History** - Track changes with automatic versioning (storage ready)
 
 ## 🚀 Quick Start
 
@@ -183,10 +186,10 @@ GhostPaste is actively being developed. Here's what's completed and what's in pr
 
 ### 🚧 In Progress
 
-- API endpoints (Phase 5 - Storage foundation complete)
+- API endpoints (Phase 5 - Core CRUD operations complete)
 - Self-expiring gists
-- One-time view functionality
 - Version history UI
+- Complete frontend integration
 
 ### 📅 Upcoming
 

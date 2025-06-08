@@ -62,8 +62,7 @@ export interface UpdateGistRequest {
  * Response from updating a gist
  */
 export interface UpdateGistResponse {
-  success: boolean;
-  updated_at: string;
+  version: number;
 }
 
 /**

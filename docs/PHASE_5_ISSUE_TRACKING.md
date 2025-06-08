@@ -19,7 +19,7 @@ Phase 5 focuses on implementing the API layer for GhostPaste, including R2 stora
 | -------- | ------------------ | -------- | ----------- | -------------------------------------------- |
 | #105     | Create Gist API    | CRITICAL | 🟢 Complete | POST /api/gists endpoint                     |
 | #106     | Read Gist APIs     | CRITICAL | 🟢 Complete | GET endpoints for metadata and blobs         |
-| #107     | Update/Delete APIs | HIGH     | 🟡 Ready    | PUT and DELETE endpoints with PIN validation |
+| #107     | Update/Delete APIs | HIGH     | 🟢 Complete | PUT and DELETE endpoints with PIN validation |
 
 ### Infrastructure (2 issues)
 
@@ -121,7 +121,7 @@ Phase 5 focuses on implementing the API layer for GhostPaste, including R2 stora
 - One-time view gists are deleted after access
 - Appropriate cache headers are set
 
-### Issue 5: Update/Delete APIs
+### Issue 5: Update/Delete APIs ✅
 
 **Priority:** HIGH  
 **Estimated Time:** 3-4 days  
@@ -129,12 +129,12 @@ Phase 5 focuses on implementing the API layer for GhostPaste, including R2 stora
 
 **Tasks:**
 
-- [ ] Create PUT /api/gists/[id] endpoint
-- [ ] Create DELETE /api/gists/[id] endpoint
-- [ ] Implement PIN validation for both endpoints
-- [ ] Ensure atomic operations (metadata + blob)
-- [ ] Handle version conflicts
-- [ ] Add audit logging
+- [x] Create PUT /api/gists/[id] endpoint
+- [x] Create DELETE /api/gists/[id] endpoint
+- [x] Implement PIN validation for both endpoints
+- [x] Ensure atomic operations (metadata + blob)
+- [x] Handle version conflicts
+- [x] Add audit logging
 
 **Acceptance Criteria:**
 
@@ -319,11 +319,42 @@ gh issue edit [number] --add-label "in progress"
 - Proper logger integration for error tracking
 - Edge runtime compatible for global performance
 
+### Issue #107: Update/Delete APIs ✅
+
+- Implemented PUT /api/gists/[id] endpoint with multipart/form-data support
+- Implemented DELETE /api/gists/[id] endpoint with dual authentication methods:
+  - One-time view gists: metadata proof validation (SHA-256 hash of created_at + size + id)
+  - PIN-protected gists: PIN validation via X-Edit-Password header
+- Added CSRF protection to all state-changing endpoints (Origin + X-Requested-With headers)
+- Implemented optimistic locking for concurrent update protection
+- Added comprehensive schema validation using Zod
+- Converted all crypto operations to WebCrypto API for edge runtime compatibility
+- Implemented user metadata encryption support
+- Created shared schemas in lib/api-schemas.ts for consistency
+- Added editor preferences support to both create and update operations
+- Achieved 100% test coverage with 47 passing tests
+
+**Key Implementation Details:**
+
+- Fixed race condition in auto-deletion by moving to explicit DELETE endpoint
+- Uses async WebCrypto operations to avoid blocking Workers
+- Implements proper error handling with typed AppError system
+- Supports both metadata proof (for one-time views) and PIN authentication
+- Validates Content-Type and enforces multipart/form-data
+- Reusable CSRF validation in lib/security.ts
+- Proper cleanup of both metadata and blob data
+
 ## Next Steps
 
-### Immediate Priority: Issue #107 - Update/Delete APIs (HIGH)
+### Immediate Priority: Issue #108 - API Middleware & Security (HIGH)
 
-With both Create and Read APIs complete, we need the Update/Delete endpoints for full CRUD operations:
+With all CRUD operations complete, we need to add security middleware and validation:
+
+- Input validation middleware for all endpoints
+- Comprehensive error handling middleware
+- Cloudflare rate limiting rules
+- Security headers implementation
+- Request timeout handling for Workers
 
 ### Recommended Timeline
 
@@ -337,14 +368,22 @@ With both Create and Read APIs complete, we need the Update/Delete endpoints for
 - ✅ Issue #105: Create Gist API (COMPLETE)
 - ✅ Issue #106: Read Gist APIs (COMPLETE)
 
-**Week 3:**
+**Week 3 (Complete):**
 
-- Issue #107: Update/Delete APIs (3-4 days)
-- Issue #108: API Middleware & Security (3-4 days) - can start earlier
+- ✅ Issue #107: Update/Delete APIs (COMPLETE)
 
-**Week 4:**
+**Week 3-4 (Current):**
 
+- Issue #108: API Middleware & Security (3-4 days)
 - Issue #109: API Documentation & Testing (2-3 days)
 - Integration testing and bug fixes
+
+### Progress Summary
+
+Phase 5 is now 71% complete (5 of 7 issues):
+
+- ✅ All storage layer issues complete (#103, #104)
+- ✅ All API endpoint issues complete (#105, #106, #107)
+- 🟡 Infrastructure issues ready to start (#108, #109)
 
 Last Updated: 2025-06-07

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
-import { POST, OPTIONS } from "./route";
+import { POST } from "./route";
 import { StorageOperations } from "@/lib/storage-operations";
 import { AppError, ErrorCode } from "@/types/errors";
 import { FILE_LIMITS } from "@/lib/constants";
@@ -82,6 +82,21 @@ describe("POST /api/gists", () => {
     return formData;
   }
 
+  function createPostRequest(
+    formData: FormData,
+    headers: Record<string, string> = {}
+  ): NextRequest {
+    return new NextRequest("http://localhost:3000/api/gists", {
+      method: "POST",
+      headers: {
+        "X-Requested-With": "GhostPaste",
+        Origin: "http://localhost:3000",
+        ...headers,
+      },
+      body: formData,
+    });
+  }
+
   it("should create a gist successfully", async () => {
     const formData = createFormData({
       metadata: {
@@ -89,15 +104,16 @@ describe("POST /api/gists", () => {
         one_time_view: false,
         file_count: 2,
         blob_count: 1,
+        encrypted_metadata: {
+          iv: "base64-encoded-iv",
+          data: "base64-encoded-data",
+        },
       },
       blob: new Uint8Array([1, 2, 3, 4, 5]),
       password: "my-secret-password",
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -130,7 +146,14 @@ describe("POST /api/gists", () => {
         edit_pin_salt: "test-salt",
         total_size: 5,
         blob_count: 1,
-        encrypted_metadata: { iv: "", data: "" },
+        encrypted_metadata: {
+          iv: "base64-encoded-iv",
+          data: "base64-encoded-data",
+        },
+        indent_mode: undefined,
+        indent_size: undefined,
+        wrap_mode: undefined,
+        theme: undefined,
       },
       new Uint8Array([1, 2, 3, 4, 5])
     );
@@ -144,10 +167,7 @@ describe("POST /api/gists", () => {
       blob: new Uint8Array([1, 2, 3, 4, 5]),
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -171,18 +191,18 @@ describe("POST /api/gists", () => {
         total_size: 5,
         blob_count: 1,
         encrypted_metadata: { iv: "", data: "" },
+        indent_mode: undefined,
+        indent_size: undefined,
+        wrap_mode: undefined,
+        theme: undefined,
       },
       expect.any(Uint8Array)
     );
   });
 
   it("should reject invalid content type", async () => {
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ test: "data" }),
+    const request = createPostRequest(new FormData(), {
+      "Content-Type": "application/json",
     });
 
     const response = await POST(request);
@@ -202,10 +222,7 @@ describe("POST /api/gists", () => {
       blob: new Uint8Array([1, 2, 3]),
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -224,10 +241,7 @@ describe("POST /api/gists", () => {
       metadata: { one_time_view: false },
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -250,10 +264,7 @@ describe("POST /api/gists", () => {
     );
     formData.append("blob", new Blob([new Uint8Array([1, 2, 3])]), "blob.bin");
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -276,10 +287,7 @@ describe("POST /api/gists", () => {
       blob: new Uint8Array([1, 2, 3]),
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -301,10 +309,7 @@ describe("POST /api/gists", () => {
       blob: largeBlob,
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -330,10 +335,7 @@ describe("POST /api/gists", () => {
       blob: new Uint8Array([1, 2, 3]),
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -356,10 +358,7 @@ describe("POST /api/gists", () => {
       blob: new Uint8Array([1, 2, 3]),
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -378,10 +377,7 @@ describe("POST /api/gists", () => {
       blob: new Uint8Array([1, 2, 3, 4, 5]),
     });
 
-    const request = new NextRequest("http://localhost:3000/api/gists", {
-      method: "POST",
-      body: formData,
-    });
+    const request = createPostRequest(formData);
 
     const response = await POST(request);
     const data = await response.json();
@@ -403,26 +399,46 @@ describe("POST /api/gists", () => {
         total_size: 5,
         blob_count: 1,
         encrypted_metadata: { iv: "", data: "" },
+        indent_mode: undefined,
+        indent_size: undefined,
+        wrap_mode: undefined,
+        theme: undefined,
       },
       expect.any(Uint8Array)
     );
   });
-});
 
-describe("OPTIONS /api/gists", () => {
-  it("should handle preflight requests", async () => {
-    const response = await OPTIONS();
+  it("should handle editor preferences", async () => {
+    const formData = createFormData({
+      metadata: {
+        indent_mode: "tabs",
+        indent_size: 4,
+        wrap_mode: "hard",
+        theme: "dark",
+        encrypted_metadata: {
+          iv: "test-iv",
+          data: "test-data",
+        },
+      },
+      blob: new Uint8Array([1, 2, 3]),
+    });
 
-    expect(response.status).toBe(200);
-    expect(response.headers.get("Access-Control-Allow-Origin")).toBe(
-      "https://ghostpaste.dev"
+    const request = createPostRequest(formData);
+
+    const response = await POST(request);
+    await response.json();
+
+    expect(response.status).toBe(201);
+
+    expect(mockCreateGist).toHaveBeenCalledWith(
+      expect.objectContaining({
+        indent_mode: "tabs",
+        indent_size: 4,
+        wrap_mode: "hard",
+        theme: "dark",
+        encrypted_metadata: { iv: "test-iv", data: "test-data" },
+      }),
+      expect.any(Uint8Array)
     );
-    expect(response.headers.get("Access-Control-Allow-Methods")).toBe(
-      "POST, OPTIONS"
-    );
-    expect(response.headers.get("Access-Control-Allow-Headers")).toBe(
-      "Content-Type"
-    );
-    expect(response.headers.get("Access-Control-Max-Age")).toBe("86400");
   });
 });

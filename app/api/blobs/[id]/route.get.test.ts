@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
-import { GET, OPTIONS } from "./route";
+import { GET } from "./route";
 import { StorageOperations } from "@/lib/storage-operations";
 import { ApiErrors } from "@/lib/api-errors";
 import type { GistMetadata } from "@/types/models";
@@ -10,7 +10,6 @@ import type { ApiErrorResponse } from "@/types/api";
 vi.mock("@/lib/storage-operations", () => ({
   StorageOperations: {
     getGist: vi.fn(),
-    deleteIfNeeded: vi.fn(),
   },
 }));
 
@@ -106,7 +105,6 @@ describe("GET /api/blobs/[id]", () => {
       const oneTimeMetadata = { ...mockMetadata, one_time_view: true };
       const mockGist = { metadata: oneTimeMetadata, blob: mockBlob };
       vi.mocked(StorageOperations.getGist).mockResolvedValue(mockGist);
-      vi.mocked(StorageOperations.deleteIfNeeded).mockResolvedValue(true);
 
       const request = createRequest();
       const context = createContext();
@@ -116,9 +114,7 @@ describe("GET /api/blobs/[id]", () => {
       expect(response.headers.get("Cache-Control")).toBe(
         "no-store, no-cache, must-revalidate"
       );
-      expect(StorageOperations.deleteIfNeeded).toHaveBeenCalledWith(
-        oneTimeMetadata
-      );
+      // Note: Auto-deletion removed, now handled by explicit DELETE endpoint
     });
 
     it("should handle large blob data", async () => {
@@ -194,21 +190,7 @@ describe("GET /api/blobs/[id]", () => {
       // Note: Logger mock calls can't be easily tested with current mock setup
     });
 
-    it("should continue if one-time deletion fails", async () => {
-      const oneTimeMetadata = { ...mockMetadata, one_time_view: true };
-      const mockGist = { metadata: oneTimeMetadata, blob: mockBlob };
-      vi.mocked(StorageOperations.getGist).mockResolvedValue(mockGist);
-      vi.mocked(StorageOperations.deleteIfNeeded).mockRejectedValue(
-        new Error("Delete failed")
-      );
-
-      const request = createRequest();
-      const context = createContext();
-      const response = await GET(request, context);
-
-      expect(response.status).toBe(200); // Should still succeed
-      // Note: Logger mock calls can't be easily tested with current mock setup
-    });
+    // Note: Auto-deletion test removed since deletion is now handled by explicit DELETE endpoint
 
     it("should handle unexpected errors", async () => {
       const unexpectedError = new TypeError("Something went wrong");
@@ -237,23 +219,5 @@ describe("GET /api/blobs/[id]", () => {
       const data = await response.arrayBuffer();
       expect(data.byteLength).toBe(0);
     });
-  });
-});
-
-describe("OPTIONS /api/blobs/[id]", () => {
-  it("should return correct CORS headers", async () => {
-    const response = await OPTIONS();
-
-    expect(response.status).toBe(200);
-    expect(response.headers.get("Access-Control-Allow-Origin")).toBe(
-      "https://ghostpaste.dev"
-    );
-    expect(response.headers.get("Access-Control-Allow-Methods")).toBe(
-      "GET, OPTIONS"
-    );
-    expect(response.headers.get("Access-Control-Allow-Headers")).toBe(
-      "Content-Type"
-    );
-    expect(response.headers.get("Access-Control-Max-Age")).toBe("86400");
   });
 });

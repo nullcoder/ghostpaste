@@ -153,24 +153,24 @@ This document tracks the implementation progress of GhostPaste. Check off tasks 
 
 ### API Routes
 
-- [ ] Configure all routes with `export const runtime = 'edge'` - [#105](https://github.com/nullcoder/ghostpaste/issues/105), [#106](https://github.com/nullcoder/ghostpaste/issues/106), [#107](https://github.com/nullcoder/ghostpaste/issues/107)
+- [x] Configure all routes with `export const runtime = 'edge'` - [#105](https://github.com/nullcoder/ghostpaste/issues/105), [#106](https://github.com/nullcoder/ghostpaste/issues/106), [#107](https://github.com/nullcoder/ghostpaste/issues/107)
 - [x] `POST /api/gists` - Create gist endpoint - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
 - [x] `GET /api/gists/[id]` - Get gist metadata - [#106](https://github.com/nullcoder/ghostpaste/issues/106)
 - [x] `GET /api/blobs/[id]` - Get encrypted blob - [#106](https://github.com/nullcoder/ghostpaste/issues/106)
-- [ ] `PUT /api/gists/[id]` - Update gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
-- [ ] `DELETE /api/gists/[id]` - Delete gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
+- [x] `PUT /api/gists/[id]` - Update gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
+- [x] `DELETE /api/gists/[id]` - Delete gist - [#107](https://github.com/nullcoder/ghostpaste/issues/107)
 - [ ] Implement Cloudflare rate limiting rules - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 - [ ] Add input validation middleware - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 - [ ] Add error handling middleware - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
-- [ ] Configure API routes to access R2 bindings - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
+- [x] Configure API routes to access R2 bindings - [#103](https://github.com/nullcoder/ghostpaste/issues/103)
 
 ### API Features
 
 - [x] Implement multipart form data parsing (Workers-compatible) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
 - [x] Add request size validation (Workers limit: 100MB) - [#105](https://github.com/nullcoder/ghostpaste/issues/105)
-- [ ] Create consistent error responses - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [x] Create consistent error responses - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 - [ ] Add API documentation - [#109](https://github.com/nullcoder/ghostpaste/issues/109)
-- [ ] Implement CORS configuration - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
+- [x] Implement CORS configuration - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 - [ ] Handle Workers CPU time limits (50ms) - [#108](https://github.com/nullcoder/ghostpaste/issues/108)
 
 ## ✨ Phase 6: Features Implementation

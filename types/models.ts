@@ -41,7 +41,6 @@ export interface GistMetadata {
  */
 export interface UserMetadata {
   description?: string; // Optional gist description
-  files: FileMetadata[]; // Array of file information
 }
 
 /**
