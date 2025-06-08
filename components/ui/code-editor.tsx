@@ -113,7 +113,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
   ) {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
-    const { theme: systemTheme } = useTheme();
+    const { resolvedTheme } = useTheme();
 
     // Store the onChange callback in a ref to avoid stale closures
     const onChangeRef = useRef(onChange);
@@ -139,8 +139,8 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
       []
     );
 
-    // Determine the active theme
-    const activeTheme = themeOverride || systemTheme || "light";
+    // Determine the active theme - use resolvedTheme which handles system theme properly
+    const activeTheme = themeOverride || resolvedTheme || "light";
 
     // Get language extension
     const getLanguageExtension = useCallback((lang: string) => {
@@ -215,11 +215,19 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
       // Debounced onChange for performance
       let changeTimeout: ReturnType<typeof setTimeout>;
 
+      // Determine theme for initialization - prefer resolved theme but fallback to system preference
+      const initTheme =
+        resolvedTheme ||
+        (typeof window !== "undefined" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light");
+
       // Create extensions with compartments
       const extensions = [
         ...baseExtensions,
         languageCompartment.of(getLanguageExtension(language)),
-        themeCompartment.of(getThemeExtension(activeTheme)),
+        themeCompartment.of(getThemeExtension(initTheme)),
         readOnlyCompartment.of(EditorState.readOnly.of(readOnly)),
         lineNumbersCompartment.of(
           showLineNumbers ? [lineNumbers(), foldGutter()] : []
