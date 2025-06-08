@@ -27,8 +27,12 @@ import { Badge } from "@/components/ui/badge";
 import { encryptGist } from "@/lib/crypto-utils";
 import type { FileData } from "@/components/ui/file-editor";
 import { SecurityLoading } from "@/components/security-loading";
+import { Turnstile } from "@/components/ui/turnstile";
 
 export default function CreateGistPage() {
+  // Get Turnstile site key - safe to use on client as it's a public key
+  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+  console.log("Turnstile Site Key:", turnstileSiteKey);
   const router = useRouter();
   const multiFileEditorRef = useRef<MultiFileEditorHandle>(null);
   const [files, setFiles] = useState<FileData[]>(() => [
@@ -53,10 +57,12 @@ export default function CreateGistPage() {
   const [validationMessage, setValidationMessage] = useState<string | null>(
     null
   );
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [isTurnstileReady, setIsTurnstileReady] = useState(false);
 
   const handleFilesChange = useCallback((newFiles: FileData[]) => {
     setFiles(newFiles);
-    setError(null);
+    // Don't clear errors on file change - let them persist
 
     // Check for duplicate filenames
     const nameCount = new Map<string, number>();
@@ -103,6 +109,7 @@ export default function CreateGistPage() {
     try {
       setIsCreating(true);
       setError(null);
+      setValidationMessage(null);
 
       // Get current files with their actual content from editors
       const currentFiles = multiFileEditorRef.current?.getFiles() || files;
@@ -127,6 +134,14 @@ export default function CreateGistPage() {
       if (hasValidationErrors) {
         setError(
           "⚠️ Almost there! Just fix the issues above and you're good to go"
+        );
+        return;
+      }
+
+      // Verify Turnstile token
+      if (!turnstileToken) {
+        setError(
+          "🛡️ Security verification required. Please refresh the page and try again."
         );
         return;
       }
@@ -157,6 +172,9 @@ export default function CreateGistPage() {
       if (password) {
         formData.append("password", password);
       }
+
+      // Add Turnstile token
+      formData.append("turnstileToken", turnstileToken);
 
       // Call the API to create the gist
       const response = await fetch("/api/gists", {
@@ -304,11 +322,43 @@ export default function CreateGistPage() {
           </CardContent>
         </Card>
 
+        {/* Invisible Turnstile Verification */}
+        {turnstileSiteKey && (
+          <div className="hidden">
+            <Turnstile
+              sitekey={turnstileSiteKey}
+              onVerify={(token) => {
+                setTurnstileToken(token);
+                setIsTurnstileReady(true);
+                // Don't clear errors here - let them persist
+              }}
+              onError={() => {
+                setError(
+                  "🛡️ Security check failed. Please refresh the page and try again."
+                );
+                setIsTurnstileReady(false);
+              }}
+              onExpire={() => {
+                setTurnstileToken(null);
+                setIsTurnstileReady(false);
+                setError(
+                  "⏰ Security verification expired. Please refresh the page to continue."
+                );
+              }}
+              theme="auto"
+              size="invisible"
+            />
+          </div>
+        )}
+
         {/* Error Display */}
         {(error || validationMessage) && (
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error || validationMessage}</AlertDescription>
+            <AlertDescription>
+              {validationMessage && <div>{validationMessage}</div>}
+              {error && <div>{error}</div>}
+            </AlertDescription>
           </Alert>
         )}
 
@@ -317,7 +367,12 @@ export default function CreateGistPage() {
           <Button
             size="lg"
             onClick={handleCreate}
-            disabled={isCreating || files.length === 0 || hasValidationErrors}
+            disabled={
+              isCreating ||
+              files.length === 0 ||
+              hasValidationErrors ||
+              (!!turnstileSiteKey && !isTurnstileReady)
+            }
           >
             {isCreating ? (
               <LoadingState type="spinner" message="Creating..." />

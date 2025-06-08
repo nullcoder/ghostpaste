@@ -25,6 +25,14 @@ bucket_name = "ghostpaste-bucket"
 [vars]
 NEXT_PUBLIC_APP_URL = "https://ghostpaste.dev"
 ENVIRONMENT = "production"
+# Turnstile site key (public)
+NEXT_PUBLIC_TURNSTILE_SITE_KEY = ""
+# Turnstile secret key (placeholder - will be overridden by wrangler secret)
+TURNSTILE_SECRET_KEY = ""
+
+# Secrets (set using wrangler secret put)
+# TURNSTILE_SECRET_KEY - Cloudflare Turnstile secret key for bot protection
+# Run: TURNSTILE_SECRET_KEY
 
 # KV namespace for rate limiting (optional)
 # Uncomment when ready to enable rate limiting

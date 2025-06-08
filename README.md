@@ -68,6 +68,7 @@ Simply open the shared link - the decryption key is in the URL fragment (#key=..
 - **Client-Side Encryption**: All encryption/decryption happens in your browser using the Web Crypto API
 - **Zero-Knowledge**: Servers only store encrypted blobs - we can't read your content even if we wanted to
 - **No Tracking**: No analytics, no cookies, no user tracking
+- **Bot Protection**: Optional Cloudflare Turnstile integration for spam prevention
 - **Open Source**: Verify our security claims by reviewing the code
 
 ## 🛠️ Technical Stack
