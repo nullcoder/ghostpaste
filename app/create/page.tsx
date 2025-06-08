@@ -276,7 +276,7 @@ export default function CreateGistPage() {
             {/* Password Protection */}
             <div className="space-y-2">
               <div className="flex items-center gap-2">
-                <Label htmlFor="password">Edit Password</Label>
+                <Label htmlFor="password">Password</Label>
                 <Badge variant="secondary" className="text-xs">
                   Optional
                 </Badge>
