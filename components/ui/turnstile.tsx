@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import Script from "next/script";
 import { cn } from "@/lib/utils";
 
@@ -34,7 +34,7 @@ declare global {
   }
 }
 
-export function Turnstile({
+export const Turnstile = memo(function Turnstile({
   sitekey,
   onVerify,
   onError,
@@ -46,33 +46,34 @@ export function Turnstile({
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
   const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const isRenderedRef = useRef(false);
+
+  // Store callbacks in refs to avoid re-renders
+  const callbacksRef = useRef({ onVerify, onError, onExpire });
+  useEffect(() => {
+    callbacksRef.current = { onVerify, onError, onExpire };
+  });
 
   useEffect(() => {
-    if (!isScriptLoaded || !containerRef.current) return;
+    if (!isScriptLoaded || !containerRef.current || isRenderedRef.current)
+      return;
 
-    // Clean up any existing widget
-    if (widgetIdRef.current && window.turnstile) {
-      try {
-        window.turnstile.remove(widgetIdRef.current);
-      } catch {
-        // Widget might already be removed
-      }
-    }
-
-    // Render new widget
+    // Render widget only once
     if (window.turnstile && containerRef.current) {
       try {
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey,
-          callback: onVerify,
-          "error-callback": onError,
-          "expired-callback": onExpire,
+          callback: (token: string) => callbacksRef.current.onVerify(token),
+          "error-callback": (error: string) =>
+            callbacksRef.current.onError?.(error),
+          "expired-callback": () => callbacksRef.current.onExpire?.(),
           theme,
           size,
         });
+        isRenderedRef.current = true;
       } catch (error) {
         console.error("Failed to render Turnstile widget:", error);
-        onError?.("Failed to load verification widget");
+        callbacksRef.current.onError?.("Failed to load verification widget");
       }
     }
 
@@ -84,9 +85,10 @@ export function Turnstile({
         } catch {
           // Widget might already be removed
         }
+        isRenderedRef.current = false;
       }
     };
-  }, [isScriptLoaded, sitekey, onVerify, onError, onExpire, theme, size]);
+  }, [isScriptLoaded, sitekey, theme, size]);
 
   return (
     <>
@@ -108,4 +110,4 @@ export function Turnstile({
       />
     </>
   );
-}
+});

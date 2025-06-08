@@ -51,9 +51,9 @@ describe("Turnstile", () => {
         expect.any(HTMLElement),
         expect.objectContaining({
           sitekey: "test-site-key",
-          callback: mockOnVerify,
-          "error-callback": mockOnError,
-          "expired-callback": mockOnExpire,
+          callback: expect.any(Function),
+          "error-callback": expect.any(Function),
+          "expired-callback": expect.any(Function),
           theme: "auto",
           size: "normal",
         })
@@ -63,6 +63,21 @@ describe("Turnstile", () => {
     // Check container exists
     const turnstileContainer = container.querySelector(".cf-turnstile");
     expect(turnstileContainer).toBeInTheDocument();
+
+    // Test that callbacks are properly forwarded
+    const renderCall = mockRender.mock.calls[0][1];
+
+    // Test onVerify callback
+    renderCall.callback("test-token");
+    expect(mockOnVerify).toHaveBeenCalledWith("test-token");
+
+    // Test onError callback
+    renderCall["error-callback"]("test-error");
+    expect(mockOnError).toHaveBeenCalledWith("test-error");
+
+    // Test onExpire callback
+    renderCall["expired-callback"]();
+    expect(mockOnExpire).toHaveBeenCalled();
   });
 
   it("applies custom theme and size", async () => {
