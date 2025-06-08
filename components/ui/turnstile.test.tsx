@@ -2,20 +2,11 @@ import { render, waitFor } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 import { Turnstile } from "./turnstile";
 
-// Mock Next.js Script component
-vi.mock("next/script", () => ({
-  default: ({ onLoad }: { onLoad: () => void }) => {
-    // Simulate script loading
-    setTimeout(() => onLoad(), 0);
-    return null;
-  },
-}));
-
 describe("Turnstile", () => {
   const mockRender = vi.fn().mockReturnValue("widget-123");
   const mockReset = vi.fn();
   const mockRemove = vi.fn();
-  const mockOnVerify = vi.fn();
+  const mockOnSuccess = vi.fn();
   const mockOnError = vi.fn();
   const mockOnExpire = vi.fn();
 
@@ -39,7 +30,7 @@ describe("Turnstile", () => {
     const { container } = render(
       <Turnstile
         sitekey="test-site-key"
-        onVerify={mockOnVerify}
+        onSuccess={mockOnSuccess}
         onError={mockOnError}
         onExpire={mockOnExpire}
       />
@@ -56,24 +47,27 @@ describe("Turnstile", () => {
           "expired-callback": expect.any(Function),
           theme: "auto",
           size: "normal",
+          appearance: "interaction-only",
+          execution: "render",
+          language: "auto",
         })
       );
     });
 
     // Check container exists
-    const turnstileContainer = container.querySelector(".cf-turnstile");
+    const turnstileContainer = container.querySelector("div");
     expect(turnstileContainer).toBeInTheDocument();
 
     // Test that callbacks are properly forwarded
     const renderCall = mockRender.mock.calls[0][1];
 
-    // Test onVerify callback
+    // Test onSuccess callback
     renderCall.callback("test-token");
-    expect(mockOnVerify).toHaveBeenCalledWith("test-token");
+    expect(mockOnSuccess).toHaveBeenCalledWith("test-token");
 
     // Test onError callback
-    renderCall["error-callback"]("test-error");
-    expect(mockOnError).toHaveBeenCalledWith("test-error");
+    renderCall["error-callback"]();
+    expect(mockOnError).toHaveBeenCalled();
 
     // Test onExpire callback
     renderCall["expired-callback"]();
@@ -84,7 +78,7 @@ describe("Turnstile", () => {
     render(
       <Turnstile
         sitekey="test-site-key"
-        onVerify={mockOnVerify}
+        onSuccess={mockOnSuccess}
         theme="dark"
         size="compact"
       />
@@ -103,7 +97,7 @@ describe("Turnstile", () => {
 
   it("cleans up widget on unmount", async () => {
     const { unmount } = render(
-      <Turnstile sitekey="test-site-key" onVerify={mockOnVerify} />
+      <Turnstile sitekey="test-site-key" onSuccess={mockOnSuccess} />
     );
 
     await waitFor(() => {
@@ -115,76 +109,14 @@ describe("Turnstile", () => {
     expect(mockRemove).toHaveBeenCalledWith("widget-123");
   });
 
-  it("handles render errors gracefully", async () => {
-    mockRender.mockImplementationOnce(() => {
-      throw new Error("Render failed");
-    });
+  it("checks script is loaded", async () => {
+    render(<Turnstile sitekey="test-site-key" onSuccess={mockOnSuccess} />);
 
-    render(
-      <Turnstile
-        sitekey="test-site-key"
-        onVerify={mockOnVerify}
-        onError={mockOnError}
-      />
+    // Check that script was added
+    const script = document.getElementById("cf-turnstile-script");
+    expect(script).toBeTruthy();
+    expect(script?.getAttribute("src")).toBe(
+      "https://challenges.cloudflare.com/turnstile/v0/api.js"
     );
-
-    await waitFor(() => {
-      expect(mockOnError).toHaveBeenCalledWith(
-        "Failed to load verification widget"
-      );
-    });
-  });
-
-  it("applies custom className", () => {
-    const { container } = render(
-      <Turnstile
-        sitekey="test-site-key"
-        onVerify={mockOnVerify}
-        className="custom-class"
-      />
-    );
-
-    const turnstileContainer = container.querySelector(".cf-turnstile");
-    expect(turnstileContainer).toHaveClass("custom-class");
-  });
-
-  it("applies correct height classes based on size", () => {
-    const { container: container1 } = render(
-      <Turnstile
-        sitekey="test-site-key"
-        onVerify={mockOnVerify}
-        size="compact"
-      />
-    );
-    expect(container1.querySelector(".cf-turnstile")).toHaveClass("h-[65px]");
-
-    const { container: container2 } = render(
-      <Turnstile
-        sitekey="test-site-key"
-        onVerify={mockOnVerify}
-        size="normal"
-      />
-    );
-    expect(container2.querySelector(".cf-turnstile")).toHaveClass("h-[65px]");
-
-    const { container: container3 } = render(
-      <Turnstile
-        sitekey="test-site-key"
-        onVerify={mockOnVerify}
-        size="flexible"
-      />
-    );
-    expect(container3.querySelector(".cf-turnstile")).toHaveClass(
-      "min-h-[65px]"
-    );
-
-    const { container: container4 } = render(
-      <Turnstile
-        sitekey="test-site-key"
-        onVerify={mockOnVerify}
-        size="invisible"
-      />
-    );
-    expect(container4.querySelector(".cf-turnstile")).toHaveClass("h-0");
   });
 });
