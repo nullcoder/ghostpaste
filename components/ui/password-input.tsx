@@ -156,6 +156,12 @@ export function PasswordInput({
     strong: "text-green-600",
   };
 
+  const strengthBgColors = {
+    weak: "bg-destructive",
+    medium: "bg-yellow-600",
+    strong: "bg-green-600",
+  };
+
   const strengthBars = {
     weak: 1,
     medium: 2,
@@ -240,10 +246,7 @@ export function PasswordInput({
                 className={cn(
                   "h-1 flex-1 rounded-full transition-colors",
                   bar <= strengthBars[passwordStrength.strength]
-                    ? strengthColors[passwordStrength.strength].replace(
-                        "text-",
-                        "bg-"
-                      )
+                    ? strengthBgColors[passwordStrength.strength]
                     : "bg-muted"
                 )}
               />

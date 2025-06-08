@@ -178,7 +178,7 @@ export function generateDefaultFilename(
   index: number,
   extension = "txt"
 ): string {
-  return `file${index}.${extension}`;
+  return `untitled${index}.${extension}`;
 }
 
 /**

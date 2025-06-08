@@ -108,7 +108,7 @@ describe("PUT /api/gists/[id]", () => {
     it("should update gist with valid encrypted metadata", async () => {
       const mockGist = { metadata: mockMetadata, blob: new Uint8Array() };
       vi.mocked(StorageOperations.getGist).mockResolvedValue(mockGist);
-      vi.mocked(StorageOperations.updateGist).mockResolvedValue();
+      vi.mocked(StorageOperations.updateGist).mockResolvedValue({});
       vi.mocked(validateGistPin).mockResolvedValue(true);
 
       const request = createPutRequest(
@@ -133,7 +133,7 @@ describe("PUT /api/gists/[id]", () => {
       const response = await PUT(request, context);
 
       expect(response.status).toBe(200);
-      const data = await response.json();
+      const data = (await response.json()) as { version: number };
       expect(data.version).toBe(2);
 
       expect(StorageOperations.updateGist).toHaveBeenCalledWith(
@@ -154,7 +154,7 @@ describe("PUT /api/gists/[id]", () => {
     it("should update gist without encrypted metadata", async () => {
       const mockGist = { metadata: mockMetadata, blob: new Uint8Array() };
       vi.mocked(StorageOperations.getGist).mockResolvedValue(mockGist);
-      vi.mocked(StorageOperations.updateGist).mockResolvedValue();
+      vi.mocked(StorageOperations.updateGist).mockResolvedValue({});
       vi.mocked(validateGistPin).mockResolvedValue(true);
 
       const request = createPutRequest(

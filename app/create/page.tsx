@@ -1,12 +1,326 @@
+"use client";
+
+import { useState, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { Container } from "@/components/ui/container";
+import {
+  MultiFileEditor,
+  type MultiFileEditorHandle,
+} from "@/components/ui/multi-file-editor";
+import { ExpirySelector } from "@/components/ui/expiry-selector";
+import { PasswordInput } from "@/components/ui/password-input";
+import { ShareDialog } from "@/components/share-dialog";
+import { Button } from "@/components/ui/button";
+import { LoadingState } from "@/components/ui/loading-state";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
+import { encryptGist } from "@/lib/crypto-utils";
+import type { FileData } from "@/components/ui/file-editor";
 
 export default function CreateGistPage() {
+  const router = useRouter();
+  const multiFileEditorRef = useRef<MultiFileEditorHandle>(null);
+  const [files, setFiles] = useState<FileData[]>(() => [
+    {
+      id: "initial-file",
+      name: "untitled.txt",
+      content: "",
+      language: "text",
+    },
+  ]);
+  const [description, setDescription] = useState("");
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [hasValidationErrors, setHasValidationErrors] = useState(false);
+  const [validationMessage, setValidationMessage] = useState<string | null>(
+    null
+  );
+
+  const handleFilesChange = useCallback((newFiles: FileData[]) => {
+    setFiles(newFiles);
+    setError(null);
+
+    // Check for duplicate filenames
+    const nameCount = new Map<string, number>();
+    const duplicates = new Set<string>();
+
+    newFiles.forEach((file) => {
+      const count = (nameCount.get(file.name) || 0) + 1;
+      nameCount.set(file.name, count);
+      if (count > 1) {
+        duplicates.add(file.name);
+      }
+    });
+
+    if (duplicates.size > 0) {
+      setValidationMessage(
+        "🚨 Oops! You have duplicate filenames. Each file needs a unique name!"
+      );
+      setHasValidationErrors(true);
+    } else {
+      setValidationMessage(null);
+      setHasValidationErrors(false);
+    }
+  }, []);
+
+  const handleValidationChange = useCallback(
+    (isValid: boolean) => {
+      if (!isValid && !validationMessage) {
+        setValidationMessage(
+          "🔧 There are some issues to fix before we can proceed"
+        );
+      } else if (
+        isValid &&
+        validationMessage &&
+        !validationMessage.includes("duplicate")
+      ) {
+        setValidationMessage(null);
+      }
+      setHasValidationErrors(!isValid);
+    },
+    [validationMessage]
+  );
+
+  const handleCreate = async () => {
+    try {
+      setIsCreating(true);
+      setError(null);
+
+      // Get current files with their actual content from editors
+      const currentFiles = multiFileEditorRef.current?.getFiles() || files;
+
+      // Validate before submission
+      if (currentFiles.length === 0) {
+        setError("✋ Hold up! You need at least one file to create a gist");
+        return;
+      }
+
+      // Check if all files are empty
+      const hasContent = currentFiles.some(
+        (file) => file.content.trim().length > 0
+      );
+      if (!hasContent) {
+        setError(
+          "💭 Your files are empty! Add some code, text, or even your favorite recipe"
+        );
+        return;
+      }
+
+      if (hasValidationErrors) {
+        setError(
+          "⚠️ Almost there! Just fix the issues above and you're good to go"
+        );
+        return;
+      }
+
+      // Encrypt the gist on the client side
+      const encryptedGist = await encryptGist(currentFiles, {
+        description: description || undefined,
+        editPin: password || undefined,
+        expiresAt: expiresAt ? new Date(expiresAt) : undefined,
+      });
+
+      // Prepare FormData for multipart/form-data submission
+      const formData = new FormData();
+
+      // Add encrypted data as blob
+      const encryptedBlob = new Blob([encryptedGist.encryptedData], {
+        type: "application/octet-stream",
+      });
+      formData.append("blob", encryptedBlob);
+
+      // Add metadata as JSON blob
+      const metadataBlob = new Blob([JSON.stringify(encryptedGist.metadata)], {
+        type: "application/json",
+      });
+      formData.append("metadata", metadataBlob);
+
+      // Add password if provided
+      if (password) {
+        formData.append("password", password);
+      }
+
+      // Call the API to create the gist
+      const response = await fetch("/api/gists", {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "GhostPaste",
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = (await response.json()) as {
+          message?: string;
+          error?: string;
+        };
+        const errorMessage =
+          errorData.message || errorData.error || "Failed to create gist";
+        throw new Error(errorMessage);
+      }
+
+      const data = (await response.json()) as { id: string };
+
+      // Create the shareable URL with the encryption key in the fragment
+      const baseUrl = window.location.origin;
+      const fullUrl = `${baseUrl}/g/${data.id}#key=${encryptedGist.encryptionKey}`;
+
+      setShareUrl(fullUrl);
+    } catch (err) {
+      console.error("Error creating gist:", err);
+      if (err instanceof Error) {
+        // Add some personality to common errors
+        if (err.message.includes("size")) {
+          setError(
+            "📏 Whoa! That's too big. Try keeping each file under 500KB"
+          );
+        } else if (err.message.includes("network")) {
+          setError("🌐 Network hiccup! Check your connection and try again");
+        } else {
+          setError(`😕 Something went wrong: ${err.message}`);
+        }
+      } else {
+        setError("🤔 An unexpected error occurred. Mind trying again?");
+      }
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleShareClose = () => {
+    // Reset form and redirect to home
+    router.push("/");
+  };
+
   return (
-    <Container className="py-8">
-      <h1 className="mb-4 text-2xl font-bold">Create New Gist</h1>
-      <p className="text-muted-foreground">
-        This page will contain the form for creating encrypted gists.
-      </p>
+    <Container className="max-w-6xl py-8">
+      <div className="mb-8">
+        <h1 className="mb-2 text-3xl font-bold">Create New Gist</h1>
+        <p className="text-muted-foreground">
+          Share code snippets with zero-knowledge encryption. Your files are
+          encrypted in your browser before being uploaded.
+        </p>
+      </div>
+
+      <div className="space-y-6">
+        {/* Description */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Description</CardTitle>
+            <CardDescription>
+              Add an optional description for your gist
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Input
+              type="text"
+              placeholder="Enter a brief description..."
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full"
+            />
+          </CardContent>
+        </Card>
+
+        {/* File Editor */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Files</CardTitle>
+            <CardDescription>
+              Add up to 20 files. Each file can be up to 500KB.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <MultiFileEditor
+              ref={multiFileEditorRef}
+              initialFiles={files}
+              onChange={handleFilesChange}
+              onValidationChange={handleValidationChange}
+              maxFiles={20}
+              maxFileSize={500 * 1024}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Options */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Options</CardTitle>
+            <CardDescription>
+              Configure expiration and edit protection for your gist.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {/* Expiration */}
+            <div className="space-y-2">
+              <Label htmlFor="expiry">Expiration</Label>
+              <ExpirySelector value={expiresAt} onChange={setExpiresAt} />
+              <p className="text-muted-foreground text-sm">
+                The gist will be automatically deleted after this time.
+              </p>
+            </div>
+
+            {/* PIN Protection */}
+            <div className="space-y-2">
+              <Label htmlFor="password">Edit Protection (Optional)</Label>
+              <PasswordInput
+                value={password}
+                onChange={setPassword}
+                mode="create"
+                placeholder="Set a PIN to protect edits"
+                showConfirm={false}
+              />
+              <p className="text-muted-foreground text-sm">
+                If set, this PIN will be required to edit or delete the gist.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Error Display */}
+        {(error || validationMessage) && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error || validationMessage}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* Create Button */}
+        <div className="flex justify-end">
+          <Button
+            size="lg"
+            onClick={handleCreate}
+            disabled={isCreating || files.length === 0 || hasValidationErrors}
+          >
+            {isCreating ? (
+              <LoadingState type="spinner" message="Creating..." />
+            ) : (
+              "Create Gist"
+            )}
+          </Button>
+        </div>
+      </div>
+
+      {/* Share Dialog */}
+      {shareUrl && (
+        <ShareDialog
+          shareUrl={shareUrl}
+          open={true}
+          onOpenChange={(open) => !open && handleShareClose()}
+        />
+      )}
     </Container>
   );
 }

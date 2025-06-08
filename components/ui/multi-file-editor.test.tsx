@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MultiFileEditor } from "./multi-file-editor";
+import React from "react";
+import { MultiFileEditor, MultiFileEditorHandle } from "./multi-file-editor";
 import { FileData } from "./file-editor";
 
 // Mock next-themes
@@ -86,7 +87,7 @@ describe("MultiFileEditor", () => {
     expect(mockOnChange).toHaveBeenLastCalledWith(
       expect.arrayContaining([
         expect.objectContaining({ name: "file1.txt" }),
-        expect.objectContaining({ name: "file2.txt" }),
+        expect.objectContaining({ name: "untitled2.txt" }),
       ])
     );
   });
@@ -383,5 +384,88 @@ describe("MultiFileEditor", () => {
         language: "text", // Auto-detected for .txt
       }),
     ]);
+  });
+
+  describe("ref forwarding", () => {
+    it("exposes getFiles method", () => {
+      const ref = React.createRef<MultiFileEditorHandle>();
+      const initialFiles: FileData[] = [
+        {
+          id: "1",
+          name: "file1.js",
+          content: "const a = 1;",
+          language: "javascript",
+        },
+        {
+          id: "2",
+          name: "file2.ts",
+          content: "let b: number = 2;",
+          language: "typescript",
+        },
+      ];
+
+      render(
+        <MultiFileEditor
+          ref={ref}
+          {...defaultProps}
+          initialFiles={initialFiles}
+        />
+      );
+
+      // Should be able to get all files from ref
+      const files = ref.current?.getFiles();
+      expect(files).toHaveLength(2);
+      expect(files?.[0]).toEqual({
+        id: "1",
+        name: "file1.js",
+        content: "const a = 1;",
+        language: "javascript",
+      });
+      expect(files?.[1]).toEqual({
+        id: "2",
+        name: "file2.ts",
+        content: "let b: number = 2;",
+        language: "typescript",
+      });
+    });
+
+    it("returns current content from child editors", () => {
+      const ref = React.createRef<MultiFileEditorHandle>();
+      const initialFiles: FileData[] = [
+        {
+          id: "1",
+          name: "test.js",
+          content: "initial",
+          language: "javascript",
+        },
+      ];
+
+      render(
+        <MultiFileEditor
+          ref={ref}
+          {...defaultProps}
+          initialFiles={initialFiles}
+        />
+      );
+
+      // The getFiles method should use refs to get current content
+      // from child FileEditor components
+      const files = ref.current?.getFiles();
+      expect(files?.[0].content).toBe("initial");
+
+      // Note: In a real scenario, if the user typed in the CodeEditor,
+      // getFiles would return the current content, not the stale state
+    });
+
+    it("handles empty file list", () => {
+      const ref = React.createRef<MultiFileEditorHandle>();
+
+      render(<MultiFileEditor ref={ref} {...defaultProps} initialFiles={[]} />);
+
+      // Should return the default file that's automatically added
+      const files = ref.current?.getFiles();
+      expect(files).toHaveLength(1);
+      expect(files?.[0].name).toBe("file1.txt");
+    });
   });
 });

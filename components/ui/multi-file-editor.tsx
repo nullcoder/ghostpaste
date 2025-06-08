@@ -1,14 +1,31 @@
 "use client";
 
-import { useState, useCallback, useMemo, useRef, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { nanoid } from "nanoid";
-import { FileEditor, FileData } from "@/components/ui/file-editor";
+import {
+  FileEditor,
+  FileData,
+  FileEditorHandle,
+} from "@/components/ui/file-editor";
 import { AddFileButton } from "@/components/ui/add-file-button";
 import {
   generateDefaultFilename,
   formatFileSize,
 } from "@/lib/language-detection";
 import { cn } from "@/lib/utils";
+
+export interface MultiFileEditorHandle {
+  /** Get all files with their current content from editors */
+  getFiles: () => FileData[];
+}
 
 export interface MultiFileEditorProps {
   /** Initial files to display */
@@ -33,16 +50,22 @@ const DEFAULT_MAX_FILES = 20;
 const DEFAULT_MAX_TOTAL_SIZE = 5 * 1024 * 1024; // 5MB
 const DEFAULT_MAX_FILE_SIZE = 500 * 1024; // 500KB
 
-export function MultiFileEditor({
-  initialFiles = [],
-  onChange,
-  readOnly = false,
-  maxFiles = DEFAULT_MAX_FILES,
-  maxTotalSize = DEFAULT_MAX_TOTAL_SIZE,
-  maxFileSize: _maxFileSize = DEFAULT_MAX_FILE_SIZE, // Currently unused but available for future file size validation
-  className,
-  onValidationChange,
-}: MultiFileEditorProps) {
+export const MultiFileEditor = forwardRef<
+  MultiFileEditorHandle,
+  MultiFileEditorProps
+>(function MultiFileEditor(
+  {
+    initialFiles = [],
+    onChange,
+    readOnly = false,
+    maxFiles = DEFAULT_MAX_FILES,
+    maxTotalSize = DEFAULT_MAX_TOTAL_SIZE,
+    maxFileSize: _maxFileSize = DEFAULT_MAX_FILE_SIZE, // Currently unused but available for future file size validation
+    className,
+    onValidationChange,
+  },
+  ref
+) {
   // Initialize with at least one file
   const [files, setFiles] = useState<FileData[]>(() => {
     if (initialFiles.length > 0) {
@@ -60,6 +83,25 @@ export function MultiFileEditor({
 
   const containerRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
+  const fileEditorsRef = useRef<Map<string, FileEditorHandle>>(new Map());
+
+  // Expose methods via ref
+  useImperativeHandle(
+    ref,
+    () => ({
+      getFiles: () => {
+        // Get current content from each editor
+        return files.map((file) => {
+          const editor = fileEditorsRef.current.get(file.id);
+          if (editor) {
+            return editor.getFileData();
+          }
+          return file;
+        });
+      },
+    }),
+    [files]
+  );
 
   // Calculate total size
   const totalSize = useMemo(() => {
@@ -222,6 +264,13 @@ export function MultiFileEditor({
             className="hover:border-muted-foreground/25 rounded-lg border p-4 transition-colors"
           >
             <FileEditor
+              ref={(ref) => {
+                if (ref) {
+                  fileEditorsRef.current.set(file.id, ref);
+                } else {
+                  fileEditorsRef.current.delete(file.id);
+                }
+              }}
               file={file}
               onChange={handleFileChange}
               onDelete={handleFileDelete}
@@ -250,13 +299,6 @@ export function MultiFileEditor({
         </p>
       )}
 
-      {/* Duplicate filename error */}
-      {duplicateFilenames.size > 0 && (
-        <p className="text-destructive text-sm">
-          Please fix duplicate filenames before proceeding
-        </p>
-      )}
-
       {/* Add file button */}
       {canAddFile && (
         <AddFileButton
@@ -277,4 +319,4 @@ export function MultiFileEditor({
       )}
     </div>
   );
-}
+});
