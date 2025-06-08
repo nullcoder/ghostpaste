@@ -20,6 +20,17 @@ export const metadata: Metadata = {
   title: "GhostPaste - Zero-Knowledge Encrypted Code Sharing",
   description:
     "Share code securely with client-side encryption. Your code stays private - even from us.",
+  openGraph: {
+    title: "GhostPaste - Share Code. Keep Secrets.",
+    description:
+      "Zero-knowledge encrypted code sharing. Client-side encryption ensures your code stays private - even from us. No tracking, no logs, just security.",
+    url: "https://ghostpaste.dev",
+  },
+  twitter: {
+    title: "GhostPaste - Share Code. Keep Secrets.",
+    description:
+      "Zero-knowledge encrypted code sharing. Client-side encryption ensures your code stays private - even from us.",
+  },
 };
 
 export default function HomePage() {

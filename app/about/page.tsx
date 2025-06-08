@@ -25,7 +25,18 @@ import { GhostLogo } from "@/components/ghost-logo";
 export const metadata: Metadata = {
   title: "About - GhostPaste",
   description:
-    "Learn about GhostPaste&apos;s zero-knowledge encrypted code sharing and our unique human-AI collaboration.",
+    "Learn about GhostPaste's zero-knowledge encrypted code sharing and our unique human-AI collaboration.",
+  openGraph: {
+    title: "About GhostPaste - The Story Behind Secure Code Sharing",
+    description:
+      "Built with love, powered by privacy. Learn how GhostPaste combines human creativity and AI assistance to create the most secure code sharing platform.",
+    url: "https://ghostpaste.dev/about",
+  },
+  twitter: {
+    title: "About GhostPaste - The Story Behind Secure Code Sharing",
+    description:
+      "Human creativity meets AI assistance. Discover how we built the most private code sharing platform.",
+  },
 };
 
 export default function AboutPage() {
@@ -152,7 +163,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="mb-1 font-semibold">Password Protection</h3>
                 <p className="text-muted-foreground text-sm">
-                  Optional PIN for edit/delete access control
+                  Optional password for edit/delete access control
                 </p>
               </div>
             </div>

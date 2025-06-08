@@ -24,7 +24,18 @@ import { GhostLogo } from "@/components/ghost-logo";
 export const metadata: Metadata = {
   title: "Security - GhostPaste",
   description:
-    "Deep dive into GhostPaste&apos;s zero-knowledge encryption and security architecture.",
+    "Deep dive into GhostPaste's zero-knowledge encryption and security architecture.",
+  openGraph: {
+    title: "Security Architecture - GhostPaste",
+    description:
+      "Learn how GhostPaste keeps your code secure with client-side encryption, zero-knowledge architecture, and privacy-first design.",
+    url: "https://ghostpaste.dev/security",
+  },
+  twitter: {
+    title: "Security Architecture - GhostPaste",
+    description:
+      "Client-side encryption, zero-knowledge architecture, no tracking. See how GhostPaste keeps your code private.",
+  },
 };
 
 export default function SecurityPage() {
@@ -776,7 +787,7 @@ export default function SecurityPage() {
                     <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-600 dark:text-orange-400" />
                     <span>
                       <strong>Phishing:</strong> Always verify you&apos;re on
-                      ghostpaste.dev before entering PINs
+                      ghostpaste.dev before entering passwords
                     </span>
                   </p>
                   <p className="flex items-start gap-2">

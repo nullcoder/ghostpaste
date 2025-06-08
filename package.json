@@ -23,7 +23,9 @@
     "test:ui": "vitest --ui",
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:integration": "node scripts/run-integration-tests.js"
+    "test:integration": "node scripts/run-integration-tests.js",
+    "generate:og-image": "node scripts/generate-og-image.js",
+    "validate:meta": "node scripts/validate-meta-tags.js"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
@@ -73,6 +75,7 @@
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^4.5.1",
     "@vitest/ui": "^3.2.1",
+    "canvas": "^3.1.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "eslint-config-prettier": "^10.1.5",
