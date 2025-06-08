@@ -39,7 +39,11 @@ export default function CreateGistPage() {
     },
   ]);
   const [description, setDescription] = useState("");
-  const [expiresAt, setExpiresAt] = useState<string | null>(null);
+  const [expiresAt, setExpiresAt] = useState<string | null>(() => {
+    // Default to 7 days from now
+    const sevenDays = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    return sevenDays.toISOString();
+  });
   const [password, setPassword] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
@@ -269,7 +273,8 @@ export default function CreateGistPage() {
               <Label htmlFor="expiry">Expiration</Label>
               <ExpirySelector value={expiresAt} onChange={setExpiresAt} />
               <p className="text-muted-foreground text-sm">
-                Your gist will self-destruct at the selected time
+                Your gist will self-destruct at the selected time (defaults to 7
+                days)
               </p>
             </div>
 
