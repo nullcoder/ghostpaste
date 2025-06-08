@@ -37,6 +37,7 @@ declare global {
       remove: (widgetId: string) => void;
       execute: (widgetId: string) => void;
     };
+    onloadTurnstileCallback?: () => void;
   }
 }
 
@@ -56,17 +57,6 @@ const Turnstile: React.FC<TurnstileProps> = ({
   const widgetIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // Load Turnstile script if not already present
-    const scriptId = "cf-turnstile-script";
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement("script");
-      script.id = scriptId;
-      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-      script.async = true;
-      script.defer = true;
-      document.head.appendChild(script);
-    }
-
     const renderWidget = () => {
       if (window.turnstile && containerRef.current && !widgetIdRef.current) {
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
@@ -84,20 +74,27 @@ const Turnstile: React.FC<TurnstileProps> = ({
       }
     };
 
-    // Render after script loads
+    // Check if Turnstile is already loaded
     if (window.turnstile) {
       renderWidget();
     } else {
-      const interval = setInterval(() => {
-        if (window.turnstile) {
-          clearInterval(interval);
-          renderWidget();
-        }
-      }, 100);
-      return () => clearInterval(interval);
+      // Set up the callback for when Turnstile loads
+      window.onloadTurnstileCallback = renderWidget;
+
+      // Load Turnstile script if not already present
+      const scriptId = "cf-turnstile-script";
+      if (!document.getElementById(scriptId)) {
+        const script = document.createElement("script");
+        script.id = scriptId;
+        script.src =
+          "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=onloadTurnstileCallback";
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
     }
 
-    // Cleanup
+    // Cleanup - always register cleanup function
     return () => {
       if (widgetIdRef.current && window.turnstile) {
         try {
@@ -105,6 +102,7 @@ const Turnstile: React.FC<TurnstileProps> = ({
         } catch {
           // Widget might already be removed
         }
+        widgetIdRef.current = null;
       }
     };
   }, [
