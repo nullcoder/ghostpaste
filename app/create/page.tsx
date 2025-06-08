@@ -32,7 +32,6 @@ import { Turnstile } from "@/components/ui/turnstile";
 export default function CreateGistPage() {
   // Get Turnstile site key - safe to use on client as it's a public key
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  console.log("Turnstile Site Key:", turnstileSiteKey);
   const router = useRouter();
   const multiFileEditorRef = useRef<MultiFileEditorHandle>(null);
   const [files, setFiles] = useState<FileData[]>(() => [
@@ -330,7 +329,6 @@ export default function CreateGistPage() {
               onVerify={(token) => {
                 setTurnstileToken(token);
                 setIsTurnstileReady(true);
-                // Don't clear errors here - let them persist
               }}
               onError={() => {
                 setError(
