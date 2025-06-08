@@ -155,11 +155,23 @@ bucket_name = "ghostpaste-bucket"
 NEXT_PUBLIC_APP_URL = "https://ghostpaste.dev"
 ```
 
-For local development secrets, create `.dev.vars`:
+For environment variables:
 
+**Build-time variables** (`.env` or `.env.production`):
+
+```bash
+# Only NEXT_PUBLIC_* variables - these are embedded in the client bundle
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_public_site_key
 ```
-# Any additional secrets go here
+
+**Runtime secrets** (`.dev.vars` for local, `wrangler secret put` for production):
+
+```bash
+# Never put these in .env files!
+TURNSTILE_SECRET_KEY=your_secret_key
 ```
+
+⚠️ **Important**: Never put secrets in `.env` or `.env.production` files as they become part of the client bundle!
 
 ### Deployment
 

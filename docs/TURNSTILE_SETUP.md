@@ -47,14 +47,23 @@ TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
 
 #### Production (Cloudflare Workers)
 
-1. Update `wrangler.toml` with the public site key:
+1. For production builds, create `.env.production`:
+
+   ```bash
+   # IMPORTANT: Only put PUBLIC variables here - NO SECRETS!
+   NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_site_key_here
+   ```
+
+   **Warning**: `.env.production` is used at build time and variables are embedded in the client bundle. Never put secret keys here!
+
+2. Alternatively, update `wrangler.toml` with the public site key:
 
    ```toml
    [vars]
    NEXT_PUBLIC_TURNSTILE_SITE_KEY = "your_site_key_here"
    ```
 
-2. Set the secret key as a Cloudflare secret:
+3. Set the secret key as a Cloudflare secret:
 
    ```bash
    wrangler secret put TURNSTILE_SECRET_KEY
