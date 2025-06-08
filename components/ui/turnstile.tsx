@@ -7,12 +7,15 @@ interface TurnstileProps {
   onSuccess?: (token: string) => void;
   onExpire?: () => void;
   onError?: () => void;
+  onTimeout?: () => void;
   theme?: "light" | "dark" | "auto";
   action?: string;
   size?: "normal" | "flexible" | "compact";
   appearance?: "always" | "execute" | "interaction-only";
   execution?: "render" | "execute";
   language?: string;
+  refreshExpired?: "auto" | "manual" | "never";
+  refreshTimeout?: "auto" | "manual" | "never";
 }
 
 declare global {
@@ -25,12 +28,15 @@ declare global {
           callback?: (token: string) => void;
           "error-callback"?: () => void;
           "expired-callback"?: () => void;
+          "timeout-callback"?: () => void;
           theme?: "light" | "dark" | "auto";
           action?: string;
           size?: "normal" | "flexible" | "compact";
           appearance?: "always" | "execute" | "interaction-only";
           execution?: "render" | "execute";
           language?: string;
+          "refresh-expired"?: "auto" | "manual" | "never";
+          "refresh-timeout"?: "auto" | "manual" | "never";
         }
       ) => string;
       reset: (widgetId: string) => void;
@@ -46,12 +52,15 @@ const Turnstile: React.FC<TurnstileProps> = ({
   onSuccess,
   onExpire,
   onError,
+  onTimeout,
   theme = "auto",
   action,
   size = "normal",
   appearance = "interaction-only",
   execution = "render",
   language = "auto",
+  refreshExpired = "auto",
+  refreshTimeout = "auto",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const widgetIdRef = useRef<string | null>(null);
@@ -67,9 +76,12 @@ const Turnstile: React.FC<TurnstileProps> = ({
           appearance,
           execution,
           language,
+          "refresh-expired": refreshExpired,
+          "refresh-timeout": refreshTimeout,
           callback: onSuccess,
           "error-callback": onError,
           "expired-callback": onExpire,
+          "timeout-callback": onTimeout,
         });
       }
     };
@@ -110,12 +122,15 @@ const Turnstile: React.FC<TurnstileProps> = ({
     onSuccess,
     onError,
     onExpire,
+    onTimeout,
     theme,
     action,
     size,
     appearance,
     execution,
     language,
+    refreshExpired,
+    refreshTimeout,
   ]);
 
   return <div ref={containerRef} />;

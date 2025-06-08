@@ -162,7 +162,7 @@ describe("CreateGistPage", () => {
       render(<CreateGistPage />);
 
       const pinInput = screen.getByPlaceholderText(
-        "Set a PIN to protect edits"
+        "Leave empty for no protection"
       );
       expect(pinInput).toBeInTheDocument();
 

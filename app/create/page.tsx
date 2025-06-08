@@ -72,14 +72,6 @@ export default function CreateGistPage() {
     setIsTurnstileReady(false);
   }, []);
 
-  const handleTurnstileExpire = useCallback(() => {
-    setTurnstileToken(null);
-    setIsTurnstileReady(false);
-    setError(
-      "⏰ Security verification expired. Please refresh the page to continue."
-    );
-  }, []);
-
   const handleFilesChange = useCallback((newFiles: FileData[]) => {
     setFiles(newFiles);
     // Don't clear errors on file change - let them persist
@@ -391,9 +383,9 @@ export default function CreateGistPage() {
         <Turnstile
           sitekey={turnstileSiteKey}
           action="create_gist"
+          refreshExpired="auto"
           onSuccess={handleTurnstileSuccess}
           onError={handleTurnstileError}
-          onExpire={handleTurnstileExpire}
           appearance="interaction-only"
         />
       )}
