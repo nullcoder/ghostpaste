@@ -109,7 +109,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
       height = "400px",
       theme: themeOverride,
     }: CodeEditorProps,
-    ref,
+    ref
   ) {
     const containerRef = useRef<HTMLDivElement>(null);
     const viewRef = useRef<EditorView | null>(null);
@@ -136,7 +136,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
           viewRef.current?.focus();
         },
       }),
-      [],
+      []
     );
 
     // Determine the active theme
@@ -145,8 +145,14 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
     // Get language extension
     const getLanguageExtension = useCallback((lang: string) => {
       const langKey = lang.toLowerCase();
+
+      // For plain text, don't use any language extension
+      if (langKey === "text") {
+        return [];
+      }
+
       const langFunc = languageModes[langKey];
-      return langFunc ? langFunc() : javascript();
+      return langFunc ? langFunc() : [];
     }, []);
 
     // Get theme extension
@@ -199,12 +205,15 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
           },
         }),
       ],
-      [placeholderText, height],
+      [placeholderText, height]
     );
 
     // Initialize the editor
     useEffect(() => {
       if (!containerRef.current || viewRef.current) return;
+
+      // Debounced onChange for performance
+      let changeTimeout: ReturnType<typeof setTimeout>;
 
       // Create extensions with compartments
       const extensions = [
@@ -213,9 +222,18 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
         themeCompartment.of(getThemeExtension(activeTheme)),
         readOnlyCompartment.of(EditorState.readOnly.of(readOnly)),
         lineNumbersCompartment.of(
-          showLineNumbers ? [lineNumbers(), foldGutter()] : [],
+          showLineNumbers ? [lineNumbers(), foldGutter()] : []
         ),
         lineWrappingCompartment.of(wordWrap ? EditorView.lineWrapping : []),
+        // Add debounced change listener
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged && onChangeRef.current) {
+            clearTimeout(changeTimeout);
+            changeTimeout = setTimeout(() => {
+              onChangeRef.current?.(update.state.doc.toString());
+            }, 300); // 300ms debounce
+          }
+        }),
       ];
 
       // Create editor state
@@ -242,6 +260,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
 
       // Cleanup
       return () => {
+        clearTimeout(changeTimeout);
         view.dom.removeEventListener("blur", handleBlur);
         view.destroy();
         viewRef.current = null;
@@ -255,7 +274,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
 
       viewRef.current.dispatch({
         effects: languageCompartment.reconfigure(
-          getLanguageExtension(language),
+          getLanguageExtension(language)
         ),
       });
     }, [language, getLanguageExtension]);
@@ -275,7 +294,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
 
       viewRef.current.dispatch({
         effects: readOnlyCompartment.reconfigure(
-          EditorState.readOnly.of(readOnly),
+          EditorState.readOnly.of(readOnly)
         ),
       });
     }, [readOnly]);
@@ -286,7 +305,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
 
       viewRef.current.dispatch({
         effects: lineNumbersCompartment.reconfigure(
-          showLineNumbers ? [lineNumbers(), foldGutter()] : [],
+          showLineNumbers ? [lineNumbers(), foldGutter()] : []
         ),
       });
     }, [showLineNumbers]);
@@ -297,7 +316,7 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
 
       viewRef.current.dispatch({
         effects: lineWrappingCompartment.reconfigure(
-          wordWrap ? EditorView.lineWrapping : [],
+          wordWrap ? EditorView.lineWrapping : []
         ),
       });
     }, [wordWrap]);
@@ -326,9 +345,9 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
           "bg-background overflow-hidden rounded-lg border",
           "focus-within:ring-ring focus-within:ring-2 focus-within:ring-offset-2",
           readOnly && "opacity-80",
-          className,
+          className
         )}
       />
     );
-  },
+  }
 );
