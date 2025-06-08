@@ -24,13 +24,32 @@ This guide explains how to set up and run GhostPaste locally for development.
    ```
 
 3. **Set up local environment variables**
-   Create a `.dev.vars` file in the root directory:
+
+   GhostPaste uses different environment files for different purposes:
+
+   - **`.env`** - Build-time variables for local development (loaded by Next.js during build)
+   - **`.env.production`** - Build-time variables for production builds (PUBLIC variables only - NO SECRETS!)
+   - **`.dev.vars`** - Runtime secrets for local Wrangler development
+   - **Cloudflare Secrets** - Runtime secrets for production (via `wrangler secret put`)
+
+   Create these files as needed:
+
+   **`.env`** (for local build-time variables):
+
    ```bash
-   # Local development secrets
-   # Add any local development secrets here
-   # Example:
-   # API_SECRET=your-secret-here
+   # Public variables that are safe to expose in the client bundle
+   NEXT_PUBLIC_TURNSTILE_SITE_KEY=1x00000000000000000000AA
    ```
+
+   **`.dev.vars`** (for local runtime secrets):
+
+   ```bash
+   # Runtime secrets - these are NOT exposed to the client
+   TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+   # Add other local development secrets here
+   ```
+
+   **Important**: Never put secrets in `.env` or `.env.production` files as they are embedded in the client bundle during build!
 
 ## Development Workflows
 
@@ -106,8 +125,9 @@ When using `npm run preview`, the following services are simulated locally:
 
 ### Environment Variables
 
-- Development environment uses `env.development` from `wrangler.toml`
-- Secrets loaded from `.dev.vars` file
+- Build-time variables (NEXT*PUBLIC*\*) loaded from `.env` during build
+- Runtime environment uses `env.development` from `wrangler.toml`
+- Runtime secrets loaded from `.dev.vars` file
 - `ENVIRONMENT=development` and `NEXT_PUBLIC_APP_URL=http://localhost:3000`
 
 ## Debugging
