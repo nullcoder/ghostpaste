@@ -9,6 +9,8 @@ import { createLogger } from "@/lib/logger";
 import { createGistMetadataSchema } from "@/lib/api-schemas";
 import type { CreateGistResponse } from "@/types/api";
 import type { GistMetadata } from "@/types/models";
+import { verifyTurnstileToken, isTurnstileEnabled } from "@/lib/turnstile";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 
 /**
  * Parse multipart form data from request
@@ -17,6 +19,7 @@ async function parseMultipartFormData(request: NextRequest): Promise<{
   metadata: Record<string, unknown>;
   blob: Uint8Array;
   password?: string;
+  turnstileToken?: string;
 }> {
   const formData = await request.formData();
 
@@ -24,6 +27,7 @@ async function parseMultipartFormData(request: NextRequest): Promise<{
   const metadataFile = formData.get("metadata") as File | null;
   const blobFile = formData.get("blob") as File | null;
   const passwordValue = formData.get("password") as string | null;
+  const turnstileToken = formData.get("turnstileToken") as string | null;
 
   if (!metadataFile || !blobFile) {
     throw ApiErrors.badRequest(
@@ -48,6 +52,7 @@ async function parseMultipartFormData(request: NextRequest): Promise<{
     metadata,
     blob,
     password: passwordValue || undefined,
+    turnstileToken: turnstileToken || undefined,
   };
 }
 
@@ -59,6 +64,8 @@ const logger = createLogger("api:gists:post");
  */
 export async function POST(request: NextRequest) {
   try {
+    // Get Cloudflare environment
+    const { env } = getCloudflareContext();
     // CSRF Protection
     if (!validateCSRFProtection(request)) {
       logger.warn("CSRF protection failed", {
@@ -81,6 +88,7 @@ export async function POST(request: NextRequest) {
       metadata: Record<string, unknown>;
       blob: Uint8Array;
       password?: string;
+      turnstileToken?: string;
     };
     try {
       formParts = await parseMultipartFormData(request);
@@ -93,7 +101,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { metadata: rawMetadata, blob, password } = formParts;
+    const { metadata: rawMetadata, blob, password, turnstileToken } = formParts;
+
+    // Verify Turnstile token if enabled
+    if (isTurnstileEnabled(env)) {
+      if (!turnstileToken) {
+        return errorResponse(
+          ApiErrors.badRequest("Verification token is required")
+        );
+      }
+
+      const turnstileResult = await verifyTurnstileToken(
+        turnstileToken,
+        env.TURNSTILE_SECRET_KEY!,
+        request.headers.get("cf-connecting-ip") || undefined
+      );
+
+      if (!turnstileResult.success) {
+        logger.warn("Turnstile verification failed", {
+          errorCodes: turnstileResult["error-codes"],
+        });
+        return errorResponse(
+          ApiErrors.badRequest("Verification failed. Please try again.")
+        );
+      }
+    }
 
     // Validate metadata
     const validationResult = createGistMetadataSchema.safeParse(rawMetadata);

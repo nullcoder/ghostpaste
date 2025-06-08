@@ -17,6 +17,8 @@ describe("Configuration Management", () => {
     GHOSTPASTE_BUCKET: {} as R2Bucket,
     NEXT_PUBLIC_APP_URL: "https://ghostpaste.dev",
     ENVIRONMENT: "production",
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: "",
+    TURNSTILE_SECRET_KEY: "",
   };
 
   beforeEach(async () => {
