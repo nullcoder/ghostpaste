@@ -59,6 +59,27 @@ export default function CreateGistPage() {
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [isTurnstileReady, setIsTurnstileReady] = useState(false);
 
+  // Stable callback references to prevent Turnstile re-renders
+  const handleTurnstileSuccess = useCallback((token: string) => {
+    setTurnstileToken(token);
+    setIsTurnstileReady(true);
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setError(
+      "🛡️ Security check failed. Please refresh the page and try again."
+    );
+    setIsTurnstileReady(false);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken(null);
+    setIsTurnstileReady(false);
+    setError(
+      "⏰ Security verification expired. Please refresh the page to continue."
+    );
+  }, []);
+
   const handleFilesChange = useCallback((newFiles: FileData[]) => {
     setFiles(newFiles);
     // Don't clear errors on file change - let them persist
@@ -321,35 +342,6 @@ export default function CreateGistPage() {
           </CardContent>
         </Card>
 
-        {/* Invisible Turnstile Verification */}
-        {turnstileSiteKey && (
-          <div className="hidden">
-            <Turnstile
-              sitekey={turnstileSiteKey}
-              action="create_gist"
-              onSuccess={(token) => {
-                setTurnstileToken(token);
-                setIsTurnstileReady(true);
-              }}
-              onError={() => {
-                setError(
-                  "🛡️ Security check failed. Please refresh the page and try again."
-                );
-                setIsTurnstileReady(false);
-              }}
-              onExpire={() => {
-                setTurnstileToken(null);
-                setIsTurnstileReady(false);
-                setError(
-                  "⏰ Security verification expired. Please refresh the page to continue."
-                );
-              }}
-              theme="auto"
-              appearance="interaction-only"
-            />
-          </div>
-        )}
-
         {/* Error Display */}
         {(error || validationMessage) && (
           <Alert variant="destructive">
@@ -393,6 +385,18 @@ export default function CreateGistPage() {
           </div>
         )}
       </div>
+
+      {/* Invisible Turnstile Verification */}
+      {turnstileSiteKey && (
+        <Turnstile
+          sitekey={turnstileSiteKey}
+          action="create_gist"
+          onSuccess={handleTurnstileSuccess}
+          onError={handleTurnstileError}
+          onExpire={handleTurnstileExpire}
+          appearance="interaction-only"
+        />
+      )}
 
       {/* Share Dialog */}
       {shareUrl && (

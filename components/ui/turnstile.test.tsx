@@ -6,6 +6,7 @@ describe("Turnstile", () => {
   const mockRender = vi.fn().mockReturnValue("widget-123");
   const mockReset = vi.fn();
   const mockRemove = vi.fn();
+  const mockExecute = vi.fn();
   const mockOnSuccess = vi.fn();
   const mockOnError = vi.fn();
   const mockOnExpire = vi.fn();
@@ -16,6 +17,7 @@ describe("Turnstile", () => {
       render: mockRender,
       reset: mockReset,
       remove: mockRemove,
+      execute: mockExecute,
     };
 
     vi.clearAllMocks();
