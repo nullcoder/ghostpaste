@@ -322,32 +322,35 @@ export default function CreateGistPage() {
         </Card>
 
         {/* Invisible Turnstile Verification */}
-        {turnstileSiteKey && (
-          <div className="hidden">
-            <Turnstile
-              sitekey={turnstileSiteKey}
-              onVerify={(token) => {
-                setTurnstileToken(token);
-                setIsTurnstileReady(true);
-              }}
-              onError={() => {
-                setError(
-                  "🛡️ Security check failed. Please refresh the page and try again."
-                );
-                setIsTurnstileReady(false);
-              }}
-              onExpire={() => {
-                setTurnstileToken(null);
-                setIsTurnstileReady(false);
-                setError(
-                  "⏰ Security verification expired. Please refresh the page to continue."
-                );
-              }}
-              theme="auto"
-              size="invisible"
-            />
-          </div>
-        )}
+        {turnstileSiteKey &&
+          typeof turnstileSiteKey === "string" &&
+          turnstileSiteKey.length > 0 && (
+            <div className="hidden">
+              <Turnstile
+                sitekey={turnstileSiteKey}
+                action="create_gist"
+                onSuccess={(token) => {
+                  setTurnstileToken(token);
+                  setIsTurnstileReady(true);
+                }}
+                onError={() => {
+                  setError(
+                    "🛡️ Security check failed. Please refresh the page and try again."
+                  );
+                  setIsTurnstileReady(false);
+                }}
+                onExpire={() => {
+                  setTurnstileToken(null);
+                  setIsTurnstileReady(false);
+                  setError(
+                    "⏰ Security verification expired. Please refresh the page to continue."
+                  );
+                }}
+                theme="auto"
+                appearance="interaction-only"
+              />
+            </div>
+          )}
 
         {/* Error Display */}
         {(error || validationMessage) && (
