@@ -26,6 +26,8 @@ import {
   importKey,
   encryptAndPack,
   unpackAndDecrypt,
+  encrypt,
+  decrypt,
   generateShareableUrl as generateShareableUrlBase,
   extractKeyFromUrl as extractKeyFromUrlBase,
   type EncryptedBlob,
@@ -34,6 +36,7 @@ import { encodeFiles, decodeFiles } from "./binary";
 import { generateSalt, hashPin, validatePin } from "./auth";
 import { generateShortId } from "./id";
 import { logger } from "./logger";
+import { base64Encode, base64Decode } from "./base64";
 import {
   type File,
   type GistMetadata,
@@ -207,20 +210,23 @@ export async function encryptGist(
       metadata.edit_pin_salt = salt;
     }
 
-    // Encrypt user metadata if provided
-    if (options.description) {
-      // TODO: In production, encrypt the user metadata
-      // const userMetadata: UserMetadata = {
-      //   description: options.description,
-      //   files: files.map(f => ({
-      //     name: f.name,
-      //     size: new TextEncoder().encode(f.content).length,
-      //     language: f.language,
-      //     blob_id: gistId,
-      //   })),
-      // };
-      // metadata.encrypted_metadata = await encryptUserMetadata(userMetadata, key);
-    }
+    // Encrypt user metadata (always encrypt, even if empty)
+    const userMetadata: UserMetadata = {
+      description: options.description || undefined,
+    };
+
+    // Encrypt the metadata using the same key as the gist content
+    const encoder = new TextEncoder();
+    const metadataJson = JSON.stringify(userMetadata);
+    const metadataBytes = encoder.encode(metadataJson);
+
+    const encryptedMetadata = await encrypt(metadataBytes, key);
+
+    // Convert to the expected format (base64 encoded for storage)
+    metadata.encrypted_metadata = {
+      iv: base64Encode(encryptedMetadata.iv),
+      data: base64Encode(encryptedMetadata.ciphertext),
+    };
 
     logger.debug("Encrypted gist successfully", {
       gistId,
@@ -280,11 +286,39 @@ export async function decryptGist(
     // Decode files from binary format
     const files = decodeFiles(decryptedData);
 
-    // TODO: In production, decrypt user metadata from encrypted_metadata field
-    const userMetadata: UserMetadata | undefined = encryptedGist.metadata
-      .encrypted_metadata
-      ? undefined // Would decrypt here
-      : undefined;
+    // Decrypt user metadata if present
+    let userMetadata: UserMetadata | undefined;
+    if (
+      encryptedGist.metadata.encrypted_metadata?.iv &&
+      encryptedGist.metadata.encrypted_metadata?.data
+    ) {
+      try {
+        // Reconstruct the encrypted data structure
+        const encryptedMetadata = {
+          iv: base64Decode(encryptedGist.metadata.encrypted_metadata.iv),
+          ciphertext: base64Decode(
+            encryptedGist.metadata.encrypted_metadata.data
+          ),
+        };
+
+        // Decrypt the metadata
+        const decryptedBytes = await decrypt(encryptedMetadata, cryptoKey);
+        const decoder = new TextDecoder();
+        const metadataJson = decoder.decode(decryptedBytes);
+        userMetadata = JSON.parse(metadataJson) as UserMetadata;
+
+        logger.debug("Successfully decrypted user metadata", {
+          hasDescription: !!userMetadata.description,
+        });
+      } catch (error) {
+        logger.warn("Failed to decrypt user metadata", {
+          error: error instanceof Error ? error.message : String(error),
+          gistId: encryptedGist.id,
+        });
+        // Continue without user metadata if decryption fails
+        userMetadata = undefined;
+      }
+    }
 
     logger.debug("Decrypted gist successfully", {
       gistId: encryptedGist.id,
@@ -410,4 +444,40 @@ export async function loadGistFromUrl(
 
   // Decrypt and return
   return decryptGist(encryptedGist, key);
+}
+
+/**
+ * Generate SHA-256 hash using WebCrypto API
+ *
+ * @param input - String to hash
+ * @returns Hex-encoded hash string
+ *
+ * @example
+ * ```typescript
+ * const hash = await sha256Hash("hello world");
+ * console.log(hash); // "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+ * ```
+ */
+export async function sha256Hash(input: string): Promise<string> {
+  try {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+    const hashArray = new Uint8Array(hashBuffer);
+
+    // Convert to hex string
+    const hashHex = Array.from(hashArray)
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+
+    logger.debug("Generated SHA-256 hash", {
+      inputLength: input.length,
+      hashLength: hashHex.length,
+    });
+
+    return hashHex;
+  } catch (error) {
+    logger.error("Failed to generate SHA-256 hash", error as Error);
+    throw new Error("Failed to generate SHA-256 hash");
+  }
 }

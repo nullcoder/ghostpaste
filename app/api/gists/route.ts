@@ -1,21 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { StorageOperations } from "@/lib/storage-operations";
 import { FILE_LIMITS } from "@/lib/constants";
 import { AppError } from "@/types/errors";
 import { generateSalt, hashPin } from "@/lib/auth";
 import { errorResponse, ApiErrors, validationError } from "@/lib/api-errors";
+import { validateCSRFProtection } from "@/lib/security";
 import { createLogger } from "@/lib/logger";
+import { createGistMetadataSchema } from "@/lib/api-schemas";
 import type { CreateGistResponse } from "@/types/api";
 import type { GistMetadata } from "@/types/models";
-
-// Validation schema for gist metadata
-const metadataSchema = z.object({
-  expires_at: z.string().datetime().nullable().optional(),
-  one_time_view: z.boolean().optional(),
-  file_count: z.number().int().positive().optional(),
-  blob_count: z.number().int().positive().optional(),
-});
 
 /**
  * Parse multipart form data from request
@@ -66,6 +59,15 @@ const logger = createLogger("api:gists:post");
  */
 export async function POST(request: NextRequest) {
   try {
+    // CSRF Protection
+    if (!validateCSRFProtection(request)) {
+      logger.warn("CSRF protection failed", {
+        origin: request.headers.get("origin"),
+        customHeader: request.headers.get("X-Requested-With"),
+      });
+      return errorResponse(ApiErrors.forbidden("Invalid request headers"));
+    }
+
     // Check content type
     const contentType = request.headers.get("content-type");
     if (!contentType?.includes("multipart/form-data")) {
@@ -94,7 +96,7 @@ export async function POST(request: NextRequest) {
     const { metadata: rawMetadata, blob, password } = formParts;
 
     // Validate metadata
-    const validationResult = metadataSchema.safeParse(rawMetadata);
+    const validationResult = createGistMetadataSchema.safeParse(rawMetadata);
     if (!validationResult.success) {
       const errors = validationResult.error.flatten();
       return errorResponse(
@@ -132,8 +134,16 @@ export async function POST(request: NextRequest) {
       edit_pin_salt: editPinSalt,
       total_size: blob.length,
       blob_count: validatedMetadata.blob_count || 1,
-      // We'll need to set encrypted_metadata in the actual implementation
-      encrypted_metadata: { iv: "", data: "" }, // Placeholder for now
+      // Use encrypted_metadata from client request (zero-knowledge design)
+      encrypted_metadata: validatedMetadata.encrypted_metadata || {
+        iv: "",
+        data: "",
+      },
+      // Editor preferences
+      indent_mode: validatedMetadata.indent_mode,
+      indent_size: validatedMetadata.indent_size,
+      wrap_mode: validatedMetadata.wrap_mode,
+      theme: validatedMetadata.theme,
     };
 
     // Create gist using storage operations
@@ -192,7 +202,7 @@ export async function OPTIONS() {
       "Access-Control-Allow-Origin":
         process.env.NEXT_PUBLIC_APP_URL || "https://ghostpaste.dev",
       "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, X-Requested-With",
       "Access-Control-Max-Age": "86400",
     },
   });

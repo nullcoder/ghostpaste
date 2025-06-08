@@ -62,18 +62,8 @@ export async function GET(
       }
     }
 
-    // For one-time view gists, delete after successful retrieval
-    if (metadata.one_time_view) {
-      try {
-        await StorageOperations.deleteIfNeeded(metadata);
-      } catch (error) {
-        // Log but don't fail the request if deletion fails
-        logger.warn(
-          "Failed to delete one-time view gist",
-          error instanceof Error ? error : new Error(String(error))
-        );
-      }
-    }
+    // Note: One-time view deletion is now handled by explicit DELETE endpoint
+    // to avoid race conditions between metadata and blob requests
 
     // Return blob data with appropriate headers
     return new NextResponse(blob, {

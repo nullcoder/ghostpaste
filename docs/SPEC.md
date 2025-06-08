@@ -216,6 +216,37 @@ Response: 200 OK
 }
 ```
 
+### Delete Gist
+
+**DELETE** `/api/gists/{id}` - Delete one-time view gists
+
+```http
+DELETE /api/gists/{id}
+Content-Type: application/json
+X-Requested-With: GhostPaste
+Origin: https://ghostpaste.dev
+
+{
+  "proof": "sha256_hash_of_metadata"
+}
+
+Response: 204 No Content
+```
+
+**Security Requirements:**
+
+- Only one-time view gists can be deleted
+- Requires metadata proof: SHA256(`created_at` + `total_size` + `gist_id` + "delete")
+- CSRF protection via Origin and X-Requested-With headers
+- Gist must not be expired
+
+**Validation Steps:**
+
+1. Check gist exists and is one-time view
+2. Validate CSRF headers
+3. Verify metadata proof matches gist data
+4. Delete all gist data (metadata + blob + versions)
+
 ### Error Responses
 
 ```json
@@ -271,12 +302,29 @@ Implementation:
 
 ### 2. One-Time View
 
-Gists that delete after first decryption:
+Gists that delete after first viewing:
 
 - `one_time_view: true` flag in metadata
-- Client notifies server after successful decrypt
-- Server immediately deletes all gist data
+- Client fetches metadata and blob separately
+- Client decrypts content and renders it
+- Client calls DELETE endpoint after successful rendering
+- Server validates deletion request and removes all gist data
 - Optional download before viewing
+
+#### Deletion Flow
+
+To prevent race conditions between metadata and blob fetching:
+
+1. **GET** `/api/gists/{id}` - Returns metadata (no auto-deletion)
+2. **GET** `/api/blobs/{id}` - Returns encrypted blob (no auto-deletion)
+3. Client decrypts and renders content
+4. **DELETE** `/api/gists/{id}` - Explicit deletion with security validation
+
+The DELETE endpoint includes:
+
+- Metadata proof validation (SHA256 hash of creation metadata)
+- CSRF protection (Origin + X-Requested-With headers)
+- One-time view restriction (only these gists can be deleted)
 
 ### 3. Version History
 
