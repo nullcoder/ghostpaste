@@ -291,6 +291,209 @@ export default function SecurityPage() {
         </Container>
       </section>
 
+      {/* PIN Protection */}
+      <section className="border-b py-12">
+        <Container>
+          <div className="mx-auto max-w-5xl">
+            <h2 className="mb-8 flex items-center gap-2 text-2xl font-bold">
+              <Key className="text-primary h-6 w-6" />
+              PIN Protection & Authentication
+            </h2>
+
+            <div className="prose prose-sm dark:prose-invert mb-8 max-w-none">
+              <p className="text-base">
+                GhostPaste offers optional PIN protection for your gists,
+                allowing you to control who can edit or delete them. This
+                feature uses industry-standard password hashing to ensure your
+                PIN remains secure even if our servers are compromised.
+              </p>
+            </div>
+
+            <div className="grid gap-6">
+              {/* PIN Security Flow */}
+              <Card className="p-6">
+                <h3 className="mb-4 font-semibold">How PIN Protection Works</h3>
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      1
+                    </div>
+                    <div>
+                      <p className="font-medium">PIN Creation</p>
+                      <p className="text-muted-foreground text-sm">
+                        When you set a PIN, it&apos;s immediately hashed in your
+                        browser using{" "}
+                        <code className="bg-muted rounded px-1 py-0.5 text-xs">
+                          PBKDF2-SHA256
+                        </code>{" "}
+                        with 100,000 iterations and a random salt
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      2
+                    </div>
+                    <div>
+                      <p className="font-medium">Secure Storage</p>
+                      <p className="text-muted-foreground text-sm">
+                        Only the hash and salt are sent to our servers. Your
+                        original PIN never leaves your browser
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      3
+                    </div>
+                    <div>
+                      <p className="font-medium">Edit Verification</p>
+                      <p className="text-muted-foreground text-sm">
+                        When editing, your PIN is re-hashed with the same salt
+                        and compared against the stored hash
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-4">
+                    <div className="bg-primary/10 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+                      4
+                    </div>
+                    <div>
+                      <p className="font-medium">Zero Knowledge</p>
+                      <p className="text-muted-foreground text-sm">
+                        We can verify your PIN without ever knowing what it is,
+                        maintaining zero-knowledge principles
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Technical Details */}
+              <div className="grid gap-6 md:grid-cols-2">
+                <Card className="p-6">
+                  <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                    <Lock className="h-5 w-5" />
+                    Hashing Specifications
+                  </h3>
+                  <dl className="space-y-3 text-sm">
+                    <div>
+                      <dt className="font-medium">Algorithm</dt>
+                      <dd className="text-muted-foreground">
+                        PBKDF2 with SHA-256
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Iterations</dt>
+                      <dd className="text-muted-foreground">
+                        100,000 (OWASP recommended minimum)
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Salt Size</dt>
+                      <dd className="text-muted-foreground">
+                        128 bits (16 bytes) of cryptographically secure random
+                        data
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Hash Output</dt>
+                      <dd className="text-muted-foreground">
+                        256 bits (32 bytes)
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">PIN Requirements</dt>
+                      <dd className="text-muted-foreground">
+                        4-50 characters, any Unicode characters allowed
+                      </dd>
+                    </div>
+                  </dl>
+                </Card>
+
+                <Card className="p-6">
+                  <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                    <Shield className="h-5 w-5" />
+                    Security Benefits
+                  </h3>
+                  <ul className="space-y-2 text-sm">
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Brute-force resistance:</strong> 100,000
+                        iterations make cracking computationally expensive
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Rainbow table protection:</strong> Unique salts
+                        prevent precomputed attacks
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Server compromise safety:</strong> Even if
+                        hashes leak, PINs remain protected
+                      </span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600 dark:text-green-400" />
+                      <span>
+                        <strong>Zero-knowledge:</strong> We never see or store
+                        your actual PIN
+                      </span>
+                    </li>
+                  </ul>
+                </Card>
+              </div>
+
+              {/* PIN Best Practices */}
+              <Card className="border-blue-200 bg-blue-50 p-6 dark:border-blue-800 dark:bg-blue-900/10">
+                <h3 className="mb-4 flex items-center gap-2 font-semibold text-blue-700 dark:text-blue-300">
+                  <AlertTriangle className="h-5 w-5" />
+                  PIN Best Practices
+                </h3>
+                <div className="grid gap-4 text-sm md:grid-cols-2">
+                  <div className="space-y-2">
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <span>Use a unique PIN not used elsewhere</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <span>Consider longer PINs for sensitive data</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-600 dark:text-blue-400" />
+                      <span>Include numbers, letters, and symbols</span>
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="flex items-start gap-2">
+                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                      <span>Avoid common patterns (1234, password)</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                      <span>Don&apos;t reuse PINs from other services</span>
+                    </p>
+                    <p className="flex items-start gap-2">
+                      <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600 dark:text-red-400" />
+                      <span>Remember: PIN protects edits, not viewing</span>
+                    </p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
+        </Container>
+      </section>
+
       {/* Security Guarantees */}
       <section className="border-b py-12">
         <Container>
