@@ -3,8 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-  // Type cast needed due to vite version mismatch between vitest (7.2.6) and @vitejs/plugin-react (6.4.1)
-  plugins: [react() as any],
+  plugins: [react()],
   test: {
     environment: "happy-dom",
     globals: true,
