@@ -66,7 +66,8 @@ export async function GET(
     // to avoid race conditions between metadata and blob requests
 
     // Return blob data with appropriate headers
-    return new NextResponse(blob, {
+    // Convert Uint8Array to Buffer for compatibility with NextResponse
+    return new NextResponse(Buffer.from(blob), {
       status: 200,
       headers: {
         "Content-Type": "application/octet-stream",

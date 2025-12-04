@@ -131,7 +131,7 @@ export async function importKey(keyString: string): Promise<CryptoKey> {
 
     const key = await crypto.subtle.importKey(
       "raw",
-      keyData,
+      keyData.buffer as ArrayBuffer,
       {
         name: ALGORITHM,
         length: KEY_LENGTH,
@@ -180,7 +180,7 @@ export async function encrypt(
         tagLength: TAG_LENGTH,
       },
       key,
-      data
+      data.buffer as ArrayBuffer
     );
 
     // Return raw binary data
@@ -227,11 +227,11 @@ export async function decrypt(
     const decrypted = await crypto.subtle.decrypt(
       {
         name: ALGORITHM,
-        iv,
+        iv: iv as Uint8Array<ArrayBuffer>,
         tagLength: TAG_LENGTH,
       },
       key,
-      ciphertext
+      ciphertext.buffer as ArrayBuffer
     );
 
     const result = new Uint8Array(decrypted);
