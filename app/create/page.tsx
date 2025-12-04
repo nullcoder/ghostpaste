@@ -169,9 +169,13 @@ export default function CreateGistPage() {
       const formData = new FormData();
 
       // Add encrypted data as blob
-      const encryptedBlob = new Blob([encryptedGist.encryptedData], {
-        type: "application/octet-stream",
-      });
+      // Convert Uint8Array to Buffer for compatibility with Blob
+      const encryptedBlob = new Blob(
+        [Buffer.from(encryptedGist.encryptedData)],
+        {
+          type: "application/octet-stream",
+        }
+      );
       formData.append("blob", encryptedBlob);
 
       // Add metadata as JSON blob

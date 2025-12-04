@@ -69,7 +69,8 @@ describe("POST /api/gists", () => {
     }
 
     if (parts.blob !== undefined) {
-      const blobFile = new Blob([parts.blob], {
+      // Convert Uint8Array to Buffer for compatibility with Blob
+      const blobFile = new Blob([Buffer.from(parts.blob)], {
         type: "application/octet-stream",
       });
       formData.append("blob", blobFile, "blob.bin");
