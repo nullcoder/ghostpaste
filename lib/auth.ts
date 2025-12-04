@@ -107,7 +107,7 @@ export async function hashPin(pin: string, salt: string): Promise<string> {
     const derivedBits = await crypto.subtle.deriveBits(
       {
         name: PBKDF2_CONFIG.algorithm,
-        salt: saltBuffer,
+        salt: saltBuffer.buffer as ArrayBuffer,
         iterations: PBKDF2_CONFIG.iterations,
         hash: PBKDF2_CONFIG.hash,
       },
